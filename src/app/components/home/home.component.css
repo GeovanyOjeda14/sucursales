@@ -1,0 +1,11 @@
+.alert{
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+.nuevoContenedor{
+    padding: 2%; 
+}
+
+#userImg[_ngcontent-c12]{
+    border: 7px solid #04ad93 !important;
+}
