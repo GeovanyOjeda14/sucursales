@@ -1,0 +1,12 @@
+.btns-consultorio{
+    margin-right: 5px;
+}
+
+.scroll {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.contenedor{
+    border: 1px solid #ced4da;
+}

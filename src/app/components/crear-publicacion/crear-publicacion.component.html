@@ -3,11 +3,10 @@
 </div>
 
 <div class="row contenedor">
-  <div class="col-lg-3 crear-pub">
+  <div class="col-lg-3 crear-pub" style="padding-top: 30px;">
     <div>
       <ul class="list-group">
-          <li class="list-group-item active" id="informacion">informacion</li>
-          <li class="list-group-item" id="horarios">Horarios </li>
+          <li class="list-group-item active" id="informacion">Informacion</li>
           <li class="list-group-item" id="imagenes">Imagenes </li>
       </ul>      
   </div>
@@ -22,18 +21,18 @@
 
           <div class="info-publicacion" *ngSwitchCase="'informacion'" >
             
-              <div class="container-fluid">
+              <!-- <div class="container-fluid">
                   <br />
                   <div class="card-header" >
                     <h1>Información del servicio</h1>
                   </div>
                   <br />
-                </div>
+                </div> -->
             
          
             <form class="form-signin example-form" [formGroup]="datos" (ngSubmit)="siguienteInformacion()">
 
-              <div class="row">
+              <!-- <div class="row">
                   <div class="col-md-1"></div>
                   <div class="col-md-5">
                      <mat-form-field class="example-full-width">
@@ -49,18 +48,18 @@
                   </div>
                   <div class="col-md-5"></div>
                   <div class="col-md-1"></div>
-              </div>
+              </div> -->
 
         
               <div class="container-fluid">
-                  <br />
-                  <div class="card-header" style="padding-top:10px !important">
-                    <h1>¿Donde vas a prestar tu servicio?</h1>
-                  </div>
-                  <br />
-                </div>      
+                <br />
+                <div class="card-header" >
+                  <h1>Información del servicio</h1>
+                </div>
+                <br />
+              </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-1 col-sm-0"></div>
                     <div class="col-md-4 col-sm-3">
                         <mat-form-field class="example-full-width">
@@ -87,7 +86,7 @@
                           </mat-form-field>
                     </div>
                     <div class="col-md-1 col-sm-0"></div>
-                </div>
+                </div> -->
   
                 
                   
@@ -95,13 +94,13 @@
 <!-- ------------------------------------------- Autocompletar  --------------------------------------------------------- -->
 
   
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <br />
     <div class="card-header" style="padding-top: 10px !important">
       <h1>Cuentanos más!</h1>
     </div>
     <br />
-  </div>
+  </div> -->
   
   
   <div class="row">
@@ -252,259 +251,8 @@
 
           </div>
 
-          <div *ngSwitchCase="'horarios'" >
-             
-            <div class="example-form">
-
-                <div class="container-fluid">
-                    <br />
-                    <div class="card-header" >
-                      <h1>Horario de atención</h1>
-                    </div>
-                    <br />
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12" style="padding: 20px; text-align: center;">
-                        <p>*Selecciona un horario de atención o más, según la disponibilidad de tu servicio</p>
-                    </div>
-                  </div>
-           
-
-  <!-- -------------------------------- HORARIOS  --------------------------------------------------------- -->
-
-    <!-- ------------------------------ HORARIO1  --------------------------------------------------------- -->
-              <mat-card>
-                  <mat-card-title> Horario 1</mat-card-title>
-                  
-                  <mat-card-content id="card-horario">
-
-                    <div class="row div-dias">
-                      <div class="col-lg-4 div-dias">
-                          <p>Dias</p>
-                          <mat-form-field>
-                              <mat-select placeholder="Dias"  multiple (selectionChange)="diasHorario1($event)" [disabled]="disableH1">
-                                <mat-option *ngFor="let d of ds" [value]="d.dia.nombre" [disabled]="!d.dia.disponible">
-                                  {{d.dia.nombre}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                      </div>
-
-                      <div class="col-lg-3 div-dias">
-                          <mat-checkbox (change)="checktManana($event,'h1')" [disabled]="disableH1">Mañana</mat-checkbox>
-                        <br>
-
-                        <mat-form-field *ngIf="mananaH1">
-                          <mat-select placeholder="Desde" [disabled]="disableH1" (selectionChange)="horasHorarios($event, 'mdesde_h1')">
-                            <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                              {{d.hora}}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-
-                        <mat-form-field *ngIf="mananaH1">
-                          <mat-select placeholder="Hasta" [disabled]="disableH1" (selectionChange)="horasHorarios($event, 'mhasta_h1')">
-                            <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                              {{d.hora}}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-
-                      <div class="col-lg-3 div-dias">
-                          <mat-checkbox (change)="checktTarde($event,'h1')" [disabled]="disableH1">Tarde</mat-checkbox>
-                          <br>
-                          <mat-form-field *ngIf="tardeH1">
-                            <mat-select placeholder="Desde" [disabled]="disableH1" (selectionChange)="horasHorarios($event, 'tdesde_h1')">
-                              <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-  
-                          <mat-form-field *ngIf="tardeH1">
-                            <mat-select placeholder="Hasta" [disabled]="disableH1" (selectionChange)="horasHorarios($event, 'thasta_h1')">
-                              <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                      </div>
-
-                    </div>
-                  </mat-card-content>
-              </mat-card>
-
-            </div>
-
-                <!-- ------------------------------ HORARIO2  --------------------------------------------------------- -->
-
-            <div class="example-form" *ngIf="horario2">
-
-                <mat-card>
-                    <mat-card-title> Horario 2</mat-card-title>
-                    
-                    <mat-card-content id="card-horario">
-  
-                      <div class="row div-dias">
-                        <div class="col-lg-4 div-dias">
-                            <p>Dias</p>
-                            <mat-form-field>
-                                <mat-select placeholder="Dias"  multiple (selectionChange)="diasHorario2($event)" [disabled]="disableH2">
-                                  <mat-option *ngFor="let d of ds" [value]="d.dia.nombre" [disabled]="!d.dia.disponible">
-                                    {{d.dia.nombre}}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                        </div>
-  
-                        <div class="col-lg-3 div-dias">
-                            <mat-checkbox (change)="checktManana($event, 'h2')" [disabled]="disableH2">Mañana</mat-checkbox>
-                          <br>
-  
-                          <mat-form-field *ngIf="mananaH2">
-                            <mat-select placeholder="Desde" [disabled]="disableH2" (selectionChange)="horasHorarios($event, 'mdesde_h2')">
-                              <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-  
-                          <mat-form-field *ngIf="mananaH2">
-                            <mat-select placeholder="Hasta" [disabled]="disableH2" (selectionChange)="horasHorarios($event, 'mhasta_h2')">
-                              <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-  
-                        <div class="col-lg-3 div-dias">
-                            <mat-checkbox (change)="checktTarde($event, 'h2')" [disabled]="disableH2">Tarde</mat-checkbox>
-                            <br>
-                            <mat-form-field *ngIf="tardeH2">
-                              <mat-select placeholder="Desde" [disabled]="disableH2" (selectionChange)="horasHorarios($event, 'tdesde_h2')">
-                                <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                  {{d.hora}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-    
-                            <mat-form-field *ngIf="tardeH2">
-                              <mat-select placeholder="Hasta" [disabled]="disableH2" (selectionChange)="horasHorarios($event, 'thasta_h2')">
-                                <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                  {{d.hora}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                        </div>
-  
-                        <div class="col-lg-1 div-dias">
-                          <button class="btn btn-danger" *ngIf="btnEliminarHorario" class="btn btn-danger btns-horario" (click)="eliminarHorario()"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                      </div>
-                    </mat-card-content>
-                </mat-card>
-
-            </div>
-
-                <!-- ------------------------------ HORARIO3  --------------------------------------------------------- -->
-
-            <div class="example-form" *ngIf="horario3">
-
-                <mat-card>
-                    <mat-card-title> Horario 3</mat-card-title>
-                    
-                    <mat-card-content id="card-horario">
-  
-                      <div class="row div-dias">
-                        <div class="col-lg-4 div-dias">
-                            <p>Dias</p>
-                            <mat-form-field>
-                                <mat-select placeholder="Dias"  multiple (selectionChange)="diasHorario3($event)">
-                                  <mat-option *ngFor="let d of ds" [value]="d.dia.nombre" [disabled]="!d.dia.disponible">
-                                    {{d.dia.nombre}}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                        </div>
-  
-                        <div class="col-lg-3 div-dias">
-                            <mat-checkbox (change)="checktManana($event,'h3')">Mañana</mat-checkbox>
-                          <br>
-  
-                          <mat-form-field *ngIf="mananaH3">
-                            <mat-select placeholder="Desde" (selectionChange)="horasHorarios($event, 'mdesde_h3')">
-                              <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-  
-                          <mat-form-field *ngIf="mananaH3">
-                            <mat-select placeholder="Hasta" (selectionChange)="horasHorarios($event, 'mhasta_h3')">
-                              <mat-option *ngFor="let d of horasDesdeHastaManana" [value]="d.value">
-                                {{d.hora}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-  
-                        <div class="col-lg-3 div-dias">
-                            <mat-checkbox (change)="checktTarde($event, 'h3')">Tarde</mat-checkbox>
-                            <br>
-                            <mat-form-field *ngIf="tardeH3">
-                              <mat-select placeholder="Desde" (selectionChange)="horasHorarios($event, 'tdesde_h3')">
-                                <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                  {{d.hora}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-    
-                            <mat-form-field *ngIf="tardeH3">
-                              <mat-select placeholder="Hasta" (selectionChange)="horasHorarios($event, 'thasta_h3')">
-                                <mat-option *ngFor="let d of horasDesdeHastaTarde" [value]="d.value">
-                                  {{d.hora}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="col-lg-1 div-dias">
-                          <button class="btn btn-danger" *ngIf="btnEliminarHorario" class="btn btn-danger btns-horario" (click)="eliminarHorario()"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-  
-                      </div>
-                    </mat-card-content>
-                </mat-card>
-
-            </div>
-
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status">
-                {{textoStatus}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta('horarios')">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-1"></div>
-                <div class="col-md-3">
-                    <button class="btn btn-secondary w-100" (click)="atrasInformacion()">Atras</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-info w-100" (click)="mostrarHorario('false')" [disabled]="!btnHorario">Agregar horario</button>
-                  </div>
-                  <div class="col-md-3">
-                      <button class="btn btn-success w-100" (click)="siguienteHorarios('true')" >Siguiente</button>
-                    </div>
-                    <div class="col-md-1.5"></div>
-            </div>
-            
-                
-          </div>
+       
+          <!-- -------------------------------- IMAGENES  ----------------------------------------------------->
 
           <div *ngSwitchCase="'imagenes'" >
 
@@ -537,6 +285,26 @@
                 <div class="card-header">
                     <h5>Imagenes del servicio</h5> 
                     <p>* Recuerda que el servicio puede tener un maximo de 6 imagenes.</p>
+                </div>
+
+                <div class="img-recorte" *ngIf="mostrarRecorte">
+
+                    <image-cropper
+                    [imageChangedEvent]="imageChangedEvent"
+                    [maintainAspectRatio]="true"
+                    [aspectRatio]="4 / 3"
+                    [resizeToWidth]="500"
+                    [cropperMinWidth]="500"
+                    [onlyScaleDown]="true"
+                    [roundCropper]="false"
+                    format="jpeg"
+                    outputType="base64"
+                    (imageCropped)="imageCropped($event)"    
+                ></image-cropper>
+
+
+                <div class="text-center" style="padding-top: 10px;">
+                      <button class="btn btn-info" *ngIf="recortar" (click)="recorte()">Recortar</button></div>
                 </div>
 
                 <div class="row rw">
@@ -584,12 +352,12 @@
               </div>
               
 
-            <div id="cargar-imagen">
+            <div id="cargar-imagen" style="padding-bottom: 40px;">
               <button class="btn btn-secondary" (click)="atrasImagenes()">Atras</button>
               <label for="file-upload" class="btn btn-info btns-horario">
                   Cargar Fotos
               </label>
-              <input id="file-upload" type="file" (change)="openGalery($event)"/>
+              <input type="file" id="file-upload" (change)="fileChangeEvent($event)" />
               <button class="btn btn-success" (click)="publicarServicio()" *ngIf="imagenes.length >= 1">Publicar Servicio</button>
           </div>
 

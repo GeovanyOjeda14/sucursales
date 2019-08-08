@@ -459,3 +459,10 @@
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
   color: #04ad93 !important;
 }
+
+/* ETIQUETA PARA FORMULARIOS */
+.form-label{
+  margin: 0px;
+  color: grey;
+  font-size: 13px;
+}

@@ -301,7 +301,7 @@
   <div *ngIf="medico">
 
     <div class="row contenedor">
-      <div class="col-lg-3" style="text-align: center; ">
+      <div class="col-lg-3" style="text-align: center; padding-top: 50px;">
         <div id="perfil-provedor-imagen">
           <img src="{{medico.avatar}}" alt="N-D">
           <br>
@@ -320,10 +320,7 @@
       </div>
       <div class="col-lg-7 perfil-provedor-medico">
 
-        <div [ngSwitch]="mymodel">
-          <div *ngSwitchCase="'informacion'">
-
-            <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
+          <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
               {{statusText}}
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
                 <span aria-hidden="true">&times;</span>
@@ -336,6 +333,11 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+
+        <div [ngSwitch]="mymodel">
+          <div *ngSwitchCase="'informacion'">
+
+            
             <div class="container-fluid">
               <br />
               <div class="card-header">
@@ -559,9 +561,9 @@
 
 <br/>
 
-              <div class="row">
+              <div class="row" style="padding-bottom: 50px;">
                   <div class="col-md-4"></div>
-                <div class="col-md-4">
+                <div class="col-md-4" >
                     <button class="btn btn-success w-100" type="submit"
                     [disabled]="!this.datos.valid && this.datos.dirty">Guardar</button>
                 </div>
@@ -638,7 +640,7 @@
                             </div>
           
                             <div class="col-md-4">
-                              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                             placeholder="Institución donde se curso el estudio" name="nombreInstitucion"
                             #nombreInstitucion="ngModel" [(ngModel)]="estudios.nombreInstitucion">
                             </div>
@@ -655,7 +657,7 @@
           
                             <div class="col-md-4">
                               <input class="form-control" type="date" id="example-date-input" name="fechaInicio"
-                            #fechaInicio="ngModel" [(ngModel)]="estudios.start">
+                            #fechaInicio="ngModel" [(ngModel)]="estudios.start" max="{{today}}" >
                             </div>
                             <div class="col-md-2"></div>
                           </div>
@@ -670,7 +672,7 @@
           
                             <div class="col-md-4">
                               <input class="form-control" type="date" id="example-date-input" name="fechaFinalizacion"
-                            #fechaFinalizacion="ngModel" [(ngModel)]="estudios.end">
+                            #fechaFinalizacion="ngModel" [(ngModel)]="estudios.end" max="{{today}}">
                             </div>
                             <div class="col-md-2"></div>
                           </div>

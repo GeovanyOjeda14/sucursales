@@ -7,6 +7,7 @@ import { MedicoService } from '../../services/medico.service';
 import { EstudiosMedicos } from '../../models/estudios-medicos';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import { PlatformLocation } from '@angular/common';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-perfil',
@@ -29,6 +30,7 @@ export class PerfilComponent implements OnInit {
   public datos: FormGroup;
   public datosAdmin: FormGroup;
   public loading;
+  public today;
 
 
   constructor(public _userService: UserService, public global: Global, public _provedorService: ProvedorService,
@@ -49,15 +51,16 @@ export class PerfilComponent implements OnInit {
   getIdentity() {
     this.loading = true;
     var user = this._userService.getIdentity();
-    console.log(user);
+    // console.log(user);
 
     if (user.medico_id) {
       this.estudios = new EstudiosMedicos('', '', '', '', '');
-
+      this.today = moment(new Date().toISOString()).format('YYYY-MM-DD');
       this.medico = user;
       this.medico.id = user.medico_id;
       this.mymodel = 'informacion';
-      console.log(this.medico);
+      // console.log(this.medico);
+
 
 
       // validaciones campos perfil de medico
@@ -220,15 +223,24 @@ export class PerfilComponent implements OnInit {
 
         this._medicoService.editInfoMedico(info, token).subscribe( (response) => {
 
-          console.log(response);
+          console.log('res', response);
           if (response[0].fecha === false) {
-            console.log('Por favor revisa las fechas, la fecha de inicio no puede ser mayor a la de finalización.');
+            // console.log('Por favor revisa las fechas, la fecha de inicio no puede ser mayor a la de finalización.');
+            this.status = 'error';
+            this.statusText = 'Por favor revisa las fechas, la fecha de inicio no puede ser mayor a la de finalización.';
           } else {
-            console.log('Datos actualizados con exito.');
+            // console.log('Datos actualizados con exito.');
+            this.status = 'success';
+            this.statusText = 'Datos actualizados con exito.';
+            this.getIdentityMedico();
+            // this.mymodel = 'estudios';
+            this.pestana('informacion');
           }
 
         }, (err) => {
           console.log(err);
+          this.status = 'error';
+          this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.';
         });
 
         form.reset();

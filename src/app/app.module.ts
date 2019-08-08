@@ -46,7 +46,6 @@ import { FechaPipe } from './pipes/fechas.pipe';
 import { HoraPipe } from './pipes/horas.pipe';
 import { CategoriaPipe } from './pipes/categoria.pipe';
 
-
 // Angular material
 
 import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule,
@@ -77,7 +76,12 @@ registerLocaleData(localeEs);
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HistoriaClinicaComponent } from './components/historia-clinica/historia-clinica.component';
 import { HistorialCitasMedicoComponent } from './components/historial-citas-medico/historial-citas-medico.component';
+import { GestionarSucursalesComponent } from './components/gestionar-sucursales/gestionar-sucursales.component';
+import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
+import { ConsultorioComponent } from './components/consultorio/consultorio.component';
 
+// recorte imagenes
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -111,9 +115,13 @@ import { HistorialCitasMedicoComponent } from './components/historial-citas-medi
     ConfirmarCuentaComponent,
     HistoriaClinicaComponent,
     HistorialCitasMedicoComponent,
+    GestionarSucursalesComponent,
+    CrearSucursalComponent,
+    ConsultorioComponent,
   ],
   imports: [
     BrowserModule,
+    ImageCropperModule,
     // routing,
     RouterModule,
     // appRoutingProviders,

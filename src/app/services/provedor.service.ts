@@ -198,6 +198,18 @@ export class ProvedorService {
       return this.http.get(this.url + '/histser/' + mes + '/' + anio + '/' + id_categoria + '/' + id_servicio, {headers : headers});
      }
 
+    //  Ruta para crear sucursal
+    crearSucursal(info){
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return  this.http.post(this.url + '/addsucon', info, {headers : headers});
+    }
+
+    // Ruta para pedir las sucursales del provedor
+    getSucursales(id_provedor){
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.get(this.url + '/sucursales/' + id_provedor, {headers : headers});
+    }
+
 }
 
 

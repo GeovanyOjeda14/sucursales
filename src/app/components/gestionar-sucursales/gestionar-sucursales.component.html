@@ -1,0 +1,59 @@
+<app-barra-navegacion></app-barra-navegacion>
+
+<div class="container-fluid">
+  <!-- <div id="btn-agregar-pub" class="text-center"> -->
+      <br />
+      <div class="card-header">
+        <h1>Mis Sucursales !</h1>
+      </div>
+      <br />
+   
+  <!-- </div> -->
+</div>
+<div class="text-center" style="padding: 10px;" *ngIf="medico || servicios">
+  <!-- routerLink="/crear-sucursal" -->
+  <button class="btn btn-success" routerLink="/crear-sucursal" *ngIf="medicos.length >= 1 || servicios.length >= 1">Crear sucursal</button>
+</div>
+
+<div class="row container">
+  <div class="col-7">
+
+    <div style="padding: 15px;" *ngFor="let s of sucursales">
+      <div class="card" >
+        <div class="card-header">{{s.nombre}}</div>
+        <div class="card-body">
+          <p><strong>Direccion : </strong> {{s.direccion}}</p>
+          <p><strong>Telefono : </strong> {{s.telefono}}</p>
+          <p><strong>Municipio : </strong> {{s.id_municipio}}</p>
+
+          <div class="text-right">
+
+            <button class="btn btn-warning" style="margin-right: 5px;"><i class="fas fa-pencil-alt"></i></button>
+
+            <button class="btn btn-danger" style="margin-right: 5px;"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="col-5"></div>
+</div>
+
+<!-- *ngIf="medico || servicios" -->
+<!-- *ngIf="medicos.length < 1 || servicios.length < 1" -->
+<div style="padding: 20px;" *ngIf="medico || servicios">
+  <div *ngIf="medicos.length < 1 || servicios.length < 1">
+    <h5>Antes de crear una sucursal hay que tener en cuenta que debes tener creados medicos y servicios</h5>
+    <div style="padding-top: 20px;"  routerLink="/medicos">
+      <button class="btn btn-success">Agregar Medico</button>
+    </div>
+  
+    <div style="padding-top: 20px;"  routerLink="/publicaciones">
+      <button class="btn btn-success">Agregar Servicio</button>
+    </div>
+  </div>
+ 
+</div>

@@ -1,0 +1,43 @@
+<div class="container" style="padding-top: 30px">
+
+  <div class="card">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col">
+              <label class="form-label">Nombre o numero consultorio</label>
+              <input type="text" class="form-control" [formControl]="nombreConsultorio">
+            </div>
+            <div class="col">
+              <label class="form-label">Extension telefono</label>
+              <input type="text" class="form-control" [formControl]="extensionConsultorio">
+            </div>
+          
+          </div>
+    
+          <div class="row">
+    
+              <div class="col">
+                <label class="form-label">Medico</label>
+                <select class="form-control" [formControl]="medicoSelect" (change)="medSelect($event)">
+                  <option *ngFor="let m of medicos" value="{{m.id}}" [disabled]="m.select === true">{{m.nombre}}</option>
+                </select>
+              </div>
+              <div class="col">
+                <label class="form-label">Servicio</label>
+                <select class="form-control" [formControl]="servicioSelect">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+              </div>
+            
+            </div>
+
+    </div>
+
+  </div>
+
+</div>
+

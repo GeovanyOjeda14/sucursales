@@ -27,6 +27,8 @@ import { OlvidoContraseniaComponent } from './components/olvido-contrasenia/olvi
 import { ConfirmarCuentaComponent } from './components/confirmar-cuenta/confirmar-cuenta.component';
 import { HistoriaClinicaComponent } from './components/historia-clinica/historia-clinica.component';
 import { HistorialCitasMedicoComponent } from './components/historial-citas-medico/historial-citas-medico.component';
+import { GestionarSucursalesComponent } from './components/gestionar-sucursales/gestionar-sucursales.component';
+import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 
 // Servicios
 
@@ -57,6 +59,8 @@ const routes: Routes = [
     {path : 'contactenosroot', component: ContactenosRootComponent, canActivate: [UserGuard] },
     {path : 'slidersroot', component: SlidersRootComponent, canActivate: [UserGuard] },
     {path : 'gestionar-pacientes', component: ListadoPacientesComponent, canActivate: [UserGuard]},
+    {path : 'gestionar-sucursales', component: GestionarSucursalesComponent, canActivate: [UserGuard]},
+    {path : 'crear-sucursal', component: CrearSucursalComponent, canActivate: [UserGuard]},
     {path : 'gestionar-pacientes/:cedula', component: ListadoPacientesComponent, canActivate: [UserGuard]},
     {path : 'vermedico/:id', component: VerPerfilMedicoComponent, canActivate: [UserGuard]},
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},
