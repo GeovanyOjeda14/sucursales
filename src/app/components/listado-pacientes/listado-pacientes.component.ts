@@ -30,7 +30,7 @@ export class ListadoPacientesComponent implements OnInit {
   @ViewChild('contentRemision') contentRemision: ElementRef;
   @ViewChild('contentCertificado') contentCertificado: ElementRef;
   @ViewChild('contentCertificadoObservaciones') contentCertificadoObservaciones: ElementRef;
-
+ 
   constructor(private _userService: UserService, private _medicoService: MedicoService, location: PlatformLocation, 
     private _aplicationService : ApplicationService, private _route: ActivatedRoute) { 
 

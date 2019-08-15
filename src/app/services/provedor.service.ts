@@ -210,6 +210,12 @@ export class ProvedorService {
       return this.http.get(this.url + '/sucursales/' + id_provedor, {headers : headers});
     }
 
+    // Ruta para pedir los consultorios de una sucursal
+    getConsultoriosSucursal(id_sucursal){
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.get(this.url + '/consulsuc/' + id_sucursal, {headers : headers});
+    }
+
 }
 
 

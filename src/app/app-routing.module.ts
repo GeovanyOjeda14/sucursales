@@ -61,6 +61,7 @@ const routes: Routes = [
     {path : 'gestionar-pacientes', component: ListadoPacientesComponent, canActivate: [UserGuard]},
     {path : 'gestionar-sucursales', component: GestionarSucursalesComponent, canActivate: [UserGuard]},
     {path : 'crear-sucursal', component: CrearSucursalComponent, canActivate: [UserGuard]},
+    {path : 'editar-sucursal/:id_sucursal', component: CrearSucursalComponent, canActivate: [UserGuard]},
     {path : 'gestionar-pacientes/:cedula', component: ListadoPacientesComponent, canActivate: [UserGuard]},
     {path : 'vermedico/:id', component: VerPerfilMedicoComponent, canActivate: [UserGuard]},
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},

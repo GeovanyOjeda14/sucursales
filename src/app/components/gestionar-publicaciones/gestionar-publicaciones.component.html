@@ -243,7 +243,7 @@
 
 
 
-                            <div class="row form">
+                            <!-- <div class="row form">
                               <div class="col">
                                 <label>*Departamento</label>
                                 <div class="form-group link" (mouseleave)="mouseLeave('departs')"
@@ -253,7 +253,6 @@
                                     <option *ngFor="let d of departamentos;let i = index" [selected]="i == posisionDtp"
                                       value="{{d.id_departamento}}">{{d.nombre}}
                                     </option>
-                                    <!-- <option [selected]="myPos" value="2">nariño2</option> -->
                                   </select>
                                   <a *ngIf="ver === 'departs'" (click)="editarSelect('departs')"
                                     class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
@@ -273,7 +272,7 @@
 
                                 </div>
                               </div>
-                            </div>
+                            </div> -->
 
 
                             <div class="row form">
@@ -303,7 +302,7 @@
 
                                 <label for="direccion">*Categoria</label>
                                 <div class="form-group link">
-                                  <input type="text" class="form-control" placeholder="Categoria" readonly>
+                                  <input type="text" class="form-control" placeholder="Categoria" value="{{editInfo.categoria}}" readonly>
 
                                 </div>
 
@@ -426,13 +425,13 @@
                               </div>
                             </div>
                             <div class="row form">
-                              <div class="col">
+                              <!-- <div class="col">
                                 <div class="form-group">
                                   <label for="medico">*Medico</label>
                                   <input type="text" class="form-control" id="medico" value="Pedrito perez" readonly
                                     aria-describedby="emailHelp" value="{{nombreMedico}}" placeholder="medico">
                                 </div>
-                              </div>
+                              </div> -->
                               <div class="col">
 
                                 <label for="direccion">*Direccion</label>
@@ -452,6 +451,8 @@
                                   maxima de caracteres (60)</p>
 
                               </div>
+
+                              <div class="col"></div>
                             </div>
                             <div class="form">
                               <div>
@@ -530,11 +531,11 @@
               </div>
               <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only">Atras</span>
               </a>
               <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
+                <span class="sr-only">Sigiente</span>
               </a>
             </div>
             </div>

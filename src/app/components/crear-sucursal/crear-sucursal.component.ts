@@ -3,6 +3,7 @@ import { ApplicationService } from '../../services/app.service';
 import { ProvedorService } from '../../services/provedor.service';
 import { UserService } from '../../services/user.service';
 import {FormControl, Validators} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-crear-sucursal',
@@ -57,20 +58,28 @@ export class CrearSucursalComponent implements OnInit {
   public tardeDesdeH3: any;
   public tardeHastaH3: any;
   public horario1;
+  public id_sucursal;
+  public ver;
+  public campo;
+  public infoSucursal;
+  public consultorioSelect;
+  public consultorioEliminar;
 
   // form control
   departSelect = new FormControl('', Validators.required);
   muniSelect = new FormControl('', Validators.required);
-  nombreSucursal = new FormControl('', Validators.required);
+  nombreSucursal = new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50),
+  Validators.pattern('[a-z A-z ñ]*')]);
   direccionSucursal = new FormControl('', Validators.required);
-  telefonoSucursal = new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(12), Validators.pattern('[0-9]*')]);
+  telefonoSucursal = new FormControl('', [Validators.pattern('[0-9]*'), Validators.minLength(7), Validators.maxLength(12)]);
   nombreConsultorio = new FormControl('', Validators.required);
   extensionConsultorio = new FormControl('');
   medicoSelect = new FormControl('', Validators.required);
   servicioSelect = new FormControl('', Validators.required);
 
 
-  constructor(private _aplicationService : ApplicationService, private _provedorService : ProvedorService, private _userService: UserService) {
+  constructor(private _aplicationService : ApplicationService, private _provedorService : ProvedorService, private _userService: UserService,
+    private _route: ActivatedRoute) {
     this.mymodel = 'informacion';
     this.horario1 = '1';
    }
@@ -78,12 +87,38 @@ export class CrearSucursalComponent implements OnInit {
   ngOnInit() {
 
     this.id_provedor = this._userService.getIdentity().id_provedor;
+
+    if(this._route.params) { 
+      this._route.params.subscribe(params => { 
+        if(params['id_sucursal']) {
+          this.id_sucursal = params['id_sucursal'];
+          //  console.log(params['id_sucursal']);
+          this.getInfoSucursal(this.id_sucursal);
+        } 
+    });
+    } 
+
     this.getMedicos(this.id_provedor);
     this.getServicios(this.id_provedor);
     this.getDepartamentos();
     this.horas();
     this.diasSemana()
+
+
+
     // this.meds();
+  }
+
+  getInfoSucursal(id_sucursal){
+    this._provedorService.getConsultoriosSucursal(id_sucursal).subscribe( (response)=> {
+      console.log(response);
+      this.infoSucursal = response;
+      this.nombreSucursal.setValue(this.infoSucursal.nombre);
+      this.telefonoSucursal.setValue(this.infoSucursal.telefono);
+      this.direccionSucursal.setValue(this.infoSucursal.direccion);
+    }, (err) => {
+        console.log(err);
+    } );
   }
 
   // meds() {
@@ -100,7 +135,7 @@ export class CrearSucursalComponent implements OnInit {
 
     this._aplicationService.getDepartamento().subscribe( (response) => {
       this.departamentos = response;
-      console.log(this.departamentos);
+      // console.log(this.departamentos);
     }, (err) => {
         
     });
@@ -115,14 +150,14 @@ export class CrearSucursalComponent implements OnInit {
     });
   }
 
-  municipioSelect(){
-    console.log(this.muniSelect.value);
-  }
+  // municipioSelect(){
+  //   console.log(this.muniSelect.value);
+  // }
 
   getServicios(id_provedor){
     this._provedorService.getPublications(id_provedor).subscribe( (response) => {
       this.servicios = response;
-      console.log(response);
+      // console.log(response);
     }, (err) => {
 
     });
@@ -311,35 +346,43 @@ export class CrearSucursalComponent implements OnInit {
 
 
     this._provedorService.getMedicosProvedor(id_provedor).subscribe( (response) => {
-        // console.log('med', response);
+        console.log('med', response);
         this.medics = response;
 
-        for(let i = 0; i < this.medics.length; i++) {
-          
-          let apellidos = this.medics[i].apellidos;
-          let avatar = this.medics[i].avatar;
-          let cedula = this.medics[i].cedula;
-          let id_provedor = this.medics[i].id_provedor;
-          let medico_id = this.medics[i].medico_id;
-          let members_id = this.medics[i].members_id;
-          let nombre = this.medics[i].nombre;
-          let nombres = this.medics[i].nombres;
-          let tarj_profecional = this.medics[i].tarj_profecional;
-          let telefono = this.medics[i].telefono;
-          let titulo = this.medics[i].titulo;
-          let whatsapp = this.medics[i].whatsapp;
-          let select = false;
+        this.medicosDisabled();
 
-          this.medicos.push({apellidos: apellidos, avatar: avatar, cedula: cedula, id_provedor: id_provedor, medico_id: medico_id,
-            members_id: members_id, nombre: nombre, nombres: nombres, tarj_profecional: tarj_profecional, telefono: telefono,
-            titulo: titulo, whatsapp: whatsapp, select: select});
-        }
-
-        console.log('med oe', this.medicos);
+        // console.log('med oe', this.medicos);
 
     }, (err) => {
 
     });
+  }
+
+  medicosDisabled(){
+    
+    for(let i = 0; i < this.medics.length; i++) {
+          
+      let apellidos = this.medics[i].apellidos;
+      let avatar = this.medics[i].avatar;
+      let cedula = this.medics[i].cedula;
+      let id_provedor = this.medics[i].id_provedor;
+      let medico_id = this.medics[i].medico_id;
+      let members_id = this.medics[i].members_id;
+      let nombre = this.medics[i].nombre;
+      let nombres = this.medics[i].nombres;
+      let tarj_profecional = this.medics[i].tarj_profecional;
+      let telefono = this.medics[i].telefono;
+      let titulo = this.medics[i].titulo;
+      let whatsapp = this.medics[i].whatsapp;
+      let activo = this.medics[i].activo;
+      let select = false;
+
+      this.medicos.push({apellidos: apellidos, avatar: avatar, cedula: cedula, id_provedor: id_provedor, medico_id: medico_id,
+        members_id: members_id, nombre: nombre, nombres: nombres, tarj_profecional: tarj_profecional, telefono: telefono,
+        titulo: titulo, whatsapp: whatsapp, select: select, activo : activo});
+    }
+
+    console.log(this.medicos);
   }
 
   crearConsultorio(bol){
@@ -386,17 +429,17 @@ export class CrearSucursalComponent implements OnInit {
       // horario 1
       case (this.mananaH1 === true && this.tardeH1 === false):
       h1 = { m_de: this.mananaDesdeH1 + ':00', m_hasta: this.mananaHastaH1 + ':00', t_de: undefined,
-      t_hasta: undefined, semana : this.diasH1};
+      t_hasta: undefined, semana : this.diasH1, id_servicio: this.servicioSelect.value.id_servicios};
       break;
 
       case (this.mananaH1 === false && this.tardeH1 === true):
       h1 = { m_de: undefined, m_hasta: undefined, t_de: this.tardeDesdeH1 + ':00',
-      t_hasta: this.tardeHastaH1 + ':00', semana : this.diasH1};
+      t_hasta: this.tardeHastaH1 + ':00', semana : this.diasH1, id_servicio: this.servicioSelect.value.id_servicios};
       break;
 
       case (this.mananaH1 === true && this.tardeH1 === true):
       h1 = { m_de: this.mananaDesdeH1 + ':00', m_hasta: this.mananaHastaH1 + ':00', t_de: this.tardeDesdeH1 + ':00',
-      t_hasta: this.tardeHastaH1 + ':00', semana : this.diasH1};
+      t_hasta: this.tardeHastaH1 + ':00', semana : this.diasH1, id_servicio: this.servicioSelect.value.id_servicios};
       break;
     }
 
@@ -404,56 +447,56 @@ export class CrearSucursalComponent implements OnInit {
           if (this.mananaH2 === true && this.tardeH2 === false) {
             // console.log('solo mañana 2');
           h2 = { m_de: this.mananaDesdeH2 + ':00', m_hasta: this.mananaHastaH2 + ':00', t_de: undefined,
-          t_hasta: undefined, semana : this.diasH2};
+          t_hasta: undefined, semana : this.diasH2, id_servicio: this.servicioSelect.value.id_servicios};
           }
 
           if (this.mananaH2 === false && this.tardeH2 === true) {
             // console.log('solo tarde 2');
             h2 = { m_de: undefined, m_hasta: undefined, t_de: this.tardeDesdeH2 + ':00',
-          t_hasta: this.tardeHastaH2 + ':00', semana : this.diasH2};
+          t_hasta: this.tardeHastaH2 + ':00', semana : this.diasH2, id_servicio: this.servicioSelect.value.id_servicios};
           }
 
           if (this.mananaH2 === true && this.tardeH2 === true) {
             // console.log('mañana tarde 2');
             h2 = { m_de: this.mananaDesdeH2 + ':00', m_hasta: this.mananaHastaH2 + ':00', t_de: this.tardeDesdeH2 + ':00',
-          t_hasta: this.tardeHastaH2 + ':00', semana : this.diasH2};
+          t_hasta: this.tardeHastaH2 + ':00', semana : this.diasH2, id_servicio: this.servicioSelect.value.id_servicios};
           }
         } else {
           h2 = { m_de: this.mananaDesdeH2, m_hasta: this.mananaHastaH2, t_de: this.tardeDesdeH2,
-          t_hasta: this.tardeHastaH2, semana : this.diasH2};
+          t_hasta: this.tardeHastaH2, semana : this.diasH2, id_servicio: this.servicioSelect.value.id_servicios};
         }
 
         if (this.horario3 === true) {
 
           if (this.mananaH3 === true && this.tardeH3 === false) {
             h3 = { m_de: this.mananaDesdeH3 + ':00', m_hasta: this.mananaHastaH3 + ':00', t_de: undefined,
-                t_hasta: undefined, semana : this.diasH3};
+                t_hasta: undefined, semana : this.diasH3, id_servicio: this.servicioSelect.value.id_servicios};
           }
 
           if (this.mananaH3 === false && this.tardeH3 === true) {
             h3 = { m_de: undefined, m_hasta: undefined, t_de: this.tardeDesdeH3  + ':00',
-                t_hasta: this.tardeHastaH3  + ':00', semana : this.diasH3};
+                t_hasta: this.tardeHastaH3  + ':00', semana : this.diasH3, id_servicio: this.servicioSelect.value.id_servicios};
           }
 
           if (this.mananaH3 === true && this.tardeH3 === true) {
             h3 = { m_de: this.mananaDesdeH3 + ':00', m_hasta: this.mananaHastaH3 + ':00', t_de: this.tardeDesdeH3  + ':00',
-                t_hasta: this.tardeHastaH3  + ':00', semana : this.diasH3};
+                t_hasta: this.tardeHastaH3  + ':00', semana : this.diasH3, id_servicio: this.servicioSelect.value.id_servicios};
           }
 
         } else {
           h3 = { m_de: this.mananaDesdeH3 , m_hasta: this.mananaHastaH3 , t_de: this.tardeDesdeH3 ,
-                t_hasta: this.tardeHastaH3 , semana : this.diasH3};
+                t_hasta: this.tardeHastaH3 , semana : this.diasH3, id_servicio: this.servicioSelect.value.id_servicios};
         }
 
       let horario = [h1, h2, h3];
-      let h4 = {horario: horario};
-      let horarios = [h4];
+      // let h4 = {horario: horario};
+      let horarios = horario;
 
       console.log(horarios);
 
       this.infoConsultorios.push({medico_id: this.medicoSelect.value.medico_id, nombre: this.nombreConsultorio.value,
-        extension: this.extensionConsultorio.value, id_servicio: this.servicioSelect.value.id_servicios, nombreMedico: this.medicoSelect.value.nombre,
-        nombreServicio : this.servicioSelect.value.nombre, horarios});
+        extension: this.extensionConsultorio.value, nombreMedico: this.medicoSelect.value.nombre,
+        nombreServicio : this.servicioSelect.value.nombre, horarios, id_servicio: this.servicioSelect.value.id_servicios});
 
         this.medicoFalse();
         this.limpiarForms();
@@ -469,6 +512,7 @@ export class CrearSucursalComponent implements OnInit {
     // console.log('aqui',this.nombreConsultorio.value);
   }
 
+  // crear sucursal
   medicoFalse() {
 
     console.log()
@@ -487,6 +531,7 @@ export class CrearSucursalComponent implements OnInit {
 
   }
 
+  // crear sucursal
   medicoTrue(){
 
     // console.log(this.medico_id);
@@ -1251,6 +1296,42 @@ export class CrearSucursalComponent implements OnInit {
   }
 
  
+  // ------------------------------------ METODOS EDITAR SUCURSAL  ----------------------------------------------------
+
+  mouseEnter(campo) {
+    this.ver = campo;
+    // console.log('campo');
+  }
+ 
+  mouseLeave() {
+    this.ver = '';
+  }
+
+  editar(campo) {
+    this.campo = document.getElementById(campo);
+    this.campo.readOnly = false;
+  }
+
+  cambio(campo) {
+    this.campo = document.getElementById(campo);
+    this.campo.readOnly = true;
+  }
+
+  verConsultorio(info){
+    this.consultorioSelect = info;
+    console.log(this.consultorioSelect);
+    document.getElementById('modal-ver-consultorio').click();
+  }
+
+  confirmacionEliminarConsulApi(info) {
+    this.eliminarConsultorio = info;
+    console.log(this.eliminarConsultorio);
+    document.getElementById('confi-eliminar-api').click();
+  }
+
+  eliminarConsultorioApi(){
+
+  }
 
 
 }

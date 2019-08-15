@@ -124,12 +124,12 @@ export class GestionarPublicacionesComponent implements OnInit {
     this.status = null;
 
     this._provedorService.getInfoEditar(id_publicacion).subscribe( (response) => {
-      // console.log(response);
+      console.log(response);
       this.editInfo = response;
-      this.getDepartamento(response.depar);
-      this.getMunicipio(response.id_departamento, response.id_muni);
-      this.getCategoria();
-      this.getMedico(response.medico_id);
+      // this.getDepartamento(response.depar);
+      // this.getMunicipio(response.id_departamento, response.id_muni);
+      // this.getCategoria();
+      // this.getMedico(response.medico_id);
       this.precioClientesPrevenir = response.precio_cliente_prevenir;
       this.validacionesDatosEdit();
       this.maxCitas = response.max_citas_ves;

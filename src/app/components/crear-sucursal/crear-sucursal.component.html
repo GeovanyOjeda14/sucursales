@@ -2,8 +2,20 @@
 <div class="container-fluid">
     <!-- <div id="btn-agregar-pub" class="text-center"> -->
         <br />
-        <div class="card-header">
+        <div class="card-header" *ngIf="!id_sucursal && mymodel === 'informacion'">
           <h1>Crear sucursal !</h1>
+        </div>
+
+        <div class="card-header" *ngIf="!id_sucursal && mymodel === 'consultorios'">
+            <h1>Crear Consultorios !</h1>
+          </div>
+
+        <div class="card-header" *ngIf="id_sucursal && mymodel === 'informacion'">
+            <h1>Editar sucursal !</h1>
+        </div>
+
+        <div class="card-header" *ngIf="id_sucursal && mymodel === 'consultorios'">
+            <h1>Gestionar consultorios !</h1>
         </div>
         <br />
      
@@ -21,6 +33,8 @@
         </ul>
       </div>
 
+      <!--  -------------------------CONSULTORIOS CREAR SUCURSAL ----------------------------------  -->
+
       <div *ngIf="infoConsultorios.length >= 1" style="padding-top: 30px;">
       
           <div class="contenedor" >
@@ -29,9 +43,14 @@
                 <div style="padding-top: 10px;" *ngFor="let ic of infoConsultorios; let i = index">
                     <div class="card" >
                         <div class="card-header"><div class="row">
-                            <div class="col">Consultorio : {{ic.nombreConsultorio}} </div>
+                            <div class="col-9">
+                              <div class="text-left">
+                                  Consultorio : {{ic.nombre}} 
+                              </div>  
+                             </div>
                             <div class="col">
-                              <div class="text-right"><button class="btn btn-danger" (click)="posisionAEliminar(i, ic.medico_id)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash-alt"></i></button></div>
+                              <div class="text-right"><button class="btn btn-danger" (click)="posisionAEliminar(i, ic.medico_id)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash-alt"></i></button>
+                              </div>
 
                               <!-- MODAL CONFIRMACION ELIMINAR Consultorio -->
 
@@ -71,83 +90,246 @@
               </div>
           </div>  
       </div> 
+
+
+      <!-- ----------------------------------- CONSULTORIOS EDITAR -------------------------------------------------- -->
+
+      <div *ngIf=" (infoSucursal && infoSucursal.consultorio.length >= 1) && mymodel === 'consultorios'" style="padding-top: 30px;">
+      
+          <div class="contenedor" >
+              <div class="tab-content scroll" id="nav-tabContent" >
+    
+                <div style="padding-top: 10px;" *ngFor="let ic of infoSucursal.consultorio; let i = index">
+                    <div class="card" >
+                        <div class="card-header"><div class="row">
+                            <div class="col-9">
+                              <div class="text-left">
+                                  Consultorio : {{ic.nombre}} 
+                              </div>
+                              </div>
+                        </div>       
+                    </div>
+            
+                      <div class="card-body">
+                        <p><strong>Medico : </strong>{{ic.medico}}</p>
+                        <p><strong>Servicio: </strong>{{ic.servicio}}</p>
+
+                        <div class="text-right" style="padding-top: 10px;">
+                            <button class="btn btn-primary" style="margin-right: 5px;" data-toggle="modal" data-target="#exampleModal" (click)="verConsultorio(ic)"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" (click)="confirmacionEliminarConsulApi(ic)"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                </div>               
+              </div>
+          </div>  
+      </div> 
+
+
     </div>
 
     <div class="col-md-9 col-sm-8" style="padding-left: 20px; padding-right: 20px;">
 
         <div [ngSwitch]="mymodel">
             <div *ngSwitchCase="'informacion'">
-              
-              <form >
 
-                <div class="row">
-                  <div class="col">
-                      <div class="form-group">
-                          <label class="form-label">Nombre sucursal *</label>
-                          <input type="text" class="form-control" [formControl]="nombreSucursal" maxlength="30">
+              <!-- ------------------------ INFORMACION CREAR SUCURSAL ---------------------------  -->
+              <div *ngIf="!id_sucursal">
+
+                  <form >
+
+                      <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label">Nombre sucursal *</label>
+                                <input type="text" class="form-control" [formControl]="nombreSucursal" maxlength="30">
+                              </div>
                         </div>
-                  </div>
-
-                  <div class="col">
-                      <div class="form-group">
-                          <label class="form-label">Telefono *</label>
-                          <input type="text" class="form-control" [formControl]="telefonoSucursal" [class.is-invalid]="(telefonoSucursal.touched && telefonoSucursal.hasError('required')) || (telefonoSucursal.hasError('pattern')) || telefonoSucursal.hasError('minLength') || telefonoSucursal.hasError('maxLength')"
-                          minlength="6" maxlength="12">
-
-                          <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('required')">
-                              Este campo es requerido.
-                            </div>
-  
-                            <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('pattern')">
-                              Este campo solo acepta numeros, sin espacion ni caracteres especiales.
-                            </div>
-
-                            <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('minLength')">
-                              Este campo solo acepta numeros, sin espacion ni caracteres especiales.
-                            </div>
-
-                            <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('maxLength')">
-                              Este campo solo acepta numeros, sin espacion ni caracteres especiales.
-                            </div>
+      
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label">Telefono *</label>
+                                <input type="text" class="form-control" [formControl]="telefonoSucursal" [class.is-invalid]="(telefonoSucursal.touched && telefonoSucursal.hasError('required')) || (telefonoSucursal.hasError('pattern')) || telefonoSucursal.hasError('minLength') || telefonoSucursal.hasError('maxLength')"
+                                minlength="6" maxlength="12">
+      
+                                <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('required')">
+                                    Este campo es requerido.
+                                  </div>
+        
+                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('pattern')">
+                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                  </div>
+      
+                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('minLength')">
+                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                  </div>
+      
+                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('maxLength')">
+                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                  </div>
+                              </div>
                         </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col form-group">
-                    <label class="form-label">Direccion *</label>
-                    <input type="text" class="form-control" [formControl]="direccionSucursal" maxlength="30">
-                  </div>
-                  <div class="col"></div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label class="form-label">Departamento *</label>
-                            <select name="" id="" class="form-control" [formControl]="departSelect" (change)="departamentoSelect($event)"> 
-                              <option *ngFor="let d of departamentos" value="{{d.id_departamento}}">{{d.nombre}}</option>
-                            </select>
+                      </div>
+      
+                      <div class="row">
+                        <div class="col form-group">
+                          <label class="form-label">Direccion *</label>
+                          <input type="text" class="form-control" [formControl]="direccionSucursal" maxlength="100">
+                        </div>
+                        <div class="col"></div>
+                      </div>
+      
+                      <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="form-label">Departamento *</label>
+                                  <select name="" id="" class="form-control" [formControl]="departSelect" (change)="departamentoSelect($event)"> 
+                                    <option *ngFor="let d of departamentos" value="{{d.id_departamento}}">{{d.nombre}}</option>
+                                  </select>
+                                </div>
                           </div>
-                    </div>
-  
-                    <div class="col">
-                        <div class="form-group">
-                            <label class="form-label">Municipio *</label>
-                            <select name="" id="" class="form-control" [formControl]="muniSelect" (change)="municipioSelect($event)"> 
-                              <option *ngFor="let m of municipios" value="{{m.id_municipio}}">{{m.nombre}}</option>
-                            </select>
+        
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="form-label">Municipio *</label>
+                                  <select name="" id="" class="form-control" [formControl]="muniSelect" > 
+                                    <option *ngFor="let m of municipios" value="{{m.id_municipio}}">{{m.nombre}}</option>
+                                  </select>
+                                </div>
                           </div>
+                        </div>
+      
+                    </form>
+      
+                    <div class="text-right" style="padding-top: 10px;">
+                      <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !this.muniSelect.value || !direccionSucursal.valid">Siguiente</button>
                     </div>
-                  </div>
+      
 
-              </form>
-
-              <div class="text-right" style="padding-top: 10px;">
-                <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !this.muniSelect.value || !direccionSucursal.valid">Siguiente</button>
               </div>
 
 
+              <!-- ---------------------------- INFORMACION EDITAR SUCURSAL --------------------------------- -->
+              <div *ngIf="id_sucursal && infoSucursal">
+
+                  <form >
+
+                      <div class="row">
+
+
+                          <!-- <div class="col" (mouseleave)="mouseLeave('nombre')" (mouseenter)="mouseEnter('nombre')">
+                              <label class="form-label">Nombre</label>
+                              <div style="display:flex">
+                                  <input type="text" id="nombre" class="form-control" formControlName="nombre" [class.is-invalid]="datos.get('nombre').errors" (change)="cambio('nombre')" readonly>
+                                  <a *ngIf="ver === 'nombre'" (click)="editar('nombre')" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                              </div>
+                             
+              
+                              <div *ngIf="datos.get('nombre').errors">
+                                <p class="alerta-error" *ngIf="datos.get('nombre').hasError('required')">* El campo es requerido.</p>
+                                <p class="alerta-error" *ngIf="datos.get('nombre').hasError('minlength')">Cantidad minima de caracteres (2).</p>
+                                <p class="alerta-error" *ngIf="datos.get('nombre').hasError('maxlength')">Cantidad maxima de caracteres (50).</p>
+                                <p class="alerta-error" *ngIf="datos.get('nombre').hasError('pattern')">Este campo solo acepta letras. </p>
+                              </div>
+              
+                            </div> -->
+
+
+                        <div class="col" (mouseleave)="mouseLeave('nombre')" (mouseenter)="mouseEnter('nombre')">
+                            <div class="form-group">
+                                <label class="form-label">Nombre sucursal *</label>
+                                <div style="display:flex">
+                                    <input type="text" id="nombre" class="form-control" [formControl]="nombreSucursal" [class.is-invalid]="nombreSucursal.errors" (change)="cambio('nombre')" readonly maxlength="30">
+                                    <a *ngIf="ver === 'nombre'" (click)="editar('nombre')" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                                </div>
+
+                                <div *ngIf="nombreSucursal.errors">
+                                    <p class="alerta-error" *ngIf="nombreSucursal.hasError('required')">* El campo es requerido.</p>
+                                    <p class="alerta-error" *ngIf="nombreSucursal.hasError('minlength')">Cantidad minima de caracteres (2).</p>
+                                    <p class="alerta-error" *ngIf="nombreSucursal.hasError('maxlength')">Cantidad maxima de caracteres (50).</p>
+                                    <p class="alerta-error" *ngIf="nombreSucursal.hasError('pattern')">Este campo solo acepta letras. </p>
+                                  </div>
+                              </div>
+                        </div>
+
+
+      
+                        <div class="col" (mouseleave)="mouseLeave('telefono')" (mouseenter)="mouseEnter('telefono')">
+                            <div class="form-group">
+                                <label class="form-label">Telefono *</label>
+                                <div style="display: flex;">
+
+                                    <input type="text" id="telefono" class="form-control" [formControl]="telefonoSucursal" [class.is-invalid]="(telefonoSucursal.touched && telefonoSucursal.hasError('required')) || (telefonoSucursal.hasError('pattern')) || telefonoSucursal.hasError('minLength') || telefonoSucursal.hasError('maxLength')"
+                                    minlength="6" maxlength="12" (change)="cambio('telefono')" readonly>
+                                    <a *ngIf="ver === 'telefono'" (click)="editar('telefono')" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                                </div>
+                                
+                                <!-- input   [class.is-invalid]="datos.get('nombres').errors" -->
+                                <div *ngIf="telefonoSucursal.errors">
+                                  <p class="alerta-error" *ngIf="telefonoSucursal.hasError('pattern')">* Este campo solo acepta números sin caracteres especiales ni puntos.</p>
+                                  <p class="alerta-error" *ngIf="telefonoSucursal.hasError('minlength')">* Cantidad minima de caracteres (7).</p>
+                                  <p class="alerta-error" *ngIf="telefonoSucursal.hasError('maxlength')">* Cantidad maxima de caracteres (12).</p>
+                                </div>
+      
+                                
+                              </div>
+                        </div>
+                      </div>
+      
+                      <div class="row">
+
+                        <div class="col form-group" (mouseleave)="mouseLeave('direccion')" (mouseenter)="mouseEnter('direccion')">
+                          <label class="form-label">Direccion *</label>
+                          
+
+                          <div style="display: flex;">
+                              <input type="text" id="direccion" class="form-control" [formControl]="direccionSucursal" maxlength="100" [class.is-invalid]="direccionSucursal.errors" (change)="cambio('direccion')" readonly>
+                              <a *ngIf="ver === 'direccion'" (click)="editar('direccion')" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>
+                          </div>
+                         
+                          <div *ngIf="direccionSucursal.errors">
+                          <p class="alerta-error" *ngIf="direccionSucursal.hasError('required')">* El campo es requerido.</p>
+                          <p class="alerta-error" *ngIf="direccionSucursal.hasError('minlength')">Cantidad minima de caracteres (2).</p>
+                          <p class="alerta-error" *ngIf="direccionSucursal.hasError('maxlength')">Cantidad maxima de caracteres (100).</p>
+                        </div>
+
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                              <label class="form-label">Municipio *</label>
+                              <input type="text" class="form-control" readonly value="{{infoSucursal.municipio}}">
+                            </div>      
+                        </div>
+                      </div>
+<!--       
+                      <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="form-label">Departamento *</label>
+                                  <select name="" id="" class="form-control" [formControl]="departSelect" (change)="departamentoSelect($event)"> 
+                                    <option *ngFor="let d of departamentos" value="{{d.id_departamento}}">{{d.nombre}}</option>
+                                  </select>
+                                </div>
+                          </div>
+        
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="form-label">Municipio *</label>
+                                  <select name="" id="" class="form-control" [formControl]="muniSelect" (change)="municipioSelect($event)"> 
+                                    <option *ngFor="let m of municipios" value="{{m.id_municipio}}">{{m.nombre}}</option>
+                                  </select>
+                                </div>
+                          </div>
+                        </div> -->
+      
+                    </form>
+      
+                    <div class="text-right" style="padding-top: 10px;">
+                      <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !direccionSucursal.valid">Siguiente</button>
+                    </div>
+
+              </div>
+              
             </div>
 
             <div *ngSwitchCase="'consultorios'">
@@ -176,7 +358,7 @@
                                 <div class="col">
                                   <label class="form-label">Medico *</label>
                                   <select name="" id="select-med" class="form-control" [formControl]="medicoSelect">
-                                    <option *ngFor="let m of medicos" [ngValue]="m" [disabled]="m.select === true">{{m.nombre}}</option>
+                                    <option *ngFor="let m of medicos" [ngValue]="m" [disabled]="m.select === true || m.activo === 'true'">{{m.nombre}}</option>
                                   </select>     
                                 </div>
           
@@ -552,6 +734,103 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" routerLink="/gestionar-sucursales">Aceptar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------------------------------- MODALES EDITA SUCURSAL ---------------------------------------------  -->
+
+<!-- Button trigger modal -->
+<button type="button" id="confi-eliminar-api" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal-eliminar">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal-eliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmacion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         ¿ Estas seguro que deseas eliminar este consultorio ? 2
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliminarConsultorioApi()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- -------------------------------------------- MODAL VER CONSULTORIO -------------------------------------------  -->
+
+  <!-- Large modal -->
+<button type="button" id="modal-ver-consultorio" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg-ver">Large modal</button>
+
+<div class="modal fade bd-example-modal-lg-ver" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" *ngIf="consultorioSelect"> Consultorio : {{consultorioSelect.nombre}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" *ngIf="consultorioSelect">
+
+            <div class="row">
+              <div class="col">
+                <label class="form-label">Medico</label>
+                <input type="text" class="form-control" value="{{consultorioSelect.medico}}" readonly> 
+              </div>
+              <div class="col">
+                <label class="form-label">Servicio</label>
+                <input type="text" class="form-control" value="{{consultorioSelect.servicio}}" readonly> 
+              </div>
+            </div>
+
+            <div style="padding-top: 35px;">
+              <div class="text-center"><h5>Horarios</h5></div>
+
+              <div style="padding-top: 10px;" *ngFor="let h of consultorioSelect.horario; let i = index">
+              
+                <div class="card">
+                  <div class="card-header">Horario {{i+1}}</div>
+                  <div class="card-body">
+                    <h5>dias</h5>
+                    <div style="display: flex;">
+                        <div *ngFor="let d of h.dias">
+                            <p>{{d.dia}} &nbsp;&nbsp;</p>           
+                        </div>
+                    </div>
+                  
+                    <div class="row">
+
+                      <div class="col">
+                          <h5>Mañana</h5>
+                          <p><strong>Desde : </strong> {{h.de_maniana}} a.m</p>
+                          <p><strong>Hasta :</strong> {{h.a_maniana}} a.m</p>
+                      </div>
+
+                      <div class="col">
+                          <h5>Tarde</h5>
+                          <p><strong>Desde :</strong> {{h.de_tarde}}</p>
+                          <p><strong>Hasta :</strong> {{h.a_tarde}}</p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+
+          </div>
     </div>
   </div>
 </div>

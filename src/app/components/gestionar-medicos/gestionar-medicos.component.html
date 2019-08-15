@@ -268,9 +268,8 @@
               </div>
 
               
-                <button type="submit" class="btn btn-primary" [disabled]="!this.datos.valid">Agregar</button>
-             
-
+                <button type="submit" class="btn btn-primary" [disabled]="!this.datos.valid || loading">Agregar</button>
+            
             </form>
           </div>
 
