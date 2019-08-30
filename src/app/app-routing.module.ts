@@ -12,13 +12,13 @@ import { TerminosYCondicionesComponent } from './components/terminos-y-condicion
 import { HomeComponent } from './components/home/home.component';
 import { BuscarCitaComponent } from './components/buscar-cita/buscar-cita.component';
 import { SlidersComponent } from './components/sliders/sliders.component';
-import { OrdenLlegadaComponent } from './components/orden-llegada/orden-llegada.component';
+// import { OrdenLlegadaComponent } from './components/orden-llegada/orden-llegada.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { CalendarioCitasComponent } from './components/calendario-citas/calendario-citas.component';
-import { GestionarCitasComponent } from './components/gestionar-citas/gestionar-citas.component';
+// import { GestionarCitasComponent } from './components/gestionar-citas/gestionar-citas.component';
 import { AprobarPublicacionesComponent } from './components/aprobar-publicaciones/aprobar-publicaciones.component';
 import { ContactenosRootComponent } from './components/contactenos-root/contactenos-root.component';
-import { SlidersRootComponent } from './components/sliders-root/sliders-root.component';
+// import { SlidersRootComponent } from './components/sliders-root/sliders-root.component';
 import { ListadoPacientesComponent } from './components/listado-pacientes/listado-pacientes.component';
 import { VerPerfilMedicoComponent } from './components/ver-perfil-medico/ver-perfil-medico.component';
 import { CrearPublicacionComponent } from './components/crear-publicacion/crear-publicacion.component';
@@ -34,6 +34,8 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
 
 // Este servicio sirve para restringuir el acceso a los usuarios no authentificados.
 import { UserGuard } from './services/user.guard';
+import { UserAdmin } from './services/user_admin.guard';
+import { UserMedico } from './services/user_medico.guard';
 
 const routes: Routes = [
     {path: '', component : LoginComponent},
@@ -44,28 +46,28 @@ const routes: Routes = [
     {path : 'home', component: HomeComponent, canActivate: [UserGuard]},
     {path : 'confirmar-cuenta', component: ConfirmarCuentaComponent},
     {path : 'publicaciones', component: GestionarPublicacionesComponent, canActivate: [UserGuard]},
-    {path : 'medicos', component: GestionarMedicosComponent, canActivate: [UserGuard]},
+    {path : 'medicos', component: GestionarMedicosComponent, canActivate: [UserGuard, UserAdmin]},
     {path : 'contactenos', component: ContactenosComponent, canActivate: [UserGuard] },
     {path : 'terminosycondiciones', component: TerminosYCondicionesComponent, canActivate: [UserGuard] },
     {path : 'buscarcita', component: BuscarCitaComponent, canActivate: [UserGuard] },
     {path : 'slider', component: SlidersComponent, canActivate: [UserGuard] },
-    {path : 'ordenllegada', component: OrdenLlegadaComponent, canActivate: [UserGuard] },
+    // {path : 'ordenllegada', component: OrdenLlegadaComponent, canActivate: [UserGuard] },
     {path : 'perfil', component: PerfilComponent, canActivate: [UserGuard] },
     {path : 'calendario', component: CalendarioCitasComponent, canActivate: [UserGuard] },
     {path : 'historial-citas', component: HistorialCitasMedicoComponent, canActivate: [UserGuard] },
     {path : 'mis-servicios', component: MisServiciosComponent, canActivate: [UserGuard] },
-    {path : 'citas', component: GestionarCitasComponent, canActivate: [UserGuard] },
+    // {path : 'citas', component: GestionarCitasComponent, canActivate: [UserGuard] },
     {path : 'apropublicaciones', component: AprobarPublicacionesComponent, canActivate: [UserGuard] },
     {path : 'contactenosroot', component: ContactenosRootComponent, canActivate: [UserGuard] },
-    {path : 'slidersroot', component: SlidersRootComponent, canActivate: [UserGuard] },
-    {path : 'gestionar-pacientes', component: ListadoPacientesComponent, canActivate: [UserGuard]},
-    {path : 'gestionar-sucursales', component: GestionarSucursalesComponent, canActivate: [UserGuard]},
-    {path : 'crear-sucursal', component: CrearSucursalComponent, canActivate: [UserGuard]},
-    {path : 'editar-sucursal/:id_sucursal', component: CrearSucursalComponent, canActivate: [UserGuard]},
-    {path : 'gestionar-pacientes/:cedula', component: ListadoPacientesComponent, canActivate: [UserGuard]},
+    // {path : 'slidersroot', component: SlidersRootComponent, canActivate: [UserGuard ] },
+    {path : 'gestionar-pacientes', component: ListadoPacientesComponent, canActivate: [UserGuard, UserMedico]},
+    {path : 'gestionar-sucursales', component: GestionarSucursalesComponent, canActivate: [UserGuard, UserAdmin]},
+    {path : 'crear-sucursal', component: CrearSucursalComponent, canActivate: [UserGuard, UserAdmin]},
+    {path : 'editar-sucursal/:id_sucursal', component: CrearSucursalComponent, canActivate: [UserGuard, UserAdmin]},
+    {path : 'gestionar-pacientes/:cedula', component: ListadoPacientesComponent, canActivate: [UserGuard, UserMedico]},
     {path : 'vermedico/:id', component: VerPerfilMedicoComponent, canActivate: [UserGuard]},
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},
-    {path : 'historia-clinica/:id/:id_servicio', component: HistoriaClinicaComponent, canActivate: [UserGuard]},
+    {path : 'historia-clinica/:id/:id_servicio', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
     {path: '**', component: LoginComponent}
 
 ];

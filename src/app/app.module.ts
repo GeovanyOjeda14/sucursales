@@ -36,6 +36,10 @@ import { ProvedorService } from './services/provedor.service';
 import { Global } from './services/global';
 import { UserService } from './services/user.service';
 import { UserGuard } from './services/user.guard';
+import { SucursalService } from './services/sucursales.service';
+import { UserAdmin } from './services/user_admin.guard';
+import { UserMedico } from './services/user_medico.guard';
+import { UserSucursal } from './services/user_sucursal.guard';
 
 // Modulo de loader
 import { NgxLoadingModule } from 'ngx-loading';
@@ -151,6 +155,10 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     ProvedorService,
     UserGuard,
     UserService,
+    SucursalService,
+    UserAdmin,
+    UserMedico,
+    UserSucursal,
     Global,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],

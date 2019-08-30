@@ -144,7 +144,7 @@ export class CalendarioCitasComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private _aplicatioService: ApplicationService, private _userService: UserService,
               private _provedorService: ProvedorService, private _medicoService: MedicoService, location: PlatformLocation) {
   this.today = moment(new Date().toISOString()).format('YYYY-MM-DD');
-  this.mymodel = 'agenda';             
+  // this.mymodel = 'agenda';             
 
     location.onPopState(() => {
         document.getElementById('btn-cerrar-modal-ver-cita').click();
@@ -518,7 +518,7 @@ export class CalendarioCitasComponent implements OnInit {
 
   hourSegmentClicked(ev) {
 
-    if (this.medico === false && this.mymodel === 'agenda') {
+    if (this.medico === false) {
       window.scroll(0, 0);
 
     // let today = moment(new Date().toISOString()).format('YYYY-M-DD HH:mm:ss');
@@ -960,15 +960,12 @@ export class CalendarioCitasComponent implements OnInit {
     this.status = false;
     this.statusT = false;
 
-    if(this.mymodel === 'agenda'){
-      this.getEventos();
-    }
 
-    if(this.mymodel === 'historial') {
+      this.getEventos();
       let anio = moment(new Date).format('YYYY');
       let mes =  moment(new Date).format('M');
       this.getEventosHistorial(mes,anio);
-    }
+    
     
 
   }
@@ -1157,7 +1154,7 @@ export class CalendarioCitasComponent implements OnInit {
               if (respuesta[i].id_mascotas) {
 
               let id_usuarios = respuesta[i].id_usuarios;
-              let color = respuesta[i].color;
+              // let color = respuesta[i].color;
               let especie = respuesta[i].especie;
               let esterilizado = respuesta[i].esterilizado;
               let fecha_nacimineto = respuesta[i].fecha_nacimineto;
@@ -1335,37 +1332,37 @@ export class CalendarioCitasComponent implements OnInit {
 
 
   // metodo para cambiar de pestaña de agenda a historial
-  pestana(pestana) {
-    // console.log('aqui');
+  // pestana(pestana) {
+  //   // console.log('aqui');
 
-    this.mymodel = pestana;
-    var li = document.getElementById(this.mymodel);
+  //   this.mymodel = pestana;
+  //   var li = document.getElementById(this.mymodel);
 
-    if (this.mymodel === 'agenda') {
+  //   if (this.mymodel === 'agenda') {
 
-        let l = document.getElementById('historial');
-        l.className = 'list-group-item';
-        li.className = 'list-group-item active';
-        console.log('agenda');
-        if(this.serviciosSelect.value.id_servicios){
-          this.getEventos();
-          this.setView(CalendarView.Month);
-        }
-    }
+  //       let l = document.getElementById('historial');
+  //       l.className = 'list-group-item';
+  //       li.className = 'list-group-item active';
+  //       console.log('agenda');
+  //       if(this.serviciosSelect.value.id_servicios){
+  //         this.getEventos();
+  //         this.setView(CalendarView.Month);
+  //       }
+  //   }
 
-    if (li.id === 'historial') {
-            let l = document.getElementById('agenda');
-            l.className = 'list-group-item';
-            li.className = 'list-group-item active';
+  //   if (li.id === 'historial') {
+  //           let l = document.getElementById('agenda');
+  //           l.className = 'list-group-item';
+  //           li.className = 'list-group-item active';
 
-            if(this.serviciosSelect.value.id_servicios) {
-              let anio = moment(new Date).format('YYYY');
-              let mes =  moment(new Date).format('M');
-              this.getEventosHistorial(mes, anio);
-              this.setView(CalendarView.Month);
-            }
-          }
-  }
+  //           if(this.serviciosSelect.value.id_servicios) {
+  //             let anio = moment(new Date).format('YYYY');
+  //             let mes =  moment(new Date).format('M');
+  //             this.getEventosHistorial(mes, anio);
+  //             this.setView(CalendarView.Month);
+  //           }
+  //         }
+  // }
 
   closeOpenMonthViewDay(ev){
     // console.log(ev);

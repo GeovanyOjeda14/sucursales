@@ -195,25 +195,24 @@
       </div>
       <div class="col-md-4 col-sm-3">
        
-  <mat-form-field class="example-full-width">
+  <!-- <mat-form-field class="example-full-width">
       <input type="text" matInput aria-label="Dirección" placeholder="Dirección" formControlName="direccion" required>
       <mat-error *ngIf="datos.get('direccion').hasError('required')">Este campo es requerido.</mat-error>
       <mat-error *ngIf="datos.get('direccion').hasError('maxlength')">El campo no puede tener más de 60 caracteres.</mat-error>
+    </mat-form-field> -->
+
+    <mat-form-field class="example-full-width">
+      <input type="text" matInput aria-label="Link del video publicitario en YouTube" placeholder="Link del video publicitario en YouTube" formControlName="video">
     </mat-form-field>
+
       </div>
+
       <div class="col-md-1 col-sm-0"></div>
   </div>
   
   <div class="row">
       <div class="col-md-1 col-sm-0"></div>
-      <div class="col-md-4 col-sm-3">
-          <mat-form-field class="example-full-width">
-              <input type="text" matInput aria-label="Link del video publicitario en YouTube" placeholder="Link del video publicitario en YouTube" formControlName="video">
-            </mat-form-field>
-          
-          
-      </div>
-      <div class="col-md-4 col-sm-3">
+      <div class="col">
        
           <mat-form-field class="example-full-width">
               <textarea matInput placeholder="Descripción del servicio"  formControlName="descripcion" minlength="40" required></textarea>

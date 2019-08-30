@@ -28,12 +28,12 @@
                 <a class="nav-link" routerLink="/publicaciones" routerLinkActive="active-navegacion">Mis servicios</a>
             </li>
 
-            <li class="nav-item" *ngIf="!identity.medico_id">
+            <li class="nav-item" *ngIf="!identity.medico_id && !identity.id_sucursales">
               <a class="nav-link" routerLink="/gestionar-sucursales" routerLinkActive="active-navegacion">Mis sucursales</a>
           </li>
 
           
-            <li class="nav-item" *ngIf="!identity.medico_id">
+            <li class="nav-item" *ngIf="!identity.medico_id && !identity.id_sucursales">
                 <a class="nav-link" routerLink="/medicos" routerLinkActive="active-navegacion">Gestionar medicos</a>
             </li>
 

@@ -4,7 +4,7 @@
     <!-- <div id="btn-agregar-pub" class="text-center"> -->
         <br />
         <div class="card-header">
-          <h1>Mis Publicaciones !</h1>
+          <h1>Mis servicios !</h1>
         </div>
         <br />
      
@@ -84,7 +84,8 @@
             <div class="col-lg-7">
               <h3><strong>{{p.nombre}}</strong></h3>
               <p><strong>Categoria : </strong>{{p.categoria}}</p>
-              <p>{{p.descripcion}}</p>
+              <p><strong>Descripcion : </strong>{{p.descripcion}}</p>
+              <div><p><strong>Creado por : </strong>{{p.creadoPor}}</p></div>      
               <div class="row" style="height: 5vw"></div>
               <div class="row">
                 <div class="col-md-5">
@@ -424,14 +425,15 @@
                                   solo acepta numeros</p>
                               </div>
                             </div>
-                            <div class="row form">
-                              <!-- <div class="col">
+
+                            <!-- <div class="row form">
+                               <div class="col">
                                 <div class="form-group">
                                   <label for="medico">*Medico</label>
                                   <input type="text" class="form-control" id="medico" value="Pedrito perez" readonly
                                     aria-describedby="emailHelp" value="{{nombreMedico}}" placeholder="medico">
                                 </div>
-                              </div> -->
+                              </div> 
                               <div class="col">
 
                                 <label for="direccion">*Direccion</label>
@@ -453,7 +455,8 @@
                               </div>
 
                               <div class="col"></div>
-                            </div>
+                            </div> -->
+                            
                             <div class="form">
                               <div>
                                 <label for="descripcion">*Descripcion</label>

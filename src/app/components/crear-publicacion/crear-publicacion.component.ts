@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Publicacion } from '../../models/publicacion';
 import { UserService } from '../../services/user.service';
 import { ApplicationService } from '../../services/app.service';
 import { ProvedorService } from '../../services/provedor.service';
@@ -120,7 +119,7 @@ export class CrearPublicacionComponent implements OnInit {
       precio: ['', [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]],
       descuento: ['', [Validators.max(100), Validators.min(10), Validators.pattern('[0-9]*')]],
       video : [''],
-      direccion : ['', [Validators.required, Validators.maxLength(60)]],
+      // direccion : ['', [Validators.required, Validators.maxLength(60)]],
       descripcion: ['', [Validators.required, Validators.minLength(40)]],
       // check: [false, [Validators.requiredTrue]],
     });
@@ -1336,32 +1335,32 @@ _handleReaderLoaded(readerEvt) {
   let user = this._userService.getIdentity();
 
   this.formulario = {id_usuario: user.id_provedor, token: token, nombre: this.datos.value.nombre,
-        precio: this.datos.value.precio, direccion: this.datos.value.direccion, imagenes: this.imagenes,
+        precio: this.datos.value.precio, imagenes: this.imagenes,
         descuento: this.datos.value.descuento, duracion: this.datos.value.duracion,
         id_ctga: this.myControl.value.id_categoria, video : this.datos.value.video,
-        max_citas: this.numeroMaxCitas.value, descripcion: this.datos.value.descripcion };
+        max_citas: this.numeroMaxCitas.value, descripcion: this.datos.value.descripcion, creador: user.nombre };
 
 
       console.log(this.formulario);
 
-      // this._provedorService.pubService(this.formulario).subscribe( (res) => {
-      // this.loading = false;
-      //   // console.log(res);
+      this._provedorService.pubService(this.formulario).subscribe( (res) => {
+      this.loading = false;
+        // console.log(res);
  
-      // if (res[0].agregado === true) {
-      //   document.getElementById('btn-publicacion-exitosa').click();
-      // } else {
-      //   // this.pg.status = 'error';
-      //   // this.pg.statusText = 'Error al agregar el servicio.';
-      //   this.statusImgs = true;
-      //   this.textoStatus = 'Error al agregar el servicio.';
-      // }
-      // }, (err) => {
-      //   this.statusImgs = true;
-      //   this.textoStatus = 'Error al agregar el servicio.';
-      //   this.loading = false;
-      //   // console.log(err);
-      // });
+      if (res[0].agregado === true) {
+        document.getElementById('btn-publicacion-exitosa').click();
+      } else {
+        // this.pg.status = 'error';
+        // this.pg.statusText = 'Error al agregar el servicio.';
+        this.statusImgs = true;
+        this.textoStatus = 'Error al agregar el servicio.';
+      }
+      }, (err) => {
+        this.statusImgs = true;
+        this.textoStatus = 'Error al agregar el servicio.';
+        this.loading = false;
+        // console.log(err);
+      });
 
   }
 

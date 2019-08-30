@@ -198,10 +198,37 @@
                                 </div>
                           </div>
                         </div>
+
+                        <div class="container-fluid">
+                          <br />
+                          <div class="card-header" style="padding-top:10px !important">
+                            <h1>Información de la cuenta</h1>
+                          </div>
+                          <br />
+                        </div>  
+
+                        <div class="row">
+                          <div class="col">
+                            <label class="form-label">Nombre de usuario</label>
+                            <input type="text" class="form-control" [formControl]="username">
+                          </div>
+                          <div class="col">
+                              <label class="form-label">Contraseña</label>
+                              <input type="password" class="form-control" [formControl]="pssw">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col">
+                              <label class="form-label">Confirmar contraseña</label>
+                              <input type="password" class="form-control" [formControl]="psswConfirm">
+                          </div>
+                          <div class="col"></div>
+                        </div>
       
                     </form>
       
-                    <div class="text-right" style="padding-top: 10px;">
+                    <div class="text-right" style="padding: 30px;">
                       <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !this.muniSelect.value || !direccionSucursal.valid">Siguiente</button>
                     </div>
       
@@ -833,4 +860,8 @@
           </div>
     </div>
   </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <img src="/assets/pulso.gif" alt="">
 </div>

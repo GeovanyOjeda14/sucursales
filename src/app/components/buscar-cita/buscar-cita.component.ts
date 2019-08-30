@@ -64,20 +64,20 @@ export class BuscarCitaComponent implements OnInit {
     let identity = this._userService.getIdentity().id_provedor;
     if (identity !== undefined) {
       this.medico = false;
-      // console.log('es provedor');
+    //   // console.log('es provedor');
       this.citasUsuario();
 
-      this.intervalo =  setInterval(() => {
-        this.citasUsuario() }, 30000);
+    //   this.intervalo =  setInterval(() => {
+    //     this.citasUsuario() }, 30000);
     } else {
       this.medico = true;
-      // console.log('es medico');
-      this.medico_id = this._userService.getIdentity().medico_id;
-      this.getCitasMedico(this._userService.getIdentity().medico_id);
+      // // console.log('es medico');
+      // this.medico_id = this._userService.getIdentity().medico_id;
+      // this.getCitasMedico(this._userService.getIdentity().medico_id);
 
-      this.intervalo =  setInterval(() => {
-      this.getCitasMedico(this._userService.getIdentity().medico_id);
-      }, 30000);
+      // this.intervalo =  setInterval(() => {
+      // this.getCitasMedico(this._userService.getIdentity().medico_id);
+      // }, 30000);
     }
 
   }
@@ -104,7 +104,7 @@ export class BuscarCitaComponent implements OnInit {
     this.home.loading = true;
     this.confirmacionEli = false;
     let identity = this._userService.getIdentity();
-    this._provedorService.ordenCita(this.cedula.value, identity.id_provedor).subscribe( (response) => {
+    this._provedorService.ordenCita(this.cedula.value, identity.id_sucursales).subscribe( (response) => {
       // console.log(response);
 
       let bol = true;
@@ -274,10 +274,11 @@ export class BuscarCitaComponent implements OnInit {
     this.home.cerrarAlerta();
     // console.log('oe');
     this.loading = true;
-    let id_provedor = this._userService.getIdentity();
-    this._provedorService.getCitasActivas(id_provedor.id_provedor).subscribe( (response) => {
+    // d_sucursales
+    let identity = this._userService.getIdentity();
+    this._provedorService.getCitasActivas(identity.id_sucursales).subscribe( (response) => {
       // console.log('aquii');
-      // console.log(response);
+      console.log(response);
       this.loading = false;
       this.citasAgregadas = response[0];
       this.citasAgregadasMasc = response[1];
@@ -353,7 +354,7 @@ export class BuscarCitaComponent implements OnInit {
   cambiarEstado(info, tipo) {
     this.loading = true;
     // console.log(info);
-    console.log(info.id_citas_activas , info.servicios_idservicios, info.categoria);
+    // console.log(info.id_citas_activas , info.id_consultorio, info.categoria);
     var id_servicio;
     var ctActivas: boolean;
 
@@ -375,7 +376,7 @@ export class BuscarCitaComponent implements OnInit {
 
       if (ctActivas === false) {
         // console.log('metodo 1');
-         this._provedorService.putCambiarEstadoCitas(info.id_citas_activas , info.servicios_idservicios, info.categoria)
+         this._provedorService.putCambiarEstadoCitas(info.id_citas_activas , info.id_consultorio, info.categoria)
                            .subscribe( (response) => {
                              this.loading = false;
                             if (response.activa === false && response.activada === true) {
@@ -423,7 +424,7 @@ export class BuscarCitaComponent implements OnInit {
     if (ctActivas === false) {
 
         // console.log(info.id_citas_activas , info.id_servicios, info.categoria);
-       this._provedorService.putCambiarEstadoCitas(info.id_citas_activas , info.id_servicios, info.categoria)
+       this._provedorService.putCambiarEstadoCitas(info.id_citas_activas , info.id_consultorio, info.categoria)
                          .subscribe( (response) => {
                            this.loading = false;
                           if (response.activa === false && response.activada === true) {

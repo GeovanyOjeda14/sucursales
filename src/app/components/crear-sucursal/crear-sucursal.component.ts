@@ -4,6 +4,7 @@ import { ProvedorService } from '../../services/provedor.service';
 import { UserService } from '../../services/user.service';
 import {FormControl, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-crear-sucursal',
@@ -73,10 +74,15 @@ export class CrearSucursalComponent implements OnInit {
   direccionSucursal = new FormControl('', Validators.required);
   telefonoSucursal = new FormControl('', [Validators.pattern('[0-9]*'), Validators.minLength(7), Validators.maxLength(12)]);
   nombreConsultorio = new FormControl('', Validators.required);
+  pssw = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  psswConfirm = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  username = new FormControl('', [Validators.required]);
   extensionConsultorio = new FormControl('');
   medicoSelect = new FormControl('', Validators.required);
   servicioSelect = new FormControl('', Validators.required);
 
+  // loading
+  public loading;
 
   constructor(private _aplicationService : ApplicationService, private _provedorService : ProvedorService, private _userService: UserService,
     private _route: ActivatedRoute) {
@@ -558,21 +564,25 @@ export class CrearSucursalComponent implements OnInit {
 
   guardar(){
     
+    this.loading = true;
+
+    let password = CryptoJS.SHA512(this.pssw.value).toString(CryptoJS.enc.Hex);
     
     let info = {nombre: this.nombreSucursal.value, telefono: this.telefonoSucursal.value, id_municipio: this.muniSelect.value,
-      direccion: this.direccionSucursal.value , id_provedor: this.id_provedor, consultorios: this.infoConsultorios};
+      direccion: this.direccionSucursal.value , id_provedor: this.id_provedor, consultorios: this.infoConsultorios, pssw: password,
+      usuario : this.username.value};
 
     console.log(info);
 
     this._provedorService.crearSucursal(info).subscribe( (response) => {
       console.log(response);
-
+      this.loading = false;
       if(response === true) {
         document.getElementById('btn-publicacion-exitosa').click();
       }
 
     }, (err) => {
-
+      this.loading = false;
     } );
   }
 

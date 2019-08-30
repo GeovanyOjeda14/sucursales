@@ -4,6 +4,7 @@ import { Global } from '../../services/global';
 import { Provedor } from '../../models/provedor';
 import { ProvedorService } from '../../services/provedor.service';
 import { MedicoService } from '../../services/medico.service';
+import { SucursalService } from '../../services/sucursales.service';
 import { EstudiosMedicos } from '../../models/estudios-medicos';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import { PlatformLocation } from '@angular/common';
@@ -13,7 +14,7 @@ import * as moment from 'moment';
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css'],
-  providers: [UserService, Global, ProvedorService, MedicoService]
+  providers: [UserService, Global, ProvedorService, MedicoService, SucursalService]
 })
 export class PerfilComponent implements OnInit {
   public identity;
@@ -31,10 +32,11 @@ export class PerfilComponent implements OnInit {
   public datosAdmin: FormGroup;
   public loading;
   public today;
-
+  public infoSucursal;
 
   constructor(public _userService: UserService, public global: Global, public _provedorService: ProvedorService,
-              public _medicoService: MedicoService, public formBuilder: FormBuilder, location: PlatformLocation) {
+              public _medicoService: MedicoService, public formBuilder: FormBuilder, location: PlatformLocation,
+              private _sucursalService: SucursalService) {
                 location.onPopState(() => {
                   document.getElementById('btn-cerrar-modal').click();
                 });
@@ -49,7 +51,7 @@ export class PerfilComponent implements OnInit {
   }
 
   getIdentity() {
-    this.loading = true;
+    // this.loading = true;
     var user = this._userService.getIdentity();
     // console.log(user);
 
@@ -86,7 +88,7 @@ export class PerfilComponent implements OnInit {
       //   telefono:telefono , wp:wp , id:this.global.id_usuario, estudios:contenedor }
     }
 
-    if (user.id_provedor) {
+    if (user.id_provedor && !user.id_sucursales) {
       this.provedor = new Provedor ('' , '', '', '', '', '', '', '', '', '', '', '');
       this.provedor = user;
       this.provedor.id = user.id_provedor ;
@@ -110,6 +112,19 @@ export class PerfilComponent implements OnInit {
 
       this.loading = false;
     }
+
+    if(user.id_provedor && user.id_sucursales){
+      // console.log(user.avatar);
+      // console.log('sucursal');
+      this._sucursalService.getInfoSucursal(user.id_sucursales).subscribe( (response) => {     
+        this.infoSucursal = response;
+        this.infoSucursal.avatar = this.global.apiUrl + user.avatar;
+        console.log(this.infoSucursal);
+      }, (err) => {
+        console.log(err);
+      } );
+    }
+
   }
 
   mouseEnter(campo) {

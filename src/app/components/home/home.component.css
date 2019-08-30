@@ -9,3 +9,8 @@
 #userImg[_ngcontent-c12]{
     border: 7px solid #04ad93 !important;
 }
+
+#menu_admin {
+    max-height: 100%;
+    background-color: aquamarine;
+}

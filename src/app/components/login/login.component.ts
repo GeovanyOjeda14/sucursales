@@ -6,22 +6,22 @@ import { ProvedorService } from '../../services/provedor.service';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
 import { ApplicationService } from '../../services/app.service';
-
+import { SucursalService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [ProvedorService, MedicoService, UserService, ApplicationService]
+  providers: [ProvedorService, MedicoService, UserService, ApplicationService, SucursalService]
 })
 export class LoginComponent implements OnInit {
   public status: string;
   public loading = false;
   public statusText;
   pssw = new FormControl('', [Validators.required, Validators.minLength(3)]);
-  email = new FormControl('', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]);
+  email = new FormControl('', Validators.required);
 
-  constructor(private _router: Router, private _route: ActivatedRoute, private _provedorService: ProvedorService,
+  constructor(private _router: Router, private _route: ActivatedRoute, private _provedorService: ProvedorService, private  _sucursalService: SucursalService,
     private _medicoService: MedicoService, public _userService: UserService, private _aplicationService: ApplicationService) {
 
   }
@@ -65,11 +65,18 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', JSON.stringify(response.token));
 
           // true admin
-          this.identity(response.id_usuario, true);
-        } else if (response.esAdmin === 3) {
+          this.identity(response.id_usuario, 'admin');
+        } 
+         if (response.esAdmin === 3) {
 
           localStorage.setItem('token', JSON.stringify(response.token));
-          this.identity(response.id_usuario, false);
+          this.identity(response.id_usuario, 'med');
+        }
+
+        if (response.esAdmin === 4) {
+
+          localStorage.setItem('token', JSON.stringify(response.token));
+          this.identity(response.id_usuario, 'sucu');
         }
 
       } else {
@@ -92,19 +99,19 @@ export class LoginComponent implements OnInit {
   }
 
 
-  identity(id, bol) {
+  identity(id, member) {
 
     // this.loading = true;
 
       console.log(id);
 
-      if (bol === true) {
+      if (member === 'admin') {
 
         // this.locket(id);
         this._provedorService.getIdentity(id).subscribe( (response) => {
-          console.log(response);
+          console.log('respuesta', response);
 
-         localStorage.setItem('identity', JSON.stringify(response));
+         localStorage.setItem('identity', JSON.stringify(response[0]));
          this.locket(id);
 
            // this._router.navigate(['/home/', response.id_usuario, response.esAdmin ]);
@@ -116,7 +123,9 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         });
 
-      } else {
+      } 
+      
+      if(member === 'med') {
 
         // this.locket(id);
         this._medicoService.getInfoMedico(id).subscribe( (response) => {
@@ -134,6 +143,20 @@ export class LoginComponent implements OnInit {
 
       }
 
+      if(member === 'sucu') {
+        
+        this._sucursalService.getIdentitySucursal(id).subscribe( (response) => {
+          console.log(response);
+          let identity = response[0];
+          localStorage.setItem('identity', JSON.stringify(identity));
+          localStorage.setItem('confirmar', JSON.stringify(true));
+          this.loading = false;
+          this._router.navigate(['home']);
+        }, (err) => {
+          console.log(err);
+        } );
+      }
+
   }
 
   locket(id) {
@@ -142,11 +165,11 @@ export class LoginComponent implements OnInit {
       console.log(response);
 
       if (response === true) {
-        console.log('aqui');
-        this._router.navigate(['/home']);
+        console.log('aqui home');
+        this._router.navigate(['home']);
         localStorage.setItem('confirmar', JSON.stringify(true));
       } else {
-        this._router.navigate(['/confirmar-cuenta']);
+        this._router.navigate(['confirmar-cuenta']);
         localStorage.setItem('confirmar', JSON.stringify(false));
       }
       this.loading = false;

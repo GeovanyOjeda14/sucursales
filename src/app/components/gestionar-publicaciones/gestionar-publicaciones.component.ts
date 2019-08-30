@@ -69,9 +69,9 @@ export class GestionarPublicacionesComponent implements OnInit {
     this.loading = true;
 
     this._provedorService.getPublications(id).subscribe( (response) => {
-
+ 
         this.publications = response;
-        // console.log(this.publications);
+        console.log(this.publications);
 
       if (this.publications[0].vacio === true) {
         this.vacio = true;
@@ -323,7 +323,7 @@ validacionesDatosEdit() {
     precio: [this.editInfo.precio, [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]],
     descuento: [this.editInfo.descuento, [Validators.max(100), Validators.min(0),  Validators.pattern('[0-9]*')]],
     video : [ this.editInfo.video],
-    direccion : [this.editInfo.direccion, [Validators.required, Validators.maxLength(60)]],
+    // direccion : [this.editInfo.direccion, [Validators.required, Validators.maxLength(60)]],
     descripcion: [this.editInfo.descripcion, [Validators.required, Validators.minLength(40)]],
   });
 }
@@ -437,8 +437,8 @@ _handleReaderLoaded(readerEvt) {
 
     let token = this._userService.getToken();
     let formulario = { id: this.editInfo.id_servicios, nombre: this.datosEdit.value.nombre, precio: this.datosEdit.value.precio,
-      direccion: this.datosEdit.value.direccion, descuento: this.datosEdit.value.descuento, duracion: this.datosEdit.value.duracion,
-      id_mncp: this.mncpSelect, id_ctga: this.editInfo.id_cate , video: this.datosEdit.value.video, max_citas: this.maxCitas,
+      descuento: this.datosEdit.value.descuento, duracion: this.datosEdit.value.duracion,
+      id_ctga: this.editInfo.id_cate , video: this.datosEdit.value.video, max_citas: this.maxCitas,
       descripcion: this.datosEdit.value.descripcion};
 
       // console.log(formulario);

@@ -24,8 +24,6 @@ export class ProvedorService {
 
         let datos = {email : email, pssw: pssw };
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-
-
         return this.http.post(this.url + '/login', datos, {headers : headers});
     }
 
@@ -33,7 +31,6 @@ export class ProvedorService {
     getIdentity(id): Observable<any> {
 
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-
         return this.http.get(this.url + '/provedores/' + id , {headers : headers});
     }
 
@@ -166,12 +163,12 @@ export class ProvedorService {
       let headers = new HttpHeaders().set('Content-Type', 'application/json');
       return  this.http.post(this.url + '/activacita', info, {headers : headers});
      }
-
+ 
      // Get citas activas
 
-     getCitasActivas(id_provedor): Observable<any> {
+     getCitasActivas(id_sucursal): Observable<any> {
       let headers = new HttpHeaders().set('Content-Type', 'application/json');
-      return this.http.get(this.url + '/citasprovac/' + id_provedor, {headers : headers});
+      return this.http.get(this.url + '/citasprovac/' + id_sucursal, {headers : headers});
      }
 
      // cambiar el estado de las citas

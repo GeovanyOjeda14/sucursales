@@ -2,7 +2,14 @@
 <app-barra-navegacion></app-barra-navegacion>
 </div>
 
-<div class="container-fluid nuevoContenedor">
+<div class="row">
+  <div class="col-3" id="menu_admin"></div>
+  <div class="col-8"></div>
+</div>
+
+
+
+<div class="container-fluid nuevoContenedor" *ngIf="identity.id_medico || identity.id_sucursal">
 
         <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
                 {{statusText}}
@@ -20,13 +27,13 @@
 
     <div class="row">
 
-        <div id="sliders" class="col-lg-6">
+        <div id="sliders" style="padding-top: 80px;" class="col-lg-5 col-md-6 col-sm-5">
 
             <app-sliders></app-sliders>
             
             </div>
         
-       <div id="servicios-home" class="col-lg-6">
+       <div id="servicios-home" class="col-lg-7 col-md-6 col-sm-7">
            <app-buscar-cita></app-buscar-cita>
         </div>
 
