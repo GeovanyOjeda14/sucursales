@@ -1,50 +1,46 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import { ProvedorService } from '../../services/provedor.service';
+import { Component, OnInit } from '@angular/core';
+// import { UserService } from '../../services/user.service';
+// import { ProvedorService } from '../../services/provedor.service';
+import { SucursalService } from '../../services/sucursales.service';
 import { FormControl, Validators } from '@angular/forms';
 
 // componente padre
 // import { ContactenosComponent } from '../contactenos/contactenos.component';
-import { CrearSucursalComponent } from '../crear-sucursal/crear-sucursal.component';
+// import { CrearSucursalComponent } from '../crear-sucursal/crear-sucursal.component';
 
 @Component({
   selector: 'app-consultorio',
   templateUrl: './consultorio.component.html',
   styleUrls: ['./consultorio.component.css'],
-  providers: [UserService, ProvedorService]
+  providers: [SucursalService]
 })
+
 export class ConsultorioComponent implements OnInit {
 
-  @Input() medicos;
+  // @Input() medicos;
   medicoSelect = new FormControl('', Validators.required);
   servicioSelect = new FormControl('', Validators.required);
-  nombreConsultorio = new FormControl('', Validators.required);
-  extensionConsultorio = new FormControl('', Validators.required);
+  nombreConsultorio = new FormControl('', [Validators.required, Validators.maxLength(20)]);
+  extensionConsultorio = new FormControl('');
+  public infoConsultorio;
 
-  constructor( private _provedorService: ProvedorService, private _crearSucursal: CrearSucursalComponent ) { }
+
+  constructor(private _sucursalService: SucursalService ) { 
+  }
 
   ngOnInit() {
-    // let identity = this._userService.getIdentity().id_provedor;
-    // this.getMedicos(identity);
-
-
+      this.getInfoConsultorio();
   }
 
-  getMedicos(id_provedor){
-
-    this._provedorService.getMedicosProvedor(id_provedor).subscribe( (response)=> {
-      console.log(response);
-      this.medicos = response;
-    }, (err) => {
-
-    });
-
+  getInfoConsultorio(){
+    let consultorio = localStorage.getItem('consultorio')
+    this.infoConsultorio = JSON.parse(consultorio);
+    console.log(this.infoConsultorio);
+    this.nombreConsultorio.setValue(this.infoConsultorio.nombre);
+    this.extensionConsultorio.setValue(this.infoConsultorio.extencion);
   }
 
-  medSelect(ev){
-    // console.log(this.medicoSelect.value);
-    // this._crearSucursal.infoConsultorio = {medico_id: this.medicoSelect.value, nombreConsultorio: this.nombreConsultorio.value,
-    // extensionConsultorio: this.extensionConsultorio.value, id_servicio: this.servicioSelect.value };
-  }
+  
+ 
 
 }

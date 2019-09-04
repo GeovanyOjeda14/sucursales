@@ -1,3 +1,13 @@
+<app-barra-navegacion></app-barra-navegacion>
+
+<div class="container-fluid">
+  <br />
+  <div class="card-header">
+    <h1>Información consultorio</h1>
+  </div>
+  <br />
+</div>
+
 <div class="container" style="padding-top: 30px">
 
   <div class="card">
@@ -8,11 +18,14 @@
 
             <div class="col">
               <label class="form-label">Nombre o numero consultorio</label>
-              <input type="text" class="form-control" [formControl]="nombreConsultorio">
+              <input type="text" class="form-control" [formControl]="nombreConsultorio" maxlength="20" [class.is-invalid]="nombreConsultorio.hasError('required')">
+              <div class="invalid-feedback" *ngIf="nombreConsultorio.hasError('required')">
+                * Este campo es requerido.
+              </div>
             </div>
             <div class="col">
               <label class="form-label">Extension telefono</label>
-              <input type="text" class="form-control" [formControl]="extensionConsultorio">
+              <input type="text" class="form-control" [formControl]="extensionConsultorio" maxlength="10">
             </div>
           
           </div>
@@ -21,22 +34,65 @@
     
               <div class="col">
                 <label class="form-label">Medico</label>
-                <select class="form-control" [formControl]="medicoSelect" (change)="medSelect($event)">
-                  <option *ngFor="let m of medicos" value="{{m.id}}" [disabled]="m.select === true">{{m.nombre}}</option>
-                </select>
+                <input type="text" class="form-control" value="{{infoConsultorio.medico}}" readonly>
               </div>
               <div class="col">
                 <label class="form-label">Servicio</label>
-                <select class="form-control" [formControl]="servicioSelect">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                  </select>
+                <input type="text" class="form-control" value="{{infoConsultorio.servicio}}" readonly>
               </div>
             
             </div>
 
     </div>
 
+  </div>
+
+</div>
+
+<div class="container-fluid" style="padding-top: 30px;">
+  <br />
+  <div class="card-header">
+    <h1>Horarios consultorio</h1>
+  </div>
+  <br />
+</div>
+
+<div class="container" style="padding: 30px">
+
+  <div style="padding-top: 10px;" *ngFor="let h of infoConsultorio.horario; let i = index">
+              
+    <div class="card">
+      <div class="card-header">Horario {{i+1}}</div>
+      <div class="card-body">
+        <h5><strong>Dias</strong></h5>
+        <div style="display: flex;">
+            <div *ngFor="let d of h.dias">
+                <p>{{d.dia}} &nbsp;&nbsp;</p>           
+            </div>
+        </div>
+      
+        <div class="row">
+
+          <div class="col">
+              <h5><strong>Mañana</strong></h5>
+              <p *ngIf="h.de_maniana"><strong>Desde : </strong> {{h.de_maniana | ampm}}</p>
+              <p *ngIf="h.a_maniana"><strong>Hasta : </strong> {{h.a_maniana | ampm}}</p>
+              <p *ngIf="!h.de_maniana"><strong>Desde : </strong> Cerrado</p>
+              <p *ngIf="!h.a_maniana"><strong>Hasta : </strong> Cerrado</p>
+          </div>
+
+          <div class="col">
+              <h5><strong>Tarde</strong></h5>
+              <p *ngIf="h.de_tarde"><strong>Desde : </strong> {{h.de_tarde | ampm}}</p>
+              <p *ngIf="h.a_tarde"><strong>Hasta : </strong> {{h.a_tarde | ampm}}</p>
+              <p *ngIf="!h.de_tarde"><strong>Desde : </strong> Cerrado</p>
+              <p *ngIf="!h.a_tarde"><strong>Hasta : </strong> Cerrado</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  
   </div>
 
 </div>

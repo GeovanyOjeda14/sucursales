@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
-
 // import {
 //   ChangeDetectionStrategy,
 //   ViewChild,
@@ -38,20 +37,21 @@ const colors: any = {
 };
 
 // Validaciones
-import {FormControl, Validators, FormBuilder} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 
 // Servicios
 import { ApplicationService } from '../../services/app.service';
 import { UserService } from '../../services/user.service';
 import { ProvedorService } from '../../services/provedor.service';
 import { MedicoService } from '../../services/medico.service';
+import { SucursalService } from '../../services/sucursales.service';
 // import { start } from 'repl';
 
 @Component({
   selector: 'app-calendario-citas',
   templateUrl: './calendario-citas.component.html',
   styleUrls: ['./calendario-citas.component.css'],
-  providers : [ApplicationService, UserService, MedicoService]
+  providers : [ApplicationService, UserService, MedicoService, SucursalService]
 })
 
 
@@ -91,7 +91,7 @@ export class CalendarioCitasComponent implements OnInit {
   info;
   mascota: any = false;
   eliminar = false;
-  public medico;
+  public tipoCuenta;
   public tipoDocumentoFor;
   public estadoCivilFor;
   public parentescos;
@@ -138,10 +138,14 @@ export class CalendarioCitasComponent implements OnInit {
   parentescoBeneficiario = new FormControl('', Validators.required);
 
   // variable cambio de model de historia a agenda
-  public mymodel;
+  // public mymodel;
   public resHistorial;
+  public res;
+  public medicos;
+  public nombreAgenda;
+  public consultorioSelecionado;
 
-  constructor(private formBuilder: FormBuilder, private _aplicatioService: ApplicationService, private _userService: UserService,
+  constructor(private _aplicatioService: ApplicationService, private _userService: UserService, private _sucursalService : SucursalService,
               private _provedorService: ProvedorService, private _medicoService: MedicoService, location: PlatformLocation) {
   this.today = moment(new Date().toISOString()).format('YYYY-MM-DD');
   // this.mymodel = 'agenda';             
@@ -156,15 +160,44 @@ export class CalendarioCitasComponent implements OnInit {
 
   ngOnInit() {
 
-    let identity = this._userService.getIdentity().medico_id;
-    if (identity !== undefined) {
-      this.medico = true;
+    let identity = this._userService.getIdentity();
+    if (identity.medico_id) {
+      this.tipoCuenta = 'medico';
       this.getEventos();
-    } else {
-      this.medico = false;
+    } 
+    
+    if(identity.id_provedor && !identity.id_sucursales) {
+      this.tipoCuenta = 'provedor';
       this.getPublicacionesProvedor();
     }
 
+    if(identity.id_provedor && identity.id_sucursales) {
+      // console.log('es sucursal');
+      this.tipoCuenta = 'sucursal'
+      this.getServiciosSucursal(identity.id_sucursales);
+      this.nombreAgenda = identity.nombre;
+    }
+
+  }
+
+  
+  getServiciosSucursal(id) {
+    // console.log('susc');
+    this.loading = true;
+    this._sucursalService.getServiciosSucursal(id).subscribe( (response) => {
+      // console.log(response);
+      // console.log('susc2');
+      this.servicios = response;
+      this.loading = false;
+      // if(this.servicios.length <= 0) {
+        
+      // }
+    }, (err) => {
+      console.log(err); 
+      this.status = true;
+      this.statusText = 'Error en la conexión, intentalo mas tarde o revisa tu conexión.';
+      this.loading = false;
+    });
   }
 
 
@@ -190,7 +223,7 @@ export class CalendarioCitasComponent implements OnInit {
         this.servicios = response;
         // console.log(this.servicios);
       }
-
+ 
     }, (err) => {
       this.status = true;
       this.statusText = 'Error en la conexión, intentalo mas tarde o revisa tu conexión.';
@@ -366,6 +399,7 @@ export class CalendarioCitasComponent implements OnInit {
       //   console.log('nombre invalido');
       // }
       // cedula
+      // {color:"#07a9df" , start:start,usuario:id,servicio:this.id_servicio , consultorio : this.medicoSelect.value.consultorio, mascota : this.mascota};
 
       if(this.formBene === true) {
 
@@ -377,7 +411,7 @@ export class CalendarioCitasComponent implements OnInit {
         start: date, contacto: this.telefono.value, nombres: this.nombre.value, usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
         ocupacion : this.ocupacion.value, direccion : this.direccion.value, barrio : this.barrio.value,
-        eps : this.eps.value, acompanante : this.acompanante.value,
+        eps : this.eps.value, acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       } else {
@@ -387,12 +421,12 @@ export class CalendarioCitasComponent implements OnInit {
         start: date, contacto: this.telefono.value, nombres: this.nombre.value, usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
         ocupacion : this.ocupacion.value, direccion : this.direccion.value, barrio : this.barrio.value,
-        eps : this.eps.value, acompanante : this.acompanante.value,
+        eps : this.eps.value, acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       }
       
-      // console.log(datos);
+      console.log(datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
         console.log('no existe', response);
@@ -415,7 +449,9 @@ export class CalendarioCitasComponent implements OnInit {
 
         if (response[0].agregado !== undefined && response[0].agregado === true) {
             console.log('agregada');
-            this.getEventos();
+            let anio = moment(new Date).format('YYYY');
+            let mes =  moment(new Date).format('M');
+            this.getEventosSucursal(mes, anio);
             this.statusT = true;
             this.statusText = 'Cita agregado con exito.';
             window.scroll(0, 0);
@@ -458,24 +494,27 @@ export class CalendarioCitasComponent implements OnInit {
         parent : this.parentescoBeneficiario.value, tel : this.telefonoBeneficiario.value,  id_usu: this.datosUser.id, pais: 47, nuevo : true};
 
         datos = { color : '#07a9df', existe : true, mascota: undefined, servicio : this.serviciosSelect.value.id_servicios,
-        start: date, usuario: this.datosUser.id, benef};
+        start: date, usuario: this.datosUser.id, benef, consultorio : this.consultorioSelecionado.id_consultorio};
 
       } else {
 
         datos = { color : '#07a9df', existe : true, mascota: undefined, servicio : this.serviciosSelect.value.id_servicios,
-        start: date, usuario: this.datosUser.id, benef};
+        start: date, usuario: this.datosUser.id, benef, consultorio : this.consultorioSelecionado.id_consultorio};
 
       }
 
           
 
-      console.log(datos);
+      // console.log(datos);
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
         console.log('existe', response);
 
         
         if ( response[0].agregado !== undefined && response[0].agregado === true) {
-          this.getEventos();
+          // this.getEventos();
+          let anio = moment(new Date).format('YYYY');
+          let mes =  moment(new Date).format('M');
+          this.getEventosSucursal(mes, anio);
           this.statusT = true;
           this.statusText = 'Cita agregado con exito.';
           window.scroll(0, 0);
@@ -518,7 +557,8 @@ export class CalendarioCitasComponent implements OnInit {
 
   hourSegmentClicked(ev) {
 
-    if (this.medico === false) {
+  
+    if (this.tipoCuenta === 'provedor' || this.tipoCuenta === 'sucursal') {
       window.scroll(0, 0);
 
     // let today = moment(new Date().toISOString()).format('YYYY-M-DD HH:mm:ss');
@@ -528,56 +568,65 @@ export class CalendarioCitasComponent implements OnInit {
     // let hours = st.diff(today2, 'days');
     // console.log(ev);
 
-    if (new Date() < ev.date) {
-      // console.log('es futuro');
-      this.existe = undefined;
-      this.formBene = undefined;
-      this.horarioCita = ev.date;
-      this.mascotaSlt = undefined;
-      this.nombre.reset();
-      this.apellidos.reset();
-      // this.identificacion.reset();
-      this.fechaNacimiento.reset();
-      this.email.reset();
-      this.telefono.reset();
-      this.cedula.reset();
-      this.nombreMascota.reset();
-      this.sexoMascota.reset();
-      this.especieMascota.reset();
-      this.esterilizado.reset();
-      this.ocupacion.reset();
-      this.tipoDocumento.reset();
-      this.direccion.reset();
-      this.barrio.reset();
-      this.estadoCivil.reset();
-      this.eps.reset();
-      this.acompanante.reset();
-      this.parentesco.reset();
-      this.telAcompanante.reset();
-
-      this.noIdentificacionBeneficiario.reset();
-      this.nombresBeneficiario.reset();
-      this.apellidosBeneficiario.reset();
-      this.telefonoBeneficiario.reset();
-      this.parentescoBeneficiario.reset();
-      this.fechaBeneficiario.reset();
-
-      this.mostrar = false;
-      let date = ev.date.toString();
-      date = date.split(' ');
-      date = date[0];
-      // console.log(this.dias(date));
-      // console.log(moment(ev.date).format('DD-MM-YYYY'));
-      // console.log(moment(ev.date).format('h:mm:ss a'));
-      this.dia = {dia: this.dias(date), fecha: moment(ev.date).format('DD-MM-YYYY'), hora: moment(ev.date).format('h:mm:ss a')};
-      // console.log(this.dia);
-      this.horarios(this.dias(date));
-
-    } else {
-      // console.log('es pasado');
-      this.status = true;
-      this.statusText = 'No puedes elegir una hora o fecha que ya paso, por favor escoge otro horario';
+    if(!this.consultorioSelecionado) {
       window.scroll(0, 0);
+      this.statusW = true;
+      this.statusText = 'Antes de sacar una cita por favor escoge un medico.';
+    } else {
+
+      if (new Date() < ev.date) {
+        // console.log('es futuro');
+        this.statusW = false;
+        this.existe = undefined;
+        this.formBene = undefined;
+        this.horarioCita = ev.date;
+        this.mascotaSlt = undefined;
+        this.nombre.reset();
+        this.apellidos.reset();
+        // this.identificacion.reset();
+        this.fechaNacimiento.reset();
+        this.email.reset();
+        this.telefono.reset();
+        this.cedula.reset();
+        this.nombreMascota.reset();
+        this.sexoMascota.reset();
+        this.especieMascota.reset();
+        this.esterilizado.reset();
+        this.ocupacion.reset();
+        this.tipoDocumento.reset();
+        this.direccion.reset();
+        this.barrio.reset();
+        this.estadoCivil.reset();
+        this.eps.reset();
+        this.acompanante.reset();
+        this.parentesco.reset();
+        this.telAcompanante.reset();
+  
+        this.noIdentificacionBeneficiario.reset();
+        this.nombresBeneficiario.reset();
+        this.apellidosBeneficiario.reset();
+        this.telefonoBeneficiario.reset();
+        this.parentescoBeneficiario.reset();
+        this.fechaBeneficiario.reset();
+  
+        this.mostrar = false;
+        let date = ev.date.toString();
+        date = date.split(' ');
+        date = date[0];
+        // console.log(this.dias(date));
+        // console.log(moment(ev.date).format('DD-MM-YYYY'));
+        // console.log(moment(ev.date).format('h:mm:ss a'));
+        this.dia = {dia: this.dias(date), fecha: moment(ev.date).format('DD-MM-YYYY'), hora: moment(ev.date).format('h:mm:ss a')};
+        // console.log(this.dia);
+        this.horarios(this.dias(date));
+  
+      } else {
+        // console.log('es pasado');
+        this.status = true;
+        this.statusText = 'No puedes elegir una hora o fecha que ya paso, por favor escoge otro horario';
+        window.scroll(0, 0);
+      }
+      
     }
     }
   }
@@ -592,13 +641,12 @@ export class CalendarioCitasComponent implements OnInit {
     var horaInicio;
     var horaFinal;
 
-    // console.log(h[1]);
-
+    // console.log('consultorio id', this.consultorioSelecionado.id_consultorio);
     // console.log(date, this.serviciosSelect.value.id_servicios, this.serviciosSelect.value.id_categoria);
-    this._provedorService.getHorario(date, this.serviciosSelect.value.id_servicios, this.serviciosSelect.value.id_categoria).
+    this._provedorService.getHorario(date, this.consultorioSelecionado.id_consultorio, this.serviciosSelect.value.id_categoria).
         subscribe((response) => {
           // console.log('horariosssssss');
-          // console.log(response);
+          console.log('horarios', response);
           this.information = response;
           this.loading = false;
         let bol = true;
@@ -670,7 +718,7 @@ export class CalendarioCitasComponent implements OnInit {
           case (this.information[0].maniana.length >= 1) && (this.information[1].tardes.length <= 1):
           // console.log('Solo horario en la mañana');
 
-          if (h[1] === 'am') {
+          if (h[1] === 'am') {  
 
             let num = this.information[0].maniana.length;
             horaInicio = this.information[0].maniana[0].hora;
@@ -960,14 +1008,110 @@ export class CalendarioCitasComponent implements OnInit {
     this.status = false;
     this.statusT = false;
 
+    if(this.tipoCuenta === 'provedor') {
 
-      this.getEventos();
-      let anio = moment(new Date).format('YYYY');
-      let mes =  moment(new Date).format('M');
-      this.getEventosHistorial(mes,anio);
+        this.getEventos();
+        // let anio = moment(new Date).format('YYYY');
+        // let mes =  moment(new Date).format('M');
+        // this.getEventosHistorial(mes,anio);
     
-    
+    }
 
+    if(this.tipoCuenta === 'sucursal') {
+      
+        this.getConsultoriosSucursalPorServicio();
+        let anio = moment(new Date).format('YYYY');
+        let mes =  moment(new Date).format('M');
+        this.getHistorialSucursal(mes, anio)
+        this.getEventosSucursal(mes, anio);
+    }
+  }
+
+  closeOpenMonthViewDay(ev){   
+    console.log(ev); 
+    this.getHistorialSucursal(moment(ev).format('M'), moment(ev).format('YYYY'));
+    this.getEventosSucursal(moment(ev).format('M'), moment(ev).format('YYYY'));
+  }
+
+  getHistorialSucursal(mes, anio) {
+    this.events = []; 
+    // console.log(this.serviciosSelect);
+    let identity = this._userService.getIdentity().id_sucursales;
+    let consultorio;
+    console.log(this.consultorioSelecionado);
+    if(!this.consultorioSelecionado){
+      consultorio = 0;
+    } else {
+      consultorio = this.consultorioSelecionado.id_consultorio;
+    }
+
+    this._sucursalService.getHistorialSucursal(mes,anio,this.serviciosSelect.value.id_servicios,this.serviciosSelect.value.id_categoria, identity,  consultorio).subscribe( (response) => {
+      console.log(response);
+
+      this.resHistorial = response;
+
+      if(this.resHistorial.length >= 1) {
+
+        for(let i = 0; i < this.resHistorial.length; i++) {
+
+          let title = this.resHistorial[i].title;
+
+              let diaS = moment(this.resHistorial[i].start).format('ddd');
+              let mesS = moment(this.resHistorial[i].start).format('MMM');
+              let fechaS = moment(this.resHistorial[i].start).format('DD-YYYY');
+              let horaS = moment.utc(this.resHistorial[i].start).format('h:mm:ss');
+              let horaSs = moment.utc(this.resHistorial[i].start).format('H');
+              let start = diaS + ' ' + mesS + ' ' + fechaS + ' ' +  horaS;
+              // d = horaS;
+
+              let diaE = moment(this.resHistorial[i].end).format('ddd');
+              let mesE = moment(this.resHistorial[i].end).format('MMM');
+              let fechaE = moment(this.resHistorial[i].end).format('DD-YYYY');
+              let horaE = moment.utc(this.resHistorial[i].end).format('h:mm:ss');
+              let horaEe = moment.utc(this.resHistorial[i].end).format('H');
+
+              let end = diaE + ' ' + mesE + ' ' + fechaE + ' ' +  horaE;
+              let info = {};
+
+              let apellidos = response[i].apellidos;
+              let avatar = response[i].avatar;
+              let cedula = response[i].cedula;
+              let fecha_nacimiento = response[i].fecha_nacimiento;
+              let nombre = response[i].nombre;
+              let telefono = response[i].telefono;
+
+                info = {id : this.resHistorial[i].id, tipo : 'usuario', historial : true,  apellidos : apellidos, avatar : avatar , cedula: cedula,
+                        fecha_nacimiento: fecha_nacimiento, nombre: nombre, telefono: telefono, color : colors.historial } ;
+                 this.addEvent(title, start, end, horaSs, horaEe, info );
+          
+        }
+      }
+    }, (err) => {
+      console.log(err);
+    } );
+
+  }
+
+  getConsultoriosSucursalPorServicio(){
+
+    let identity = this._userService.getIdentity().id_sucursales;
+    this._sucursalService.getConsultoriosSegunServicio(identity, this.serviciosSelect.value.id_servicios).subscribe( (response)=> {
+      // console.log('consuls', response);
+      this.medicos = response;
+    }, (err) => {
+      console.log(err);
+    } );
+  }
+
+  consultorioSelect(ev){
+    // console.log(ev);
+    this.nombreAgenda = ev.value.medico;
+    this.consultorioSelecionado = ev.value;
+    // this.getEventosHistorial();
+    let anio = moment(new Date).format('YYYY');
+    let mes =  moment(new Date).format('M');
+    this.getHistorialSucursal(mes, anio);
+    this.getEventosSucursal(mes, anio);
   }
 
   mascotaSelect(ev) {
@@ -979,6 +1123,7 @@ export class CalendarioCitasComponent implements OnInit {
     }
 
   }
+
 
   // metodo para agregar citas a servicios de veterianaria
   // parametro : tipo de cita, agregar, existe, nueva.
@@ -993,7 +1138,7 @@ export class CalendarioCitasComponent implements OnInit {
                    existe : true , existem : false, fecha_nacimiento : this.fechaNacimientoMascota.value, mascota : true,
                    nombreMascota : this.nombreMascota.value, nombres : this.datosUser.nombre, raza : this.raza.value,
                    servicio : this.serviciosSelect.value.id_servicios, sexo : this.sexoMascota.value, start : date,
-                   usuario : this.datosUser.id, correo: this.email.value};
+                   usuario : this.datosUser.id, correo: this.email.value, consultorio : this.consultorioSelecionado.id_consultorio};
 
       // console.log(datos);
       this.loading = true;
@@ -1030,7 +1175,7 @@ export class CalendarioCitasComponent implements OnInit {
       let id_mascota = parseInt(this.peludito.value);
       let datos = {apellidos: this.datosUser.apellidos, color: '#07a9df', contacto: this.datosUser.telefono, existe: true, existem: true,
                    id_mascota: id_mascota , mascota: true, nombres: this.datosUser.nombre,
-                   servicio: this.serviciosSelect.value.id_servicios, start : date, usuario: this.datosUser.id};
+                   servicio: this.serviciosSelect.value.id_servicios, start : date, usuario: this.datosUser.id, consultorio : this.consultorioSelecionado.id_consultorio};
       // console.log(datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
@@ -1067,7 +1212,7 @@ export class CalendarioCitasComponent implements OnInit {
       let datos = {apellidos: this.apellidos.value, color : '#07a9df', contacto: this.telefono.value, especie: this.especieMascota.value,
                    esterilizado : this.esterilizado.value, existe : false, mascota : true, nombreMascota: this.nombreMascota.value,
                    nombres : this.nombre.value, servicio : this.serviciosSelect.value.id_servicios, sexo : this.sexoMascota.value,
-                   start : date, usuario : this.datosUser.cedula};
+                   start : date, usuario : this.datosUser.cedula, consultorio : this.consultorioSelecionado.id_consultorio};
       // console.log(datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
@@ -1084,7 +1229,7 @@ export class CalendarioCitasComponent implements OnInit {
         }
       }, (err) => {
         this.status = true;
-            this.statusText = 'Error al agregar la cita, intentalo mas tarde o revisa tu conexion.';
+        this.statusText = 'Error al agregar la cita, intentalo mas tarde o revisa tu conexion.';
         this.loading = false;
         // console.log(err);
       });
@@ -1094,6 +1239,7 @@ export class CalendarioCitasComponent implements OnInit {
   cerrarAlerta() {
     this.status = false;
     this.statusT = false;
+    this.statusW = false;
   }
 
   getEventos () {
@@ -1104,12 +1250,14 @@ export class CalendarioCitasComponent implements OnInit {
     var id_servicios;
     var id_categoria;
 
-    if (this.medico === true) {
+    if (this.tipoCuenta === 'medico') {
         let inf = localStorage.getItem('calendar-medico');
         let jinf = JSON.parse(inf);
         id_servicios = jinf.id_servicios;
         id_categoria = jinf.id_categoria;
-    } else {
+    } 
+    
+    if(this.tipoCuenta === 'provedor'){
       id_servicios = this.serviciosSelect.value.id_servicios;
       id_categoria =  this.serviciosSelect.value.id_categoria;
     }
@@ -1127,7 +1275,7 @@ export class CalendarioCitasComponent implements OnInit {
           if (respuesta.length <= 0) {
             // console.log('no hay eventos');
           }  else {
-            var d;
+            // var d;
             for (let i = 0; i < respuesta.length; i++) {
 
               let title = respuesta[i].title;
@@ -1191,6 +1339,96 @@ export class CalendarioCitasComponent implements OnInit {
         });
   }
 
+  getEventosSucursal(mes, anio){
+    // console.log('aqui ev sucu', this.serviciosSelect);
+    // this._sucursalService.getServiciosSucursal()
+    // return this.http.get(this.url + '/eventser/' + mes + '/' + anio + '/' + id_serv + '/'+ id_sucursal+ '/' + id_cate, ); 
+    this.events = [];
+    let consultorio;
+    if(!this.consultorioSelecionado) {
+      consultorio = 0;
+    } else {
+      consultorio = this.consultorioSelecionado.id_consultorio;
+    }
+
+    // let anio = moment(new Date).format('YYYY');
+    // let mes =  moment(new Date).format('M');
+    let identity = this._userService.getIdentity();
+    this._sucursalService.getEventsSucursal(mes,anio,this.serviciosSelect.value.id_servicios, identity.id_sucursales, this.serviciosSelect.value.id_categoria, consultorio).subscribe( (response) =>{
+      console.log('res ev', response);
+      this.res = response;
+
+      if(this.res.length >= 1) {
+        // console.log('kk');
+        // var d;
+        for (let i = 0; i < this.res.length; i++) {
+
+          let title = this.res[i].title;
+
+          let diaS = moment(this.res[i].start).format('ddd');
+          let mesS = moment(this.res[i].start).format('MMM');
+          let fechaS = moment(this.res[i].start).format('DD-YYYY');
+          let horaS = moment.utc(this.res[i].start).format('h:mm:ss');
+          let horaSs = moment.utc(this.res[i].start).format('H');
+          let start = diaS + ' ' + mesS + ' ' + fechaS + ' ' +  horaS;
+          let id_consultorio = this.res[i].id_consultorio;
+          // d = horaS;
+
+          let diaE = moment(this.res[i].end).format('ddd');
+          let mesE = moment(this.res[i].end).format('MMM');
+          let fechaE = moment(this.res[i].end).format('DD-YYYY');
+          let horaE = moment.utc(this.res[i].end).format('h:mm:ss');
+          let horaEe = moment.utc(this.res[i].end).format('H');
+
+          let end = diaE + ' ' + mesE + ' ' + fechaE + ' ' +  horaE;
+          let id_eventos = this.res[i].id_eventos;
+          let info = {};
+
+
+          if (this.res[i].id_mascotas) {
+
+          let id_usuarios = this.res[i].id_usuarios;
+          // let color = this.res[i].color;
+          let especie = this.res[i].especie;
+          let esterilizado = this.res[i].esterilizado;
+          let fecha_nacimineto = this.res[i].fecha_nacimineto;
+          let nombre = this.res[i].nombre ;
+          let raza = this.res[i].raza;
+          let sexo = this.res[i].sexo;
+          let avatar = response[i].avatar;
+
+             info = {id : this.res[i].id_mascotas , tipo : 'mascota' , id_usuarios : id_usuarios , especie: especie,
+             esterilizado : esterilizado, fecha_nacimineto : fecha_nacimineto, nombre: nombre, raza: raza, sexo: sexo, avatar: avatar,
+             id_eventos: id_eventos, color : colors.prevenir, id_consultorio : id_consultorio};
+             this.addEvent(title, start, end, horaSs, horaEe, info);
+          } else {
+
+          let apellidos = response[i].apellidos;
+          let avatar = response[i].avatar;
+          let cedula = response[i].cedula;
+          let fecha_nacimiento = response[i].fecha_nacimiento;
+          let nombre = response[i].nombre;
+          let telefono = response[i].telefono;
+
+            info = {id : this.res[i].usuarios_id, tipo : 'usuario', apellidos : apellidos, avatar : avatar , cedula: cedula, id_consultorio : id_consultorio,
+                    fecha_nacimiento: fecha_nacimiento, nombre: nombre, telefono: telefono, id_eventos: id_eventos , color : colors.prevenir} ;
+             this.addEvent(title, start, end, horaSs, horaEe, info);
+          }
+          // console.log('info',info);
+        }
+      
+      }
+
+
+    }, (err) => {
+      console.log(err);
+      this.status = true;
+      this.statusText = 'Error al agregar la cita, intentalo mas tarde o revisa tu conexion.';
+      this.loading = false;
+    } );
+
+  }
+
 
   getEventosHistorial(mes,anio) {
 
@@ -1246,7 +1484,10 @@ export class CalendarioCitasComponent implements OnInit {
       this.loading = false;
     }, (err) => {
       console.log(err);
+      this.status = true;
+      this.statusText = 'Error al agregar la cita, intentalo mas tarde o revisa tu conexion.';
       this.loading = false;
+      // this.loading = false;
     });
   }
 
@@ -1258,78 +1499,114 @@ export class CalendarioCitasComponent implements OnInit {
     this.eliminar = false;
   }
 
-  eliminarCita(bol, id_eventos) {
+  eliminarCita(bol, info) {
 
+    // console.log(bol, info);
     this.loading = true;
     window.scroll(0,0);
 
     let token = this._userService.getToken();
-    var usuarios_id;
+    let categoria;
+    // var usuarios_id;
+    // if (this.tipoCuenta === 'medico') {
+    //   usuarios_id = this._userService.getIdentity().medico_id;
+    // } else if (this.tipoCuenta === 'provedor') {
+    //   usuarios_id = this._userService.getIdentity().id_provedor;
+    // } else if (this.tipoCuenta === 'sucursal') {
+    //   usuarios_id = this._userService.getIdentity().id_sucursales;
+    // }
 
-    if (this.medico === true) {
-      usuarios_id = this._userService.getIdentity().medico_id;
+    if(bol === true) {
+      // mascota
+      categoria = 20;
     } else {
-      usuarios_id = this._userService.getIdentity().id_provedor;
+      // usuarios
+      categoria = 0;
     }
 
-    if (bol === true ) {
-      // es una mascota
-        this._provedorService.dltCitaProvedor(id_eventos, usuarios_id, 20, token).subscribe( (response) => {
-          // console.log(response);
-          this.loading = false;
-          if (response[0].borrado === true) {
-            this.getEventos();
-            this.statusT = true;
-            this.statusText = 'La cita fue elimina con exito.';
-            window.scroll(0 , 0);
-          } else {
-            this.status = true;
-            this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
-            window.scroll(0 , 0);
-          }
-        }, (err) => {
-          // console.log(err);
-           this.status = true;
-           this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
-           window.scroll(0 , 0);
-           this.loading = false;
-        });
-    } else {
-      // es un usuario
-      this._provedorService.dltCitaProvedor(id_eventos,  usuarios_id, 0, token).subscribe( (response) => {
-        // console.log(response);
-        this.loading = false;
-        if (response[0].borrado === true) {
-          this.getEventos();
-          this.statusT = true;
-          this.statusText = 'La cita fue elimina con exito.';
-          window.scroll(0 , 0);
+    this._provedorService.dltCitaProvedor(info.id_eventos, info.id_consultorio, categoria, token).subscribe( (response) => {
+            console.log(response);
+            this.loading = false;
+            if (response[0].borrado === true) {
+              // this.getEventos();
+              let anio = moment(new Date).format('YYYY');
+              let mes =  moment(new Date).format('M');
+              this.getEventosSucursal(mes, anio);
+              this.statusT = true;
+              this.statusText = 'La cita fue elimina con exito.';
+              window.scroll(0 , 0);
+            } else {
+              this.status = true;
+              this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+              window.scroll(0 , 0);
+            }
+          }, (err) => {
+            // console.log(err);
+             this.status = true;
+             this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+             window.scroll(0 , 0);
+             this.loading = false;
+          });
 
-        } else {
-          this.status = true;
-          this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
-          window.scroll(0 , 0);
-        }
-      }, (err) => {
-        // console.log(err);
-        this.status = true;
-        this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
-        window.scroll(0 , 0);
-        this.loading = false;
-      });
 
-    }
+    // if (bol === true ) {
+    //   // es una mascota
+    //     this._provedorService.dltCitaProvedor(info.id_eventos, info.id_consultorio, 20, token).subscribe( (response) => {
+    //       // console.log(response);
+    //       this.loading = false;
+    //       if (response[0].borrado === true) {
+    //         this.getEventos();
+    //         this.statusT = true;
+    //         this.statusText = 'La cita fue elimina con exito.';
+    //         window.scroll(0 , 0);
+    //       } else {
+    //         this.status = true;
+    //         this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+    //         window.scroll(0 , 0);
+    //       }
+    //     }, (err) => {
+    //       // console.log(err);
+    //        this.status = true;
+    //        this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+    //        window.scroll(0 , 0);
+    //        this.loading = false;
+    //     });
+    // } else {
+    //   // es un usuario
+    //   this._provedorService.dltCitaProvedor(info.id_eventos,  info.id_consultorio, 0, token).subscribe( (response) => {
+    //     // console.log(response);
+    //     this.loading = false;
+    //     if (response[0].borrado === true) {
+    //       this.getEventos();
+    //       this.statusT = true;
+    //       this.statusText = 'La cita fue elimina con exito.';
+    //       window.scroll(0 , 0);
+
+    //     } else {
+    //       this.status = true;
+    //       this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+    //       window.scroll(0 , 0);
+    //     }
+    //   }, (err) => {
+    //     // console.log(err);
+    //     this.status = true;
+    //     this.statusText = 'La cita no se puede eliminar, por favor revisa tu conexión o intentalo más tarde.';
+    //     window.scroll(0 , 0);
+    //     this.loading = false;
+    //   });
+
+    // }
   }
 
   agregarBene() {
+
     this.formBene = true;
-    this.getParentescos();
+    // this.getParentescos();
   }
 
   cancelarBene(){
     this.formBene = false;
   }
-
 
   // metodo para cambiar de pestaña de agenda a historial
   // pestana(pestana) {
@@ -1364,9 +1641,6 @@ export class CalendarioCitasComponent implements OnInit {
   //         }
   // }
 
-  closeOpenMonthViewDay(ev){
-    // console.log(ev);
-    this.getEventosHistorial(moment(ev).format('M'), moment(ev).format('YYYY'));
-  }
+ 
 
 }

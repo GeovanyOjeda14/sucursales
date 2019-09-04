@@ -29,6 +29,8 @@ import { HistoriaClinicaComponent } from './components/historia-clinica/historia
 import { HistorialCitasMedicoComponent } from './components/historial-citas-medico/historial-citas-medico.component';
 import { GestionarSucursalesComponent } from './components/gestionar-sucursales/gestionar-sucursales.component';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
+import { GestionarConsultoriosComponent } from './components/gestionar-consultorios/gestionar-consultorios.component';
+import { ConsultorioComponent } from './components/consultorio/consultorio.component';
 
 // Servicios
 
@@ -36,6 +38,7 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
 import { UserGuard } from './services/user.guard';
 import { UserAdmin } from './services/user_admin.guard';
 import { UserMedico } from './services/user_medico.guard';
+import { UserSucursal } from './services/user_sucursal.guard';
 
 const routes: Routes = [
     {path: '', component : LoginComponent},
@@ -47,10 +50,12 @@ const routes: Routes = [
     {path : 'confirmar-cuenta', component: ConfirmarCuentaComponent},
     {path : 'publicaciones', component: GestionarPublicacionesComponent, canActivate: [UserGuard]},
     {path : 'medicos', component: GestionarMedicosComponent, canActivate: [UserGuard, UserAdmin]},
+    {path : 'consultorios', component: GestionarConsultoriosComponent, canActivate: [UserGuard, UserSucursal]},
     {path : 'contactenos', component: ContactenosComponent, canActivate: [UserGuard] },
     {path : 'terminosycondiciones', component: TerminosYCondicionesComponent, canActivate: [UserGuard] },
     {path : 'buscarcita', component: BuscarCitaComponent, canActivate: [UserGuard] },
     {path : 'slider', component: SlidersComponent, canActivate: [UserGuard] },
+    {path : 'consultorio', component: ConsultorioComponent, canActivate: [UserGuard] },
     // {path : 'ordenllegada', component: OrdenLlegadaComponent, canActivate: [UserGuard] },
     {path : 'perfil', component: PerfilComponent, canActivate: [UserGuard] },
     {path : 'calendario', component: CalendarioCitasComponent, canActivate: [UserGuard] },

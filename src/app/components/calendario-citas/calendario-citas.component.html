@@ -3,11 +3,11 @@
 <div class="container-fluid">
   <br />
   <div class="card-header">
-    <h1>Calendario</h1>
+    <h1>Agenda de {{nombreAgenda}} </h1>
   </div>
   <br />
 
-  <div class="row contenedor" *ngIf="!medico">
+  <div class="row contenedor" *ngIf="tipoCuenta === 'sucursal' || tipoCuenta === 'provedor'">
 
     <div class="col-lg-2">
 
@@ -29,6 +29,18 @@
                   </mat-select>
                 </mat-form-field>
           </div>
+
+          <div style="padding-top: 50px;" *ngIf="medicos">
+            <p style="margin: 0px; color: grey; font-size: 17px;">Escoge un medico</p>
+            <mat-form-field class="w-100">
+                <mat-label><h6>Medicos</h6></mat-label>
+                <mat-select (selectionChange)="consultorioSelect($event)" >
+                  <mat-option *ngFor="let m of medicos" [value]="m">
+                    {{ m.medico }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
           
         
       <!-- <div class="calendario"> </div> -->
@@ -41,6 +53,13 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="statusW">
+            {{statusText}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
   
         <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="statusT">
           {{statusText}}
@@ -66,14 +85,14 @@
           <div class="col-md-4">
             <div class="btn-group">
               <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
-                (viewDateChange)="closeOpenMonthViewDay($event)" >
+                (viewDateChange)="closeOpenMonthViewDay($event)">
                 Atras
               </div>
               <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (click)="hoy()">
                 Hoy
               </div>
               <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
-                (viewDateChange)="closeOpenMonthViewDay($event)" >
+                (viewDateChange)="closeOpenMonthViewDay($event)">
                 Adelante
               </div>
             </div>
@@ -217,11 +236,11 @@
         *ngIf="mascota && !eliminar">Eliminar cita</button>
 
       <!-- Boton para eliminar cita a un usuario -->
-      <button type="button" class="btn btn-danger" (click)="eliminarCita(false, info.id_eventos)"
+      <button type="button" class="btn btn-danger" (click)="eliminarCita(false, info)"
         *ngIf="!mascota && info && eliminar" data-dismiss="modal">Eliminar cita</button>
 
       <!-- Boton para eliminar cita a una mascota -->
-      <button type="button" class="btn btn-danger" (click)="eliminarCita(true, mascota.id_eventos)"
+      <button type="button" class="btn btn-danger" (click)="eliminarCita(true, mascota)"
         *ngIf="mascota && eliminar" data-dismiss="modal">Eliminar cita</button>
 
 
@@ -1043,7 +1062,7 @@
 
 <!-- --------------------------------------------CALENDARIO MEDICO--------------------------------------------- -->
 
-<div  *ngIf="medico">
+<div  *ngIf="tipoCuenta === 'medico'">
 
   <div>  
           <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status">

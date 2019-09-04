@@ -1345,7 +1345,7 @@ _handleReaderLoaded(readerEvt) {
 
       this._provedorService.pubService(this.formulario).subscribe( (res) => {
       this.loading = false;
-        // console.log(res);
+        console.log(res);
  
       if (res[0].agregado === true) {
         document.getElementById('btn-publicacion-exitosa').click();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import CryptoJS from 'crypto-js';
 import { FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProvedorService } from '../../services/provedor.service';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   pssw = new FormControl('', [Validators.required, Validators.minLength(3)]);
   email = new FormControl('', Validators.required);
 
-  constructor(private _router: Router, private _route: ActivatedRoute, private _provedorService: ProvedorService, private  _sucursalService: SucursalService,
+  constructor(private _router: Router, private _provedorService: ProvedorService, private  _sucursalService: SucursalService,
     private _medicoService: MedicoService, public _userService: UserService, private _aplicationService: ApplicationService) {
 
   }

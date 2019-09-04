@@ -49,6 +49,7 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { FechaPipe } from './pipes/fechas.pipe';
 import { HoraPipe } from './pipes/horas.pipe';
 import { CategoriaPipe } from './pipes/categoria.pipe';
+import { AmPmPipe } from './pipes/ampm.pipe';
 
 // Angular material
 
@@ -86,6 +87,7 @@ import { ConsultorioComponent } from './components/consultorio/consultorio.compo
 
 // recorte imagenes
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { GestionarConsultoriosComponent } from './components/gestionar-consultorios/gestionar-consultorios.component';
 
 @NgModule({
   declarations: [
@@ -113,6 +115,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     FechaPipe,
     HoraPipe,
     CategoriaPipe,
+    AmPmPipe,
     CrearPublicacionComponent,
     MisServiciosComponent,
     OlvidoContraseniaComponent,
@@ -122,6 +125,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     GestionarSucursalesComponent,
     CrearSucursalComponent,
     ConsultorioComponent,
+    GestionarConsultoriosComponent,
   ],
   imports: [
     BrowserModule,

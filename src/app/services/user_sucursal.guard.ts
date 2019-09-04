@@ -12,9 +12,9 @@ export class UserSucursal implements CanActivate {
     canActivate() {
         let identity = this._userService.getIdentity();
 
-        if(identity.medico_id || identity.id_provedor) {
+        if(identity.medico_id || (identity.id_provedor && !identity.id_provedor)) {
             return false;
-        } else  if (identity.id_sucursales) {
+        } else  if (identity.id_sucursales && identity.id_provedor) {
             return true;
         }   
     }

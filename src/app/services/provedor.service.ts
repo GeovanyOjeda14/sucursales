@@ -79,8 +79,8 @@ export class ProvedorService {
       }
 
     // Ruta para obtener el horaio segun cada servicio
-    getHorario (fecha, id_servicio, id_categoria): Observable<any> {
-        return this.http.get(this.url + '/servcitas/' + fecha + '/' + id_servicio + '/' + id_categoria);
+    getHorario (fecha, id_consultorio, id_categoria): Observable<any> {
+        return this.http.get(this.url + '/servcitas/' + fecha + '/' + id_consultorio + '/' + id_categoria);
     }
 
     // Ruta para pedir los eventos que tiene cada servicio
@@ -108,10 +108,10 @@ export class ProvedorService {
 
 
       // Ruta para borrar una cita de provedor
-      dltCitaProvedor(idEventos, idProvedor, id_categoria , token): Observable <any> {
+      dltCitaProvedor(idEventos, id_consultorio, id_categoria , token): Observable <any> {
 
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.delete(this.url + '/eventss/' + idEventos + '/' + idProvedor + '/'
+        return this.http.delete(this.url + '/eventss/' + idEventos + '/' + id_consultorio + '/'
                                 + id_categoria + '?token=' + token , {headers : headers});
 
        }

@@ -28,12 +28,20 @@
             <input type="email" [formControl]="email" class="form-control" placeholder="Usuario o correo"
                [class.is-invalid]="email.hasError('required') && email.touched" required
               autofocus>
+
+              <div class="invalid-feedback" *ngIf="email.hasError('required') && email.touched">
+                * Este campo es requerido.
+              </div>
           </div>
           <br />
           <div class="col-md-12">
             <label for="inputPassword" class="sr-only">Contraseña</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" [formControl]="pssw"
               [class.is-invalid]="pssw.hasError('required') && pssw.touched" required autofocus>
+
+              <div class="invalid-feedback" *ngIf="pssw.hasError('required') && pssw.touched">
+                * Este campo es requerido.
+              </div>
           </div>
         </div>
         <div class="col-md-4"></div>

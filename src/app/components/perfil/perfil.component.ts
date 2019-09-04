@@ -116,12 +116,19 @@ export class PerfilComponent implements OnInit {
     if(user.id_provedor && user.id_sucursales){
       // console.log(user.avatar);
       // console.log('sucursal');
+      this.loading = true;
       this._sucursalService.getInfoSucursal(user.id_sucursales).subscribe( (response) => {     
         this.infoSucursal = response;
         this.infoSucursal.avatar = this.global.apiUrl + user.avatar;
         console.log(this.infoSucursal);
+        this.loading = false;
       }, (err) => {
         console.log(err);
+        this.status = 'error';
+        this.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
+        window.scroll(0, 0);
+        this.loading = false;
+        
       } );
     }
 
@@ -197,6 +204,8 @@ export class PerfilComponent implements OnInit {
     }, (err) => {
       this.loading = false;
       console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.';
     });
   }
 
