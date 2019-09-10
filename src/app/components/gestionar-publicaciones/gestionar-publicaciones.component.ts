@@ -34,6 +34,7 @@ export class GestionarPublicacionesComponent implements OnInit {
   cargarFotos: any;
   public status;
   public statusText;
+  public infoSerSucu;
 
   // variables para edit
   public ver;
@@ -52,6 +53,7 @@ export class GestionarPublicacionesComponent implements OnInit {
         document.getElementById('btn-cerrar-modal-crear-medico').click();
         document.getElementById('btn-cerrar-modal-crear-pub').click();
         document.getElementById('btn-cerrar-modal-ver-pub').click();
+        document.getElementById('btn-cerrar-ver-serSucu').click();     
       });
     }
 
@@ -505,6 +507,12 @@ _handleReaderLoaded(readerEvt) {
     this.statusText = 'No se puede eliminar el servicio, por favor revisa tu conexión o intentalo más tarde.';
     window.scroll(0, 0);
   });
+ }
+
+ verServicioSucursal(info){
+   console.log(info);
+    this.infoSerSucu = info;
+    document.getElementById('btn-ver-ser-sucursal').click();
  }
 
 }

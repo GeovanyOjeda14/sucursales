@@ -13,9 +13,9 @@ import { UserService } from '../../services/user.service';
 export class HomeComponent implements OnInit {
   public admin: string;
   public data_provedor;
-  loading;
-  status: any;
-  statusText: string;
+  public loading = false;
+  public status: any;
+  public statusText: string;
   public identity;
 
   constructor(public _provedorService: ProvedorService, public global: Global,

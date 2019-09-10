@@ -87,22 +87,23 @@
               <p><strong>Descripcion : </strong>{{p.descripcion}}</p>
               <div><p><strong>Creado por : </strong>{{p.creadoPor}}</p></div>      
               <div class="row" style="height: 5vw"></div>
-              <div class="row">
-                <div class="col-md-5">
-                  <p class="p-btns">
+             
+                <div class="text-center">
+                    <a  class="btn btn-info w-100" role="button" data-toggle="modal"
+                    (click)="verServicioSucursal(p)"><i class="far fa-eye"></i> Ver</a>
+                  <!-- <p class="p-btns">
                     <a href="#myModal{{p.id_servicios}}" class="btn btn-info w-100" role="button" data-toggle="modal"
                       (click)="verPublicacion(p.id_servicios)"><i class="far fa-eye"></i> Ver</a>
-                  </p>
+                  </p> -->
                 </div>
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                   <p class="p-btns">
                     <a href="#eliminarPub{{p.id_servicios}}" class="btn btn-danger w-100" role="button"
                       data-toggle="modal" (click)="verPublicacion(p.id_servicios)"><i class="fas fa-trash-alt"></i>
                       Eliminar</a>
-                    <!-- <a href="#eliminarPub{{p.id_servicios}}" class="abtn btn-danger btn-lg" role="button"><i class="fas fa-trash-alt"></i> Eliminar</a> -->
                   </p>
-                </div>
-              </div>
+                </div> -->
+             
             </div>
 
             <br>
@@ -134,12 +135,6 @@
             </div>
 
             <!-- ------------------------- FIN MODAL DESEA ELIMINAR PUBLICACIONO --------------------------- -->
-
-
-
-
-
-
 
             <!-- Modal -->
 
@@ -549,6 +544,103 @@
 
   </div>
 </div>
+
+
+<!-- Extra large modal -->
+<button type="button" id="btn-ver-ser-sucursal" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target=".ver-servicio-sucursal">Extra large modal</button>
+
+<div class="modal fade ver-servicio-sucursal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" *ngIf="infoSerSucu"><strong>{{infoSerSucu.nombre}}</strong></h5>
+            <button type="button" id="btn-cerrar-ver-serSucu" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div *ngIf="infoSerSucu">
+
+              <div class="modal-body">
+
+                  <div class="card-header">
+                      <h5>Imagenes del servicio</h5>
+                  </div>
+                 
+                  <div class="row imgs container-fluid" style="border: solid 0.5px whitesmoke;">
+                      <div class="col-lg-2 contenedores" *ngFor="let m of infoSerSucu.fotos, let i = index">
+                        <img src="{{global.apiUrl + m.ruta}}" class="imga2" />
+                      </div>
+                  </div>
+
+    
+                      <div class="card-header" >
+                        <h5>Información del servicio</h5>
+                  </div>
+         
+
+                  <div class="container" style="padding-top: 50px;">
+
+                      <div class="row">
+                          <div class="col form-group">
+                            <label class="form-label">Nombre servicio</label>
+                            <input type="text" class="form-control" value="{{infoSerSucu.nombre}}" readonly>
+                          </div>
+                          <div class="col form-group">
+                            <label class="form-label">Categoria</label>
+                            <input type="text" class="form-control" value="{{infoSerSucu.categoria}}" readonly>
+                          </div>
+                        </div>
+      
+                        <div class="row">
+                            <div class="col form-group">
+                              <label class="form-label">Precio</label>
+                              <input type="text" class="form-control" value="{{infoSerSucu.precio}}" readonly>
+                            </div>
+                            <div class="col form-group">
+                              <label class="form-label">Descuento</label>
+                              <input type="text" class="form-control" value="{{infoSerSucu.descuento}}" readonly>
+                            </div>
+                          </div>
+      
+                          <div class="row">
+                              <div class="col form-group">
+                                <label class="form-label">Precio con descuento</label>
+                                <input type="text" class="form-control" value="{{infoSerSucu.precio_cliente_prevenir}}" readonly>
+                              </div>
+                              <div class="col form-group">
+                                <label class="form-label">Duracion</label>
+                                <input type="text" class="form-control" value="{{infoSerSucu.duracion}}" readonly>
+                              </div>
+                            </div>
+      
+                            <div class="row">
+                                <div class="col form-group">
+                                  <label class="form-label">Maximo de citas por hora</label>
+                                  <input type="text" class="form-control" value="{{infoSerSucu.max_citas_ves}}" readonly>
+                                </div>                        
+                            </div>
+      
+                            <div class="row">
+                                <div class="col form-group">
+                                  <label class="form-label">Descripcion</label>
+                                  <textarea class="form-control" readonly>{{infoSerSucu.descripcion}}</textarea>
+                                </div>                        
+                            </div>
+
+                  </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+
+          </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div class="loading container-fluid" *ngIf="loading">
   <img src="/assets/pulso.gif" alt="">
 </div>

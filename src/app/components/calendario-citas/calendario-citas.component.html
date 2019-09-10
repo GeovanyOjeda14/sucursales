@@ -1259,7 +1259,7 @@ data-target=".bd-example-modal-lg">Large modal</button>
       *ngIf="mascota && !eliminar">Eliminar cita</button>
 
     <!-- Boton para eliminar cita a un usuario -->
-    <button type="button" class="btn btn-danger" (click)="eliminarCita(false, info.id_eventos)"
+    <button type="button" class="btn btn-danger" (click)="eliminarCita(false, info)"
       *ngIf="!mascota && info && eliminar" data-dismiss="modal">Eliminar cita</button>
 
     <!-- Boton para eliminar cita a una mascota -->

@@ -144,6 +144,7 @@ export class CalendarioCitasComponent implements OnInit {
   public medicos;
   public nombreAgenda;
   public consultorioSelecionado;
+  public id_consultorio;
 
   constructor(private _aplicatioService: ApplicationService, private _userService: UserService, private _sucursalService : SucursalService,
               private _provedorService: ProvedorService, private _medicoService: MedicoService, location: PlatformLocation) {
@@ -163,7 +164,10 @@ export class CalendarioCitasComponent implements OnInit {
     let identity = this._userService.getIdentity();
     if (identity.medico_id) {
       this.tipoCuenta = 'medico';
-      this.getEventos();
+      let anio = moment(new Date).format('YYYY');
+      let mes =  moment(new Date).format('M');
+      this.getEventos(anio, mes);
+      this.nombreAgenda = identity.nombres + ' ' + identity.apellidos;
     } 
     
     if(identity.id_provedor && !identity.id_sucursales) {
@@ -1002,15 +1006,17 @@ export class CalendarioCitasComponent implements OnInit {
     // console.log(ev);
     this.events = [];
     this.serviciosSelect = ev;
+
     let date = new Date();
     this.viewDate = date;
     this.view = CalendarView.Month;
     this.status = false;
     this.statusT = false;
-
+    this.consultorioSelecionado = undefined;
+    console.log(this.id_consultorio);
     if(this.tipoCuenta === 'provedor') {
 
-        this.getEventos();
+        // this.getEventos();
         // let anio = moment(new Date).format('YYYY');
         // let mes =  moment(new Date).format('M');
         // this.getEventosHistorial(mes,anio);
@@ -1034,19 +1040,23 @@ export class CalendarioCitasComponent implements OnInit {
   }
 
   getHistorialSucursal(mes, anio) {
+    console.log(this.id_consultorio);
     this.events = []; 
-    // console.log(this.serviciosSelect);
+    // console.log('hist');
     let identity = this._userService.getIdentity().id_sucursales;
-    let consultorio;
-    console.log(this.consultorioSelecionado);
+
+    // console.log(this.consultorioSelecionado);
     if(!this.consultorioSelecionado){
-      consultorio = 0;
+      // console.log('1');
+      this.id_consultorio = 0;
     } else {
-      consultorio = this.consultorioSelecionado.id_consultorio;
+      this.id_consultorio =  this.consultorioSelecionado.id_consultorio;
     }
 
-    this._sucursalService.getHistorialSucursal(mes,anio,this.serviciosSelect.value.id_servicios,this.serviciosSelect.value.id_categoria, identity,  consultorio).subscribe( (response) => {
-      console.log(response);
+    // console.log('info his suc', mes,anio,this.serviciosSelect.value.id_servicios,this.serviciosSelect.value.id_categoria, identity, this.id_consultorio)
+
+    this._sucursalService.getHistorialSucursal(mes,anio,this.serviciosSelect.value.id_servicios,this.serviciosSelect.value.id_categoria, identity, this.id_consultorio).subscribe( (response) => {
+      // console.log('sucu', response);
 
       this.resHistorial = response;
 
@@ -1104,7 +1114,7 @@ export class CalendarioCitasComponent implements OnInit {
   }
 
   consultorioSelect(ev){
-    // console.log(ev);
+    console.log(ev);
     this.nombreAgenda = ev.value.medico;
     this.consultorioSelecionado = ev.value;
     // this.getEventosHistorial();
@@ -1131,6 +1141,8 @@ export class CalendarioCitasComponent implements OnInit {
     window.scroll(0, 0);
     var date = moment(this.horarioCita).format('YYYY-M-DD') + ' ' + moment(this.horarioCita).format('h:mm:ss a');
     var token = this._userService.getToken();
+    var anio = moment(new Date).format('YYYY');
+    var mes =  moment(new Date).format('M');
 
     if (tipo === 'agregar') {
       let datos = {apellidos : this.datosUser.apellidos, color : '#07a9df', colorMascota : this.color.value,
@@ -1140,13 +1152,13 @@ export class CalendarioCitasComponent implements OnInit {
                    servicio : this.serviciosSelect.value.id_servicios, sexo : this.sexoMascota.value, start : date,
                    usuario : this.datosUser.id, correo: this.email.value, consultorio : this.consultorioSelecionado.id_consultorio};
 
-      // console.log(datos);
+      console.log('agregar', datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
         // console.log(response);
-
+        window.scroll(0, 0);
         if (response[0].agregado === true) {
-            this.getEventos();
+            this.getEventosSucursal(mes, anio);
             this.statusT = true;
             this.statusText = 'Cita agregado con exito.';
             this.loading = false;
@@ -1159,7 +1171,6 @@ export class CalendarioCitasComponent implements OnInit {
         if (response[0].reservado !== undefined && response[0].reservado === true) {
           this.status = true;
           this.statusText = 'No se puede sacar la cita, el usuario ya tiene una cita reservada para este dia.';
-          window.scroll(0, 0);
           this.loading = false;
         }
       }, (err) => {
@@ -1176,13 +1187,14 @@ export class CalendarioCitasComponent implements OnInit {
       let datos = {apellidos: this.datosUser.apellidos, color: '#07a9df', contacto: this.datosUser.telefono, existe: true, existem: true,
                    id_mascota: id_mascota , mascota: true, nombres: this.datosUser.nombre,
                    servicio: this.serviciosSelect.value.id_servicios, start : date, usuario: this.datosUser.id, consultorio : this.consultorioSelecionado.id_consultorio};
-      // console.log(datos);
+      console.log('existe', datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
         console.log(response);
-
+        window.scroll(0, 0);
         if (response[0].agregado === true) {
-            this.getEventos();
+
+            this.getEventosSucursal(mes, anio);
             this.statusT = true;
             this.statusText = 'Cita agregado con exito.';
             this.loading = false;
@@ -1195,7 +1207,6 @@ export class CalendarioCitasComponent implements OnInit {
         if (response[0].reservado !== undefined && response[0].reservado === true) {
           this.status = true;
           this.statusText = 'No se puede sacar la cita, el usuario ya tiene una cita reservada para este dia.';
-          window.scroll(0, 0);
           this.loading = false;
         }
 
@@ -1213,14 +1224,15 @@ export class CalendarioCitasComponent implements OnInit {
                    esterilizado : this.esterilizado.value, existe : false, mascota : true, nombreMascota: this.nombreMascota.value,
                    nombres : this.nombre.value, servicio : this.serviciosSelect.value.id_servicios, sexo : this.sexoMascota.value,
                    start : date, usuario : this.datosUser.cedula, consultorio : this.consultorioSelecionado.id_consultorio};
-      // console.log(datos);
+      console.log('nueva', datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
+        window.scroll(0,0);
         // console.log(response);
         if (response[0].agregado === true) {
             this.statusT = true;
             this.statusText = 'Cita agregado con exito.';
-            this.getEventos();
+            this.getEventosSucursal(mes, anio);
             this.loading = false;
         } else {
             this.status = true;
@@ -1242,23 +1254,21 @@ export class CalendarioCitasComponent implements OnInit {
     this.statusW = false;
   }
 
-  getEventos () {
+  getEventos (anio, mes) {
     // console.log('aqui get ev citas');
     this.events = [];
-    let anio = moment(new Date).format('YYYY');
-    let mes =  moment(new Date).format('M');
-    var id_servicios;
+    var id_consultorio;
     var id_categoria;
 
     if (this.tipoCuenta === 'medico') {
         let inf = localStorage.getItem('calendar-medico');
         let jinf = JSON.parse(inf);
-        id_servicios = jinf.id_servicios;
+        id_consultorio = jinf.id_consultorio;
         id_categoria = jinf.id_categoria;
     } 
     
     if(this.tipoCuenta === 'provedor'){
-      id_servicios = this.serviciosSelect.value.id_servicios;
+      id_consultorio = this.serviciosSelect.value.id_consultorio;
       id_categoria =  this.serviciosSelect.value.id_categoria;
     }
 
@@ -1266,7 +1276,7 @@ export class CalendarioCitasComponent implements OnInit {
     // console.log(this.serviciosSelect);
     // console.log(anio, mes);
 
-    this._provedorService.getEventos(mes, anio, id_servicios , id_categoria)
+    this._provedorService.getEventos(mes, anio, id_consultorio , id_categoria)
         .subscribe( (response) => {
           // console.log('aqui 2, eventos');
           console.log(response);
@@ -1501,20 +1511,25 @@ export class CalendarioCitasComponent implements OnInit {
 
   eliminarCita(bol, info) {
 
-    // console.log(bol, info);
+    console.log(bol, info);
     this.loading = true;
     window.scroll(0,0);
 
     let token = this._userService.getToken();
     let categoria;
+    let id_consultorio;
+
     // var usuarios_id;
-    // if (this.tipoCuenta === 'medico') {
-    //   usuarios_id = this._userService.getIdentity().medico_id;
-    // } else if (this.tipoCuenta === 'provedor') {
-    //   usuarios_id = this._userService.getIdentity().id_provedor;
-    // } else if (this.tipoCuenta === 'sucursal') {
-    //   usuarios_id = this._userService.getIdentity().id_sucursales;
-    // }
+    if (this.tipoCuenta === 'medico') {
+      id_consultorio = localStorage.getItem('calendar-medico');
+      id_consultorio = JSON.parse(id_consultorio);
+      id_consultorio = id_consultorio.id_consultorio;  
+    } else if (this.tipoCuenta === 'provedor') {
+      // usuarios_id = this._userService.getIdentity().id_provedor;
+      id_consultorio = info.id_consultorio;
+    } else if (this.tipoCuenta === 'sucursal') {
+      // usuarios_id = this._userService.getIdentity().id_sucursales;
+    }
 
     if(bol === true) {
       // mascota
@@ -1524,14 +1539,21 @@ export class CalendarioCitasComponent implements OnInit {
       categoria = 0;
     }
 
-    this._provedorService.dltCitaProvedor(info.id_eventos, info.id_consultorio, categoria, token).subscribe( (response) => {
+    this._provedorService.dltCitaProvedor(info.id_eventos, id_consultorio, categoria, token).subscribe( (response) => {
             console.log(response);
             this.loading = false;
             if (response[0].borrado === true) {
               // this.getEventos();
-              let anio = moment(new Date).format('YYYY');
-              let mes =  moment(new Date).format('M');
-              this.getEventosSucursal(mes, anio);
+                let anio = moment(new Date).format('YYYY');
+                let mes =  moment(new Date).format('M');
+              if(this.tipoCuenta === 'susucrsal') {      
+                this.getEventosSucursal(mes, anio);
+              }
+
+              if(this.tipoCuenta === 'medico') {
+                this.getEventos(anio,mes);
+              }
+              
               this.statusT = true;
               this.statusText = 'La cita fue elimina con exito.';
               window.scroll(0 , 0);

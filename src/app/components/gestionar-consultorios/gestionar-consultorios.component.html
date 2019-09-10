@@ -32,9 +32,20 @@
       <!-- FIN ALERTAS -->
 
 
+      <div class="text-center" style="padding-top: 30px;" *ngIf="consultorios && consultorios.length <= 0">
+          <h3>Aun tienes consultorios creados.</h3>
+      </div>
+
+      <div class="text-center" style="padding-bottom: 30px;">
+          <!-- [routerLink]="['/consultorio']" -->
+          <button type="button" class="btn btn-success" (click)="getMedicos()"><i class="fas fa-plus"></i>&nbsp; Crear
+            Consultorio</button>
+      </div>
+      
+
       <!-- ------------------------------------- CONSULTORIOS ---------------------------------------------- -->
 
-      <div *ngIf="consultorios && consultorios.consultorio.length >= 1">
+      <div *ngIf="consultorios && ( consultorios.consultorio && consultorios.consultorio.length >= 1)">
         <div style="padding-top: 10px;" *ngFor="let c of consultorios.consultorio">
           <div class="card">
             <div class="card-header">Consultorio : {{c.nombre}}</div>
@@ -45,8 +56,8 @@
               <p><strong>Servicio pestado : </strong>{{c.servicio}}</p>
 
               <div class="text-right" style="padding-top: 10px;">
-                <button class="btn btn-warning" style="margin-right: 5px;" (click)="editarConsultorio(c)"><i class="fas fa-pencil-alt"></i></button>
-                <button class="btn btn-danger" style="margin-right: 5px;"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-warning" style="margin-right: 5px;"  [routerLink]="['/consultorio', c.id_consultorio]"><i class="fas fa-pencil-alt"></i></button>
+                <button class="btn btn-danger" style="margin-right: 5px;" (click)="eliminarConsultorio(c.id_consultorio)"><i class="fas fa-trash-alt"></i></button>
               </div>
             </div>
           </div>
@@ -99,6 +110,72 @@
       </div>
   </div>
 </div>
+
+<!-- Button trigger modal -->
+<button type="button" id="btn-modal-eliminar-consultorio" style="display: none" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="!infoEliminar">Aviso</h5>
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="infoEliminar">Confirmacion</h5>
+          <button type="button" id="btn-modal-cerrar-eliConsul" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="!infoEliminar">
+            <div class="modal-body" >
+              Hay citas activas en el consultorio, por favor eliminalas antes de eliminar este consultorio.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+              </div>
+        </div>
+
+        <div *ngIf="infoEliminar">
+            <div class="modal-body" >
+              ¿ Estas seguro que deseas eliminar este consultorio ?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliConsul()">Eliminar</button>
+              </div>
+        </div>       
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Button trigger modal -->
+<button type="button" id="btn-info-medico" style="display: none" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalInfo">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" >Aviso</h5>
+          <button type="button" id="btn-modal-cerrar-info" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+            <div class="modal-body" >
+              No tienes medicos disponibles para crear un consultorio, por favor ponte en contacto con el administrador.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+              </div>
+      
+      </div>
+    </div>
+  </div>
+
 
 <div class="loading container-fluid" *ngIf="loading">
   <img src="/assets/pulso.gif" alt="">

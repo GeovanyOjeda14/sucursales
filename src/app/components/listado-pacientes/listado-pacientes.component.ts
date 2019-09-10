@@ -272,6 +272,9 @@ export class ListadoPacientesComponent implements OnInit {
 
   }
 
+  cerrarAlerta(){
+    this.status = undefined;
+  }
 
 
 }

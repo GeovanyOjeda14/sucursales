@@ -7,7 +7,7 @@
   
 <div class="container-fluid" style="padding-top: 50px; padding-left: 50px;">
 
-    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status === 'error'">
+    <div class="alert alert-danger alert-dismissible fade show container" role="alert" *ngIf="status === 'error'">
         {{statusText}}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
           <span aria-hidden="true">&times;</span>

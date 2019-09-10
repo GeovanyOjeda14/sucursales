@@ -23,7 +23,7 @@ export class MisServiciosComponent implements OnInit {
   comentarioArea = new FormControl('', [Validators.required, Validators.minLength(2)]);
 
   constructor(private _medicoService: MedicoService, private _userService: UserService, private _router: Router,
-    private global: Global, location: PlatformLocation) {
+    public global: Global, location: PlatformLocation) {
       location.onPopState(() => {
         document.getElementById('cerrar-modal-comentarios').click();
       });
@@ -43,6 +43,8 @@ export class MisServiciosComponent implements OnInit {
     }, (err) => {
       console.log(err);
       this.loading = false;
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.'
     });
   }
 
@@ -53,18 +55,21 @@ export class MisServiciosComponent implements OnInit {
 
   irCalendario(info) {
     console.log(info);
-    let inf = {id_servicios : info.id_servicios, id_categoria: info.categoria_idcategoria};
+    let inf = {id_servicios : info.id_servicios, id_categoria: info.categoria_idcategoria, id_consultorio : info.id_consultorio};
     localStorage.removeItem('calendar-medico');
     localStorage.setItem('calendar-medico', JSON.stringify(inf));
     this._router.navigate(['/calendario']);
   }
 
   verComentarios(info) {
+    let identity = this._userService.getIdentity().medico_id;
     this.status = undefined;
     // console.log(info);
     this.loading = true;
     this.infoServicio = info;
-    this._medicoService.getComentarioMedico(info.id_servicios, info.categoria_idcategoria).subscribe( (response) => {
+
+    // console.log(identity);
+    this._medicoService.getComentarioMedico(info.id_servicios, info.categoria_idcategoria, identity).subscribe( (response) => {
       console.log(response);
       this.comentarios = response;
       this.loading = false;

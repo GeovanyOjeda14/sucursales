@@ -55,6 +55,7 @@ const routes: Routes = [
     {path : 'terminosycondiciones', component: TerminosYCondicionesComponent, canActivate: [UserGuard] },
     {path : 'buscarcita', component: BuscarCitaComponent, canActivate: [UserGuard] },
     {path : 'slider', component: SlidersComponent, canActivate: [UserGuard] },
+    {path : 'consultorio/:id', component: ConsultorioComponent, canActivate: [UserGuard] },
     {path : 'consultorio', component: ConsultorioComponent, canActivate: [UserGuard] },
     // {path : 'ordenllegada', component: OrdenLlegadaComponent, canActivate: [UserGuard] },
     {path : 'perfil', component: PerfilComponent, canActivate: [UserGuard] },

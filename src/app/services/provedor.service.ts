@@ -51,7 +51,7 @@ export class ProvedorService {
     getMedicosProvedor(id): Observable<any> {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-        return this.http.get(this.url + '/medicos/' + id);
+        return this.http.get(this.url + '/medicos/' + id, {headers : headers});
     }
  
 
@@ -91,13 +91,14 @@ export class ProvedorService {
 
     postCitasProvedor(info, token): Observable <any> {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return   this.http.post(this.url + '/citai/' + '?token=' + token, info, {headers : headers});
+        return this.http.post(this.url + '/citai/' + '?token=' + token, info, {headers : headers});
  
       }
 
     // Ruta para obtener la informacion de una publicacion para ser editada.
     getInfoEditar(id): Observable <any> {
-        return this.http.get(this.url + '/sservicio/' + id);
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/sservicio/' + id , {headers : headers});
       }
 
       // Ruta para obtener los datos de una mascota

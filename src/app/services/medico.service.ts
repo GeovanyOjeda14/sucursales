@@ -54,9 +54,11 @@ export class MedicoService {
     }
 
     // ruta para obtener los comentarios por servicio de un medico
-    getComentarioMedico(id_servicio , idctga) {
+    getComentarioMedico(id_servicio , idctga, id_medico) {
+
+      console.log(id_servicio, idctga, id_medico);
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/comentmed/' + id_servicio + '/' + idctga, {headers : headers});
+        return this.http.get(this.url + '/comentmed/' + id_servicio + '/' + idctga + '/' + id_medico, {headers : headers});
       }
 
        // ruta para dar respuestas a los comentarios por parte del medico.
@@ -96,8 +98,8 @@ export class MedicoService {
       }
 
       // Ruta para obtener las citas del medico.
-      getHistorialCitasCalendar(mes,anio,id_medico,id_categoria, id_servicio){
+      getHistorialCitasCalendar(mes,anio,id_medico,id_categoria, id_consultorio){
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/histmed/' + mes + '/' + anio + '/' + id_medico + '/' + id_categoria + '/' + id_servicio , {headers : headers});
+        return this.http.get(this.url + '/histmed/' + mes + '/' + anio + '/' + id_medico + '/' + id_categoria + '/' + id_consultorio , {headers : headers});
       }
 }

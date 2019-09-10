@@ -9,7 +9,7 @@
 
 
 
-<div class="container-fluid nuevoContenedor" *ngIf="identity.id_medico || identity.id_sucursales">
+<div class="container-fluid nuevoContenedor" *ngIf="identity.medico_id || identity.id_sucursales">
 
         <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
                 {{statusText}}
@@ -41,7 +41,7 @@
 </div>
 
 <div class="loading" *ngIf="loading">
-    <img src="/assets/pulso.gif" alt="">
+  <img src="/assets/pulso.gif" alt="">
 </div>
 
 

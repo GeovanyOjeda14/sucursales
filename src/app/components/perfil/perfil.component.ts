@@ -30,6 +30,7 @@ export class PerfilComponent implements OnInit {
   descuentoPrecio = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
   public datos: FormGroup;
   public datosAdmin: FormGroup;
+  public datosSucu: FormGroup;
   public loading;
   public today;
   public infoSucursal;
@@ -120,6 +121,7 @@ export class PerfilComponent implements OnInit {
       this._sucursalService.getInfoSucursal(user.id_sucursales).subscribe( (response) => {     
         this.infoSucursal = response;
         this.infoSucursal.avatar = this.global.apiUrl + user.avatar;
+        this.validacionesSucursal();
         console.log(this.infoSucursal);
         this.loading = false;
       }, (err) => {
@@ -132,6 +134,18 @@ export class PerfilComponent implements OnInit {
       } );
     }
 
+  }
+
+  validacionesSucursal(){
+    this.datosSucu = this.formBuilder.group({
+
+      nombre: [this.infoSucursal[0].nombre, [Validators.required, Validators.minLength(3), Validators.maxLength(50),
+              Validators.pattern('[a-z A-z ñ]*') ]],
+      direccion : [this.infoSucursal[0].direccion, [Validators.required]],
+      telefono : [this.infoSucursal[0].telefono, [Validators.required, Validators.pattern('[0-9]*'), Validators.minLength(7) ,
+                  Validators.maxLength(15)]],
+
+    });
   }
 
   mouseEnter(campo) {
@@ -322,6 +336,28 @@ export class PerfilComponent implements OnInit {
 
   cerrarAlerta() {
     this.status = undefined;
+  }
+
+  editarSucu(){
+    this.loading = true;
+    let info = {nombre : this.datosSucu.value.nombre, direccion : this.datosSucu.value.direccion, telefono : this.datosSucu.value.telefono,
+    id_sucursal : this.infoSucursal[0].id_sucursales}
+
+    console.log(info);
+
+    this._sucursalService.editInfoSucursal(info).subscribe( (response) => {
+      console.log(response);
+      this.loading = false;
+      if(response === true) {
+        this.status = 'success';
+        this.statusText = 'Datos actualizados con exito.';
+      }
+    }, (err) => {
+      console.log(err);
+      this.loading = false;
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde';
+    } );
   }
 
 }

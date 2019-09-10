@@ -55,4 +55,60 @@ export class SucursalService {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/consulsuc/' + id_sucursal , {headers : headers});
     }
+
+    // Ruta para eliminar el horario de un consultorio
+    dltHorarioConsultorio(id_horario){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.delete(this.url + '/delhorario/' + id_horario, {headers : headers});    
+    }
+
+    // Ruta para pedir informacion de un consultorio
+    getInfoConsultorio(id_consultorio){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/consultorioid/' + id_consultorio, {headers : headers});
+    }
+
+    // Ruta para enviar horario
+    postEnviarHorario(info) {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.post(this.url + '/horario', info, {headers : headers});
+    }
+
+    // Ruta para saber si un horario tiene citas o no
+    getConfirmacionEliminarHorario(id_horario){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/exevents/' + id_horario , {headers : headers});
+    }
+
+    // Ruta para actualizar los datos del consultorio
+    editInfoConsultorio(info) {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.put(this.url + '/consultorio/', info , {headers : headers});
+    }
+
+    // Ruta para editar los datos de una sucursal
+    editInfoSucursal(info){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.put(this.url + '/sucursal/', info , {headers : headers});
+    }
+
+
+    // Ruta para saber si hay citas en un consultorio antes de eliminarlo
+    getEventsConsul(id_consultorio){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/eventsco/' + id_consultorio, {headers : headers});
+    }
+
+    // Ruta para eliminar consultorio
+    dltConsultorio(id_consultorio){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.put(this.url + '/delconsul/' + id_consultorio, {headers : headers});
+    }
+
+    // Ruta para crear un consultorio a traves de la sucursal
+    postConsultorioSucursal(info){
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.post(this.url + '/addconsul/', info, {headers : headers});
+    }
+
 }

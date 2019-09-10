@@ -655,6 +655,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h1') {
       this.mananaH1 = false;
+      this.mananaDesdeH1 = undefined;
+      this.mananaHastaH1 = undefined;   
     }
 
     if (ev.checked === true && h === 'h2') {
@@ -663,6 +665,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h2') {
       this.mananaH2 = false;
+      this.mananaHastaH2 = undefined;
+      this.mananaDesdeH2 = undefined;
     }
 
     if (ev.checked === true && h === 'h3') {
@@ -671,6 +675,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h3') {
       this.mananaH3 = false;
+      this.mananaDesdeH3 = undefined;
+      this.mananaHastaH3 = undefined;
     }
   }
 
@@ -759,6 +765,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h1') {
       this.tardeH1 = false;
+      this.tardeDesdeH1 = undefined;
+      this.tardeHastaH1 = undefined;
     }
 
     if (ev.checked === true && h === 'h2') {
@@ -767,6 +775,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h2') {
       this.tardeH2 = false;
+      this.tardeDesdeH2 = undefined;
+      this.tardeHastaH2 = undefined;
     }
 
     if (ev.checked === true && h === 'h3') {
@@ -775,6 +785,8 @@ export class CrearSucursalComponent implements OnInit {
 
     if (ev.checked === false && h === 'h3') {
       this.tardeH3 = false;
+      this.tardeDesdeH3 = undefined;
+      this.tardeHastaH3 = undefined;
     }
   }
 
@@ -1291,6 +1303,8 @@ export class CrearSucursalComponent implements OnInit {
       this.horario3 = false;
       this.btnHorario = true;
       this.disableH2 = false;
+      this.enabledDiasH2();
+      this.enabledDiasH3();
       this.diasH3 = undefined;
       this.mananaDesdeH3 = undefined;
       this.mananaHastaH3 = undefined;

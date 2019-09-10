@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ProvedorService } from '../../services/provedor.service';
 import { Global } from '../../services/global';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MedicoService } from '../../services/medico.service';
 import { Medico } from '../../models/medico';
 import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';

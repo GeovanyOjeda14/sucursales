@@ -129,16 +129,18 @@
                 <input type="text" class="form-control" id="direccion" aria-describedby="emailHelp"
                   placeholder="Direccion" formControlName="direccion" (change)="cambio('direccion')"
                   [class.is-invalid]="datosAdmin.get('direccion').errors" readonly>
+
+                  <div *ngIf="datosAdmin.get('direccion').errors">
+                      <p class="alerta-error" *ngIf="datosAdmin.get('direccion').hasError('required')">* El campo es
+                        requerido
+                      </p>
+                    </div>
               </div>
               <div class="col-md-1"> <a *ngIf="ver === 'direccion'" (click)="editar('direccion')"
                   class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a></div>
               <div class="col-md-1"></div>
             </div>
-            <div *ngIf="datosAdmin.get('direccion').errors">
-              <p class="alerta-error" *ngIf="datosAdmin.get('direccion').hasError('required')">* El campo es
-                requerido
-              </p>
-            </div>
+            
           </div>
 
           <div class="form-group" (mouseleave)="mouseLeave('telefono')" (mouseenter)="mouseEnter('telefono')">
@@ -152,6 +154,18 @@
                 <input type="text" class="form-control" id="telefono" aria-describedby="emailHelp"
                   placeholder="telefono" formControlName="telefono" (change)="cambio('telefono')"
                   [class.is-invalid]="datosAdmin.get('telefono').errors" readonly>
+
+                  <div *ngIf="datosAdmin.get('telefono').errors">
+                      <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('required')">* El campo es
+                        requerido
+                      </p>
+                      <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('minlength')">Cantidad minima de
+                        caracteres (5)</p>
+                      <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('maxlength')">Cantidad maxima de
+                        caracteres (15)</p>
+                      <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('pattern')">Este campo solo acepta numeros sin puntos, espacios o caracteres especiales.</p>
+                    </div>
+
               </div>
               <div class="col-md-1">
                 <a *ngIf="ver === 'telefono'" (click)="editar('telefono')" class="btn btn-warning"><i
@@ -161,16 +175,7 @@
 
             </div>
 
-            <div *ngIf="datosAdmin.get('telefono').errors">
-              <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('required')">* El campo es
-                requerido
-              </p>
-              <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('minlength')">Cantidad minima de
-                caracteres (5)</p>
-              <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('maxlength')">Cantidad maxima de
-                caracteres (15)</p>
-              <p class="alerta-error" *ngIf="datosAdmin.get('telefono').hasError('pattern')">Este campo solo acepta numeros sin puntos, espacios o caracteres especiales.</p>
-            </div>
+           
 
 
           </div>
@@ -188,23 +193,21 @@
                 <input type="text" class="form-control" id="whatsapp" aria-describedby="emailHelp"
                   placeholder="whatsapp" formControlName="whats" (change)="cambio('whatsapp')"
                   [class.is-invalid]="datosAdmin.get('whats').errors" readonly>
+
+                  <div *ngIf="datosAdmin.get('whats').errors">
+                      <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('minlength')">Cantidad minima de
+                        caracteres (5)</p>
+                      <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('maxlength')">Cantidad maxima de
+                        caracteres (15)</p>
+                      <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('pattern')">Este campo solo acepta numeros sin puntos, espacios o caracteres especiales.</p>
+                    </div>
               </div>
               <div class="col-md-1">
                 <a *ngIf="ver === 'whatsapp'" (click)="editar('whatsapp')" class="btn btn-warning"><i
                     class="fas fa-pencil-alt"></i></a>
               </div>
               <div class="col-md-1"></div>
-
             </div>
-
-            <div *ngIf="datosAdmin.get('whats').errors">
-              <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('minlength')">Cantidad minima de
-                caracteres (5)</p>
-              <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('maxlength')">Cantidad maxima de
-                caracteres (15)</p>
-              <p class="alerta-error" *ngIf="datosAdmin.get('whats').hasError('pattern')">Este campo solo acepta numeros sin puntos, espacios o caracteres especiales.</p>
-            </div>
-
           </div>
 
 
@@ -728,6 +731,7 @@
                   style="border-radius: 138px;border: 17px solid white; background: white; " alt="">
                 <br>
                 <div style="padding-bottom: 40px;">
+                    <h3 style="color: white;"><strong>Sucursal</strong></h3>
                   <h4><strong>{{infoSucursal[0].nombre}}</strong></h4>
                 </div>
               </div>
@@ -756,61 +760,110 @@
               </div>
 
               <div *ngIf="infoSucursal">
-                  <div class="form-group">
-                      <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-4">
-                          <p style="text-align: left">Nombre sucursal :</p>
+
+                <form  [formGroup]="datosSucu" (ngSubmit)="editarSucu()" novalidate>
+
+                    <div class="form-group" (mouseleave)="mouseLeave('nombreSucu')" (mouseenter)="mouseEnter('nombreSucu')">
+                        <div class="row">
+                          <div class="col-md-2"></div>
+                          <div class="col-md-4">
+                            <p style="text-align: left">Nombre sucursal :</p>
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" class="form-control" id="nombreSucu" aria-describedby="emailHelp"
+                              placeholder="Nombre sucursal" formControlName="nombre" (change)="cambio('nombreSucu')"
+                              [class.is-invalid]="datosSucu.get('nombre').errors" maxlength="50" readonly>
+
+                              <div *ngIf="datosSucu.get('nombre').errors">
+                                  <p class="alerta-error" *ngIf="datosSucu.get('nombre').hasError('required')">* El campo es requerido </p>
+                                  <p class="alerta-error" *ngIf="datosSucu.get('nombre').hasError('maxlength')">* Cantidad maxima de caracteres (50)</p>
+                                  <p class="alerta-error" *ngIf="datosSucu.get('nombre').hasError('minlength')">* Cantidad minima de caracteres (3)</p>
+                                </div>
+                          </div>
+                          <div class="col-md-1"> <a *ngIf="ver === 'nombreSucu'" (click)="editar('nombreSucu')"
+                            class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a></div>
+                          <div class="col-md-2"></div>
                         </div>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Nombre de la empresa" value="{{infoSucursal[0].nombre}}" readonly>
+                    </div>
+
+
+                    <div class="form-group" (mouseleave)="mouseLeave('direccionSucu')" (mouseenter)="mouseEnter('direccionSucu')">
+                        <div class="row">
+                          <div class="col-md-2"></div>
+                          <div class="col-md-4">
+                            <p style="text-align: left">Dirección: </p>
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" class="form-control" id="direccionSucu" aria-describedby="emailHelp"
+                              placeholder="Direccion" formControlName="direccion" (change)="cambio('direccionSucu')"
+                              [class.is-invalid]="datosSucu.get('direccion').errors" maxlength="50" readonly>
+
+                              <div *ngIf="datosSucu.get('direccion').errors">
+                                  <p class="alerta-error" *ngIf="datosSucu.get('direccion').hasError('required')">* El campo es
+                                    requerido
+                                  </p>
+                                </div>
+                          </div>
+                          <div class="col-md-1"> <a *ngIf="ver === 'direccionSucu'" (click)="editar('direccionSucu')"
+                              class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a></div>
+                          <div class="col-md-1"></div>
                         </div>
-                        <div class="col-md-2"></div>
+                        
                       </div>
-                  </div>
-    
-                  <div class="form-group">
-                      <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-4">
-                          <p style="text-align: left">Direccion :</p>
+
+
+
+      
+                    <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-2"></div>
+                          <div class="col-md-4">
+                            <p style="text-align: left">Municipio :</p>
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                              placeholder="Nombre de la empresa" value="{{infoSucursal[0].municipio}}" readonly>
+                          </div>
+                          <div class="col-md-2"></div>
                         </div>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Nombre de la empresa" value="{{infoSucursal[0].direccion}}" readonly>
+                    </div>
+      
+                    <div class="form-group" (mouseleave)="mouseLeave('telefonoSucu')" (mouseenter)="mouseEnter('telefonoSucu')">
+                        <div class="row">
+                          <div class="col-md-2"></div>
+                          <div class="col-md-4">
+                            <p style="text-align: left">Telefono :</p>
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" class="form-control" id="telefonoSucu" aria-describedby="emailHelp"
+                              placeholder="Nombre de la empresa" formControlName="telefono" (change)="cambio('telefonoSucu')"
+                              [class.is-invalid]="datosSucu.get('telefono').errors" maxlength="15" readonly>
+
+                              <div *ngIf="datosSucu.get('telefono').errors">
+                                  <p class="alerta-error" *ngIf="datosSucu.get('telefono').hasError('required')">* El campo es
+                                    requerido
+                                  </p>
+
+                                  <p class="alerta-error" *ngIf="datosSucu.get('maxlength').hasError('required')">* Cantidad maxima de caracteres (15)
+                                    </p>
+
+                                    <p class="alerta-error" *ngIf="datosSucu.get('minlength').hasError('required')">* Cantidad minima de caracteres (7)
+                                      </p>
+                                </div>
+                          </div>
+                          <div class="col-md-1"> <a *ngIf="ver === 'telefonoSucu'" (click)="editar('telefonoSucu')"
+                            class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a></div>
+                          <div class="col-md-2"></div>
                         </div>
-                        <div class="col-md-2"></div>
-                      </div>
-                  </div>
-    
-                  <div class="form-group">
-                      <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-4">
-                          <p style="text-align: left">Municipio :</p>
-                        </div>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Nombre de la empresa" value="{{infoSucursal[0].municipio}}" readonly>
-                        </div>
-                        <div class="col-md-2"></div>
-                      </div>
-                  </div>
-    
-                  <div class="form-group">
-                      <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-4">
-                          <p style="text-align: left">Telefono :</p>
-                        </div>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Nombre de la empresa" value="{{infoSucursal[0].telefono}}" readonly>
-                        </div>
-                        <div class="col-md-2"></div>
-                      </div>
-                  </div>
+                    </div>
+                    <br>
+                    <div class="text-center">
+                      <button class="btn btn-success" [disabled]="!datosSucu.valid">Editar Informacion</button>
+                    </div>
+
+                </form>
+                 
+                  <!-- // -->
               </div>
              
             </div>

@@ -57,6 +57,8 @@ export class HistorialCitasMedicoComponent implements OnInit {
   public medico_id;
   public resEventos;
   public infoPaciente;
+  public status;
+  public statusText;
 
   constructor(private _userService : UserService, private _medicoService : MedicoService, location: PlatformLocation){
     location.onPopState(() => {
@@ -81,6 +83,8 @@ export class HistorialCitasMedicoComponent implements OnInit {
       this.loading = false;
     }, (err) => {
       console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
       this.loading = false;
     });
   }
@@ -92,20 +96,20 @@ export class HistorialCitasMedicoComponent implements OnInit {
 
   servicioSelecionado(ev) {
     this.servicio = ev.value;
-    console.log(this.servicio);
+    console.log('sv', this.servicio);
     let anio = moment(new Date).format('YYYY');
     let mes =  moment(new Date).format('M');
 
-    this.getHistorial(this.servicio.categoria_idcategoria, this.servicio.id_servicios, anio, mes);
+    this.getHistorial(this.servicio.categoria_idcategoria, this.servicio.id_consultorio, anio, mes);
   }
-
-  getHistorial(id_categoria, id_servicio, anio, mes) {
+ 
+  getHistorial(id_categoria, id_consultorio, anio, mes) {
     
     this.loading = true;
     this.events = [];
-    // console.log(mes, anio, id_categoria, id_servicio);
+    // console.log(mes, anio, id_categoria, id_consultorio);
 
-    this._medicoService.getHistorialCitasCalendar(mes, anio, this.medico_id, id_categoria, id_servicio).subscribe( (response) => {
+    this._medicoService.getHistorialCitasCalendar(mes, anio, this.medico_id, id_categoria, id_consultorio).subscribe( (response) => {
       console.log(response);
       this.resEventos = response;
 
@@ -152,6 +156,9 @@ export class HistorialCitasMedicoComponent implements OnInit {
 
       this.loading = false;
     }, (err) => { 
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
+      this.loading = false;
       console.log(err);
     });
 
@@ -160,7 +167,7 @@ export class HistorialCitasMedicoComponent implements OnInit {
   closeOpenMonthViewDay(ev) {
     console.log(ev);
     // console.log(moment(ev).format('YYYY'), moment(ev).format('M'));
-    this.getHistorial(this.servicio.categoria_idcategoria, this.servicio.id_servicios,moment(ev).format('YYYY') ,moment(ev).format('M'));
+    this.getHistorial(this.servicio.categoria_idcategoria, this.servicio.id_consultorio,moment(ev).format('YYYY') ,moment(ev).format('M'));
   }
 
   addEvent(title, start, end, horaInicio, horaFinal, info): void {
@@ -210,5 +217,9 @@ export class HistorialCitasMedicoComponent implements OnInit {
 
     this.infoPaciente = event;
     console.log(event);
+  }
+
+  cerrarAlerta(){
+    this.status = undefined;
   }
 }
