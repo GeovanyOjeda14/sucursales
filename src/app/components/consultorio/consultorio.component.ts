@@ -140,8 +140,8 @@ export class ConsultorioComponent implements OnInit {
 
   siguiente(){
     this.mymodel = 'horarios';
-    document.getElementById('informacionCrear').className = 'list-group-item';
-    document.getElementById('horariosCrear').className = 'list-group-item active';
+    document.getElementById('informacion').className = 'list-group-item';
+    document.getElementById('horarios').className = 'list-group-item active';
   }
 
   mostrarHorario(bol) {
@@ -581,7 +581,7 @@ export class ConsultorioComponent implements OnInit {
 
 
    atras(tipo) {
-    // console.log(this.diasH1);
+    // console.log('asda');
 
   
     let bol = true;
@@ -593,8 +593,8 @@ export class ConsultorioComponent implements OnInit {
           if(tipo === false) {
           this.horario1 = '1';
           this.mymodel = 'informacion';
-          document.getElementById('informacionCrear').className = 'list-group-item active';
-          document.getElementById('horariosCrear').className = 'list-group-item';
+          document.getElementById('informacion').className = 'list-group-item active';
+          document.getElementById('horarios').className = 'list-group-item';
           }
           
       
@@ -632,8 +632,8 @@ export class ConsultorioComponent implements OnInit {
             this.horario1 = '1';
          }
          this.mymodel = 'informacion';
-         document.getElementById('informacionCrear').className = 'list-group-item active';
-         document.getElementById('horariosCrear').className = 'list-group-item';
+         document.getElementById('informacion').className = 'list-group-item active';
+         document.getElementById('horarios').className = 'list-group-item';
          }
 
          console.log(this.diasH1);
@@ -676,8 +676,8 @@ export class ConsultorioComponent implements OnInit {
           this.horario1 = '1';
        }  
         this.mymodel = 'informacion';
-        document.getElementById('informacionCrear').className = 'list-group-item active';
-        document.getElementById('horariosCrear').className = 'list-group-item';
+        document.getElementById('informacion').className = 'list-group-item active';
+        document.getElementById('horarios').className = 'list-group-item';
         }
         
       }
@@ -728,8 +728,8 @@ export class ConsultorioComponent implements OnInit {
               this.horario1 = '1';
            }
             this.mymodel = 'informacion';
-            document.getElementById('informacionCrear').className = 'list-group-item active';
-            document.getElementById('horariosCrear').className = 'list-group-item';
+            document.getElementById('informacion').className = 'list-group-item active';
+            document.getElementById('horarios').className = 'list-group-item';
             }
             
         }
@@ -835,9 +835,9 @@ export class ConsultorioComponent implements OnInit {
 
     guardar() {
 
-      if(this.validacionesH1Crear(true) === true) {
-        console.log('aqui');
-      }
+      // if(this.validacionesH1Crear(true) === true) {
+      //   console.log('aqui');
+      // }
       let sw = true;
 
       switch(sw === true) {
@@ -940,9 +940,9 @@ export class ConsultorioComponent implements OnInit {
       // let h4 = {horario: horario};
       let horarios = horario;
       // console.log(horarios);
-      let identity = this._userService.getIdentity().id_sucursales;   
-      let info =  [{ medico_id: this.medicoSelect.value, nombre: this.nombreConsultorio.value, id_sucursal : identity,
-        extension: this.extensionConsultorio.value, horarios, id_servicio: this.servicioSelect.value }];
+      let identity = this._userService.getIdentity();   
+      let info =  [{id_sucursal: identity.id_sucursales},{ medico_id: this.medicoSelect.value, nombre: this.nombreConsultorio.value, id_sucursal : identity.id_sucursales,
+        extension: this.extensionConsultorio.value, horarios, id_servicio: this.servicioSelect.value, id_provedor: identity.id_provedor }];
         console.log(info);
         this._sucursalService.postConsultorioSucursal(info).subscribe( (response) => {
           console.log(response);
@@ -959,7 +959,7 @@ export class ConsultorioComponent implements OnInit {
         } );
 
     }
-
+ 
 
   // ------------------------------------ METODOS EDITAR CONSULTORIO -------------------------------------------------------------
 

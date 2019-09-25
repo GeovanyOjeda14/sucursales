@@ -11,6 +11,27 @@
     <!-- </div> -->
   </div>
 
+
+
+  <!--  ------- ALERTAS ----------------------------- -->
+
+  <div class="alert alert-danger alert-dismissible fade show container" role="alert" *ngIf="status === 'error'">
+      {{statusText}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade show container" role="alert" *ngIf="status === 'success'">
+      {{statusText}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <!-- FIN ALERTAS -->
+
+
 <!-- <div id="btn-agregar-pub"><h1>Mis Publicaciones ! &nbsp; <button type="button" class="btn btn-success" [routerLink]="['/crear-publicacion']"><i class="fas fa-plus"></i>&nbsp; Crear Publicación</button></h1> -->
 <div class="container">
   <div id="btn-agregar-pub" class="text-center">
@@ -56,27 +77,11 @@
 
 <!-- ------------------------- FIN MODAL DESA CREAR MEDICO --------------------------- -->
 <div class="container-fluid">
+
   <div class="row">
 
     <div class="col-md-7">
       <div id="card-publicacion" *ngIf="!vacio">
-
-
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status === 'error'">
-          {{statusText}}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
-          {{statusText}}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-
 
         <div class="jumbotron jumbotron-fluid" style="padding: 20px" *ngFor="let p of publications">
           <div class="row">
@@ -86,24 +91,30 @@
               <p><strong>Categoria : </strong>{{p.categoria}}</p>
               <p><strong>Descripcion : </strong>{{p.descripcion}}</p>
               <div><p><strong>Creado por : </strong>{{p.creadoPor}}</p></div>      
-              <div class="row" style="height: 5vw"></div>
+              <div class="row" style="height: 5vw" *ngIf="identity.id_provedor && !identity.id_sucursales">
+
+                  <div class="col-md-6">
+                      <p class="p-btns">
+                          <a href="#myModal{{p.id_servicios}}" class="btn btn-info w-100" role="button" data-toggle="modal"
+                            (click)="verPublicacion(p.id_servicios)"><i class="far fa-eye"></i> Ver</a>
+                        </p>
+                  </div>
+  
+                  <div class="col-md-6">
+                    <p class="p-btns">
+                      <a href="#eliminarPub{{p.id_servicios}}" class="btn btn-danger w-100" role="button"
+                        data-toggle="modal" (click)="verPublicacion(p.id_servicios)"><i class="fas fa-trash-alt"></i>
+                        Eliminar</a>
+                    </p>
+                  </div>
+
+              </div>
              
-                <div class="text-center">
+                <div class="text-center" *ngIf="identity.id_provedor && identity.id_sucursales">
                     <a  class="btn btn-info w-100" role="button" data-toggle="modal"
-                    (click)="verServicioSucursal(p)"><i class="far fa-eye"></i> Ver</a>
-                  <!-- <p class="p-btns">
-                    <a href="#myModal{{p.id_servicios}}" class="btn btn-info w-100" role="button" data-toggle="modal"
-                      (click)="verPublicacion(p.id_servicios)"><i class="far fa-eye"></i> Ver</a>
-                  </p> -->
+                    (click)="verServicioSucursal(p)"><i class="far fa-eye"></i> Ver</a>   
                 </div>
-                <!-- <div class="col-md-6">
-                  <p class="p-btns">
-                    <a href="#eliminarPub{{p.id_servicios}}" class="btn btn-danger w-100" role="button"
-                      data-toggle="modal" (click)="verPublicacion(p.id_servicios)"><i class="fas fa-trash-alt"></i>
-                      Eliminar</a>
-                  </p>
-                </div> -->
-             
+  
             </div>
 
             <br>
@@ -190,6 +201,7 @@
 
                             <div class="col-lg-2 contenedores" *ngFor="let item of imagenes, let i = index"><img
                                 [src]="item.base64Image" class="imga" />
+                              
                               <button class="btn btn-danger" (click)="eliminarImagenNueva(i)"><i
                                   class="fas fa-trash-alt"></i></button>
                             </div>

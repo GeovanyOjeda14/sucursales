@@ -2,21 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Global } from '../../services/global';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, Validators } from '@angular/forms';
-import CryptoJS from 'crypto-js';
 
-@Component({ 
-  selector: 'app-barra-navegacion',
-  templateUrl: './barra-navegacion.component.html',
-  styleUrls: ['./barra-navegacion.component.css'],
+@Component({
+  selector: 'app-panel-administrador',
+  templateUrl: './panel-administrador.component.html',
+  styleUrls: ['./panel-administrador.component.css'],
   providers : [UserService, Global]
 })
-export class BarraNavegacionComponent implements OnInit {
+export class PanelAdministradorComponent implements OnInit {
   public identity;
-  username = new FormControl('', Validators.required);
-  pssw = new FormControl('', Validators.required);
 
-  constructor( public _userService: UserService, public global: Global, private _router: Router, private _route: ActivatedRoute,) { }
+  constructor(public _userService: UserService, public global: Global, private _router: Router, private _route: ActivatedRoute) { }
 
   ngOnInit() {
 
@@ -33,12 +29,6 @@ export class BarraNavegacionComponent implements OnInit {
     this._router.navigate(['/login']);
   }
 
-  iniciarSesion(){
-    let password = CryptoJS.SHA512(this.pssw.value).toString(CryptoJS.enc.Hex);
-    console.log(this.username.value, password);
-  }
-
-
   colapse(){
 
     if(document.getElementById('sidebar').className === '') {
@@ -49,6 +39,5 @@ export class BarraNavegacionComponent implements OnInit {
       document.getElementById('sidebarCollapse').className = '';
     }
   }
-
 
 }

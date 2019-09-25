@@ -111,4 +111,9 @@ export class SucursalService {
         return this.http.post(this.url + '/addconsul/', info, {headers : headers});
     }
 
+    dltSucursal(id_sucursal) {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.delete(this.url + '/sucursal/'+ id_sucursal,{headers : headers});
+    }
+
 }

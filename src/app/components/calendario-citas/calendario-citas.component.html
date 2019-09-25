@@ -16,7 +16,7 @@
             <li class="list-group-item active" id="agenda" (click)="pestana('agenda')">Agenda</li>
             <li class="list-group-item" id="historial" (click)="pestana('historial')">Historial citas</li>
         </ul> -->
-
+ 
 
           <div style="padding-top: 50px;">
               <p style="margin: 0px; color: grey; font-size: 17px;">Escoge un servicio</p>
@@ -88,7 +88,7 @@
                 (viewDateChange)="closeOpenMonthViewDay($event)">
                 Atras
               </div>
-              <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (click)="hoy()">
+              <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
                 Hoy
               </div>
               <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"

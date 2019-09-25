@@ -441,7 +441,7 @@
 .crear-pub[_ngcontent-c1] div[_ngcontent-c1]{
   margin-left: 15px !important;
   margin-top: 15px !important;
-}
+} 
 
 #perfil-provedor-imagen{
       margin-top: 0px !important; 
@@ -465,4 +465,8 @@
   margin: 0px;
   color: grey;
   font-size: 13px;
+}
+
+.color-prevenir{
+  color: #048e79;
 }

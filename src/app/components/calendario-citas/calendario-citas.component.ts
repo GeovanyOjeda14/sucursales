@@ -1013,7 +1013,7 @@ export class CalendarioCitasComponent implements OnInit {
     this.status = false;
     this.statusT = false;
     this.consultorioSelecionado = undefined;
-    console.log(this.id_consultorio);
+    // console.log(this.id_consultorio);
     if(this.tipoCuenta === 'provedor') {
 
         // this.getEventos();
@@ -1040,7 +1040,7 @@ export class CalendarioCitasComponent implements OnInit {
   }
 
   getHistorialSucursal(mes, anio) {
-    console.log(this.id_consultorio);
+    // console.log(this.id_consultorio);
     this.events = []; 
     // console.log('hist');
     let identity = this._userService.getIdentity().id_sucursales;
@@ -1106,7 +1106,7 @@ export class CalendarioCitasComponent implements OnInit {
 
     let identity = this._userService.getIdentity().id_sucursales;
     this._sucursalService.getConsultoriosSegunServicio(identity, this.serviciosSelect.value.id_servicios).subscribe( (response)=> {
-      // console.log('consuls', response);
+      console.log('consuls', response);
       this.medicos = response;
     }, (err) => {
       console.log(err);
@@ -1528,6 +1528,7 @@ export class CalendarioCitasComponent implements OnInit {
       // usuarios_id = this._userService.getIdentity().id_provedor;
       id_consultorio = info.id_consultorio;
     } else if (this.tipoCuenta === 'sucursal') {
+      id_consultorio = info.id_consultorio;
       // usuarios_id = this._userService.getIdentity().id_sucursales;
     }
 
@@ -1539,6 +1540,8 @@ export class CalendarioCitasComponent implements OnInit {
       categoria = 0;
     }
 
+    console.log(info.id_eventos, id_consultorio, categoria);
+
     this._provedorService.dltCitaProvedor(info.id_eventos, id_consultorio, categoria, token).subscribe( (response) => {
             console.log(response);
             this.loading = false;
@@ -1546,7 +1549,7 @@ export class CalendarioCitasComponent implements OnInit {
               // this.getEventos();
                 let anio = moment(new Date).format('YYYY');
                 let mes =  moment(new Date).format('M');
-              if(this.tipoCuenta === 'susucrsal') {      
+              if(this.tipoCuenta === 'sucursal') {      
                 this.getEventosSucursal(mes, anio);
               }
 

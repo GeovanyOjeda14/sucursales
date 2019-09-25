@@ -5,12 +5,13 @@ import { UserService } from '../../services/user.service';
 import {FormControl, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import CryptoJS from 'crypto-js';
+import { SucursalService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-crear-sucursal',
   templateUrl: './crear-sucursal.component.html',
   styleUrls: ['./crear-sucursal.component.css'],
-  providers: [ApplicationService, ProvedorService, UserService]
+  providers: [ApplicationService, ProvedorService, UserService, SucursalService]
 })
 export class CrearSucursalComponent implements OnInit {
   public mymodel;
@@ -25,7 +26,7 @@ export class CrearSucursalComponent implements OnInit {
   public servicios;
   public id_provedor;
   public status;
-  public textoStatus;
+  public statusText;
 
   // variables horarios para consultorios
   public horasDesdeHastaManana;
@@ -65,6 +66,8 @@ export class CrearSucursalComponent implements OnInit {
   public infoSucursal;
   public consultorioSelect;
   public consultorioEliminar;
+  public id_consultorio;
+  public infoEliminar;
 
   // form control
   departSelect = new FormControl('', Validators.required);
@@ -72,11 +75,11 @@ export class CrearSucursalComponent implements OnInit {
   nombreSucursal = new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50),
   Validators.pattern('[a-z A-z ñ]*')]);
   direccionSucursal = new FormControl('', Validators.required);
-  telefonoSucursal = new FormControl('', [Validators.pattern('[0-9]*'), Validators.minLength(7), Validators.maxLength(12)]);
+  telefonoSucursal = new FormControl('', [Validators.required ,Validators.pattern('[0-9]*'), Validators.minLength(7), Validators.maxLength(12)]);
   nombreConsultorio = new FormControl('', Validators.required);
   pssw = new FormControl('', [Validators.required, Validators.minLength(8)]);
   psswConfirm = new FormControl('', [Validators.required, Validators.minLength(8)]);
-  username = new FormControl('', [Validators.required]);
+  username = new FormControl('', [Validators.required, Validators.pattern('[a-zA-z_0-9]*')]);
   extensionConsultorio = new FormControl('');
   medicoSelect = new FormControl('', Validators.required);
   servicioSelect = new FormControl('', Validators.required);
@@ -85,7 +88,7 @@ export class CrearSucursalComponent implements OnInit {
   public loading;
 
   constructor(private _aplicationService : ApplicationService, private _provedorService : ProvedorService, private _userService: UserService,
-    private _route: ActivatedRoute) {
+    private _route: ActivatedRoute, private _sucursalService: SucursalService) {
     this.mymodel = 'informacion';
     this.horario1 = '1';
    }
@@ -116,8 +119,9 @@ export class CrearSucursalComponent implements OnInit {
   }
 
   getInfoSucursal(id_sucursal){
-    this._provedorService.getConsultoriosSucursal(id_sucursal).subscribe( (response)=> {
-      console.log(response);
+    console.log('oi');    
+      this._provedorService.getConsultoriosSucursal(id_sucursal).subscribe( (response)=> {
+      console.log('sucu',response);
       this.infoSucursal = response;
       this.nombreSucursal.setValue(this.infoSucursal.nombre);
       this.telefonoSucursal.setValue(this.infoSucursal.telefono);
@@ -343,6 +347,7 @@ export class CrearSucursalComponent implements OnInit {
   }
 
   getMedicos(id_provedor) {
+    this.medics = undefined;
 
     // this.medicos = [{nombre: 'pepe perez', select: false, id: '1'},
     // {nombre: 'elvio lao', select: false, id: '2'},
@@ -501,8 +506,11 @@ export class CrearSucursalComponent implements OnInit {
       console.log(horarios);
 
       this.infoConsultorios.push({medico_id: this.medicoSelect.value.medico_id, nombre: this.nombreConsultorio.value,
-        extension: this.extensionConsultorio.value, nombreMedico: this.medicoSelect.value.nombre,
-        nombreServicio : this.servicioSelect.value.nombre, horarios, id_servicio: this.servicioSelect.value.id_servicios});
+        extension: this.extensionConsultorio.value, nombreMedico: this.medicoSelect.value.nombre, id_sucursal : this.id_sucursal,
+        nombreServicio : this.servicioSelect.value.nombre, horarios, id_servicio: this.servicioSelect.value.id_servicios, id_provedor: this.id_provedor});
+
+        // let info =  [{ medico_id: this.medicoSelect.value, nombre: this.nombreConsultorio.value, id_sucursal : identity,
+      // extension: this.extensionConsultorio.value, horarios, id_servicio: this.servicioSelect.value }];
 
         this.medicoFalse();
         this.limpiarForms();
@@ -562,10 +570,35 @@ export class CrearSucursalComponent implements OnInit {
     this.medicoTrue();
   }
 
+  guardarConsultorio() {
+      // let info =  [{ medico_id: this.medicoSelect.value, nombre: this.nombreConsultorio.value, id_sucursal : identity,
+      // extension: this.extensionConsultorio.value, horarios, id_servicio: this.servicioSelect.value }];
+      console.log(this.infoConsultorios);
+
+      this.loading = true;
+      this._sucursalService.postConsultorioSucursal(this.infoConsultorios).subscribe( (response)=>{
+        this.loading = false;
+        window.scroll(0,0);
+        if(response === true){    
+          this.getInfoSucursal(this.id_sucursal);
+          this.infoConsultorios = [];
+          this.status = 'success';
+          this.statusText = 'Consultorios creados exitosamente.';
+        }
+      }, (err) => {
+        window.scroll(0,0);
+        this.status = 'error';
+        this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde';
+        this.loading = false;
+      });
+  }
+
   guardar(){
+
+   
     
     this.loading = true;
-
+    window.scroll(0,0);
     let password = CryptoJS.SHA512(this.pssw.value).toString(CryptoJS.enc.Hex);
     
     let info = {nombre: this.nombreSucursal.value, telefono: this.telefonoSucursal.value, id_municipio: this.muniSelect.value,
@@ -575,13 +608,18 @@ export class CrearSucursalComponent implements OnInit {
     console.log(info);
 
     this._provedorService.crearSucursal(info).subscribe( (response) => {
-      console.log(response);
+      console.log('respuesta', response);
       this.loading = false;
       if(response === true) {
         document.getElementById('btn-publicacion-exitosa').click();
+      } else {
+        this.status = 'error';
+        this.statusText = 'El nombre de usuario ya existe, por favor escribe otro.'
       }
 
     }, (err) => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexion por favor revisa tu conexion o intentalo mas tarde.'
       this.loading = false;
     } );
   }
@@ -816,8 +854,8 @@ export class CrearSucursalComponent implements OnInit {
     // console.log('aqui val1')
 
     if (this.diasH1 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa los dias de atención en el horario 1.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa los dias de atención en el horario 1.';
         return false;
     } else {
 
@@ -826,15 +864,15 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH1 === true && this.tardeH1 === false) :
       if (this.mananaDesdeH1 === undefined || this.mananaHastaH1 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 1.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 1.';
         return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.mananaDesdeH1 > this.mananaHastaH1) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 1.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 1.';
           // console.log('<aqui>');
           return false;
         } else {
@@ -842,8 +880,8 @@ export class CrearSucursalComponent implements OnInit {
           if ( bol === 'false' ) {
 
             if (this.diasH1.length >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 2.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 2.';
             } else {
              this.horario2 = true;
             //  console.log('aqui agregar');
@@ -862,23 +900,23 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH1 === false && this.tardeH1 === true) :
       if (this.tardeDesdeH1 === undefined || this.tardeHastaH1 === undefined) {
-          this.status = true;
-          this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 1.';
+          this.status = 'warning';
+          this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 1.';
           return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.tardeDesdeH1 > this.tardeHastaH1) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 1.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 1.';
           return false;
         } else {
 
           if ( bol === 'false' ) {
 
            if (this.diasH1.length >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 2.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 2.';
             } else {
              this.horario2 = true;
             //  console.log('aqui agregar');
@@ -900,23 +938,23 @@ export class CrearSucursalComponent implements OnInit {
       case (this.mananaH1 === true && this.tardeH1 === true) :
 
       if (this.mananaDesdeH1 === undefined || this.mananaHastaH1 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 1.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 1.';
         return false;
       } else if (this.tardeDesdeH1 === undefined || this.tardeHastaH1 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde del horario 1.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde del horario 1.';
         return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.mananaDesdeH1 > this.mananaHastaH1) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 1.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 1.';
           return false;
         } else if (this.tardeDesdeH1 > this.tardeHastaH1) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 1.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 1.';
           return false;
         } else {
 
@@ -924,8 +962,8 @@ export class CrearSucursalComponent implements OnInit {
 
 
             if (this.diasH1.length >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 2.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 2.';
             } else {
              this.horario2 = true;
             //  console.log('aqui agregar');
@@ -945,8 +983,8 @@ export class CrearSucursalComponent implements OnInit {
       break;
 
       case (this.mananaH1 === false && this.tardeH1 === false) :
-      this.status = true;
-      this.textoStatus = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
+        this.status = 'warning';
+        this.statusText = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
       return false;
       break;
     }
@@ -959,8 +997,8 @@ export class CrearSucursalComponent implements OnInit {
     // console.log('aquiii');
 
     if (this.diasH2 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa los dias de atención en el horario 2.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa los dias de atención en el horario 2.';
         return false;
     } else {
 
@@ -969,23 +1007,23 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH2 === true && this.tardeH2 === false) :
       if (this.mananaDesdeH2 === undefined || this.mananaHastaH2 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 2.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 2.';
         return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.mananaDesdeH2 > this.mananaHastaH2) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 2.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 2.';
           return false;
         } else {
 
           if (bol === 'false') {
 
             if ( (this.diasH1.length + this.diasH2.length) >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 3.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 3.';
             } else {
 
               this.horario3 = true;
@@ -1013,23 +1051,23 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH2 === false && this.tardeH2 === true) :
       if (this.tardeDesdeH2 === undefined || this.tardeHastaH2 === undefined) {
-          this.status = true;
-          this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 2.';
+          this.status = 'warning';
+          this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 2.';
           return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.tardeDesdeH2 > this.tardeHastaH2) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 2.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 2.';
           return false;
         } else {
 
           if (bol === 'false') {
 
             if ( (this.diasH1.length + this.diasH2.length) >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 3.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 3.';
             } else {
 
               this.horario3 = true;
@@ -1051,30 +1089,30 @@ export class CrearSucursalComponent implements OnInit {
       case (this.mananaH2 === true && this.tardeH2 === true) :
 
       if (this.mananaDesdeH2 === undefined || this.mananaHastaH2 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 2.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 2.';
         return false;
       } else if (this.tardeDesdeH2 === undefined || this.tardeHastaH2 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde del horario 2.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde del horario 2.';
         return false;
       } else {
          // Validacion de las horas de inicio y final
          if (this.mananaDesdeH2 > this.mananaHastaH2) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 2.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 2.';
           return false;
         } else if (this.tardeDesdeH2 > this.tardeHastaH2) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 2.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 2.';
           return false;
         } else {
 
           if (bol === 'false') {
 
            if ( (this.diasH1.length + this.diasH2.length) >= 7) {
-              this.status = true;
-              this.textoStatus = 'No hay dias disponibles para el horario 3.';
+              this.status = 'warning';
+              this.statusText = 'No hay dias disponibles para el horario 3.';
             } else {
 
               this.horario3 = true;
@@ -1092,8 +1130,8 @@ export class CrearSucursalComponent implements OnInit {
       break;
 
       case (this.mananaH2 === false && this.tardeH2 === false) :
-      this.status = true;
-      this.textoStatus = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
+        this.status = 'warning';
+        this.statusText = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
       return false;
       break;
     }
@@ -1104,8 +1142,8 @@ export class CrearSucursalComponent implements OnInit {
   validacionesH3(): boolean {
 
     if (this.diasH3 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa los dias de atención en el horario 3.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa los dias de atención en el horario 3.';
     } else {
 
       let val = true;
@@ -1113,15 +1151,15 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH3 === true && this.tardeH3 === false) :
       if (this.mananaDesdeH3 === undefined || this.mananaHastaH3 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 3.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 3.';
         return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.mananaDesdeH3 > this.mananaHastaH3) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 3.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 3.';
           return false;
         } else {
           // console.log('mañana bn h3');
@@ -1132,15 +1170,15 @@ export class CrearSucursalComponent implements OnInit {
 
       case (this.mananaH3 === false && this.tardeH3 === true) :
       if (this.tardeDesdeH3 === undefined || this.tardeHastaH3 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 3.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde de el horario 3.';
         return false;
       } else {
 
         // Validacion de las horas de inicio y final
         if (this.tardeDesdeH3 > this.tardeHastaH3) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 3.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 3.';
           return false;
         } else {
           // console.log('tarde bn h3');
@@ -1152,23 +1190,23 @@ export class CrearSucursalComponent implements OnInit {
       case (this.mananaH3 === true && this.tardeH3 === true) :
 
       if (this.mananaDesdeH3 === undefined || this.mananaHastaH3 === undefined) {
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la mañana del horario 3.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la mañana del horario 3.';
         return false;
       } else if (this.tardeDesdeH3 === undefined || this.tardeHastaH3 === undefined) {
         // console.log(this.tardeDesdeH3, this.tardeHastaH3);
-        this.status = true;
-        this.textoStatus = 'Por favor completa una hora de inicio y terminación en la tarde del horario 3.';
+        this.status = 'warning';
+        this.statusText = 'Por favor completa una hora de inicio y terminación en la tarde del horario 3.';
         return false;
       } else {
          // Validacion de las horas de inicio y final
          if (this.mananaDesdeH3 > this.mananaHastaH3) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 3.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la mañana de el horario 3.';
           return false;
         } else if (this.tardeDesdeH3 > this.tardeHastaH3) {
-          this.status = true;
-          this.textoStatus = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 3.';
+          this.status = 'warning';
+          this.statusText = 'La hora final no puede ser mayor a la hora de inicio en la tarde de el horario 3.';
           return false;
         } else {
           return true;
@@ -1177,8 +1215,8 @@ export class CrearSucursalComponent implements OnInit {
       break;
 
       case (this.mananaH3 === false && this.tardeH3 === false) :
-      this.status = true;
-      this.textoStatus = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
+        this.status = 'warning';
+      this.statusText = 'Por favor escoge el horario de atención en la mañana o en la tarde de acuerdo a la disponibilidad del servicio.';
       return false;
       break;
     }
@@ -1348,13 +1386,74 @@ export class CrearSucursalComponent implements OnInit {
   }
 
   confirmacionEliminarConsulApi(info) {
-    this.eliminarConsultorio = info;
-    console.log(this.eliminarConsultorio);
-    document.getElementById('confi-eliminar-api').click();
+    // this.eliminarConsultorio = info;
+    // console.log(this.eliminarConsultorio);
+    // document.getElementById('confi-eliminar-api').click();
+    this.loading = true;
+    this.id_consultorio = info.id_consultorio;
+    this._sucursalService.getEventsConsul(info.id_consultorio).subscribe( (response) => {
+      console.log(response);
+      this.loading = false;
+      window.scroll(0,0);
+      if(response[0].eventsC <= 0 ) {
+       console.log('elimianr');
+       this.infoEliminar = true;
+       document.getElementById('confi-eliminar-api').click();
+      } else {
+        console.log('no se puse eliminar');
+        this.infoEliminar = false;
+        document.getElementById('confi-eliminar-api').click();
+      }
+    }, (err) => {
+      this.loading = false;
+      console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.';
+    } );
   }
 
-  eliminarConsultorioApi(){
+  eliConsul(){
 
+    this.loading = true;
+    this._sucursalService.dltConsultorio(this.id_consultorio).subscribe( (response) => {
+      this.loading = false;
+      window.scroll(0,0);
+      if(response === true){
+        this.status = 'success';
+        this.statusText = 'Consultorio eliminado exitosamente.';
+        this.getInfoSucursal(this.id_sucursal);
+        this.getMedicos(this.id_provedor);
+      }
+      console.log(response);
+    }, (err) => {
+      window.scroll(0,0);
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.';
+      this.loading = false;
+      console.log(err);
+    } );
+  }
+
+  guardarInfoSucursal(){
+    this.loading = true;
+    let info = {nombre: this.nombreSucursal.value, direccion: this.direccionSucursal.value, telefono: this.telefonoSucursal.value, id_sucursal: this.id_sucursal};
+    console.log(info);
+    this._sucursalService.editInfoSucursal(info).subscribe( (response) => {
+      console.log(response);
+      this.loading = false;
+      if(response === true) {
+        this.status = 'success';
+        this.statusText = 'Datos actualizados con exito.';
+      } else {
+        this.status = 'error';
+        this.statusText = 'Error al actualizar los datos';
+      }
+    }, (err) => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde';
+      this.loading = false;
+      console.log(err);
+    });
   }
 
 

@@ -29,4 +29,9 @@ export class HomeComponent implements OnInit {
     this.status = undefined;
   }
 
+  
+  cambiarSesion(){
+    document.getElementById('btn-cambiar-de-sesion').click();
+  }
+
 }

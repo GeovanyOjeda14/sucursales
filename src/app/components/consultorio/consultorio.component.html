@@ -19,8 +19,8 @@
   <div class="col-2" style="padding-top: 100px" *ngIf="crearConsul">
       <div style="padding-left : 15px;">
           <ul class="list-group">
-            <li class="list-group-item active" id="informacionCrear">Información</li>
-            <li class="list-group-item" id="horariosCrear">Horarios</li>
+            <li class="list-group-item active" id="informacion">Información</li>
+            <li class="list-group-item" id="horarios">Horarios</li>
           </ul>
         </div>
   </div>
@@ -162,8 +162,9 @@
                 <div class="col-1"></div>
               </div>
     
-              <div class="text-center" style="padding-top: 20px;">
-                <button class="btn btn-success" (click)="guardarInformacion()" *ngIf="infoConsultorio" [disabled]="!nombreConsultorio.valid">Guardar Informacion</button>
+              <div class="text-center" style="padding-top: 20px;" *ngIf="infoConsultorio">
+                <button class="btn btn-success" style="margin-right: 5px;" (click)="guardarInformacion()" [disabled]="!nombreConsultorio.valid">Guardar Informacion</button>
+                <button class="btn btn-primary" style="margin-right: 5px;" (click)="pestana('horarios')">Ir a consultorios</button>
               </div>
 
 
@@ -639,14 +640,8 @@
            
 
         </div>
-      </div>
- 
-         
- 
-         
- </div>
- 
-
+      </div>     
+    </div>
   </div>
 </div>
 

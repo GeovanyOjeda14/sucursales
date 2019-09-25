@@ -488,12 +488,13 @@ _handleReaderLoaded(readerEvt) {
  eliminarPub(id) {
   this.loading = true;
   let token = this._userService.getToken();
+  window.scroll(0,0);
   this._provedorService.dltService(id, token).subscribe( (response) => {
     // console.log(response);
     this.loading = false;
     if (response === false ) {
       this.status = 'error';
-      this.statusText = 'No se puede eliminar el servicio, existen citas agendadas';
+      this.statusText = 'No se puede eliminar el servicio, por que tiene consultorios asociados.';
       window.scroll(0, 0);
     } else {
       this.getPublications(this.identity.id_provedor);

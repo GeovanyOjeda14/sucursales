@@ -307,11 +307,11 @@
                 </div>
 
                 <div class="row rw">
-                  <div class="col-lg-2 contenedores" *ngFor="let item of imagenes; let i = index">
+                  <div class="col-2 contenedores" *ngFor="let item of imagenes; let i = index">
                       <img [src]="item.base64Image" class="imagenes">
                       <button class="btn btn-danger" (click)="borrarFoto(i)"><i class="fas fa-trash-alt"></i></button>
                   </div>
-              
+               
                 </div>
               </div>
 

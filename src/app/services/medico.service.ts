@@ -31,7 +31,7 @@ export class MedicoService {
         return this.http.post(this.url + '/medicos/' + '?token=' + token, info, {headers : headers});
     }
 
-
+ 
     // Borrar medico por provedor
 
     dltMedicoPorProvedor(medico_id, provedor_id, token): Observable<any> {

@@ -72,6 +72,8 @@ export class GestionarMedicosComponent implements OnInit {
         this.loading = false;
       }
     }, (err) => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalos mas tarde.';
       this.loading = false;
       // console.log(err);
     });
@@ -82,22 +84,28 @@ export class GestionarMedicosComponent implements OnInit {
   }
 
   deleteMedico(medico_id) {
-
+    this.loading = true;
     let token = this._userService.getToken();
-
+    window.scroll(0,0);
     this._medicoService.dltMedicoPorProvedor(medico_id, this.identity.id_provedor, token).subscribe( (response) => {
-      // console.log(response);
+      
+      console.log(response);
+      this.loading = false;
       if (response === true) {
         this.getMedicos(this.identity.id_provedor);
         this.status = 'success';
         this.statusText = 'El medico ha sido eliminado con exito.';
-        this.getMedicos(this.identity.id_provedor);
+        // this.getMedicos(this.identity.id_provedor);
       } else {
         this.status = 'error';
-        this.statusText = 'El medico no se puede eliminar por que tiene un servicio asociado, elimina primero el servicio.';
+        this.statusText = 'El medico no se puede eliminar por que tiene un consultorio asociado, elimina primero el consultorio.';
       }
     }, (err) => {
+      // window.scroll(0,0);
       // console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexion, por favor revisa tu conexion o intentalo mas tarde.'
+      this.loading = false;
     });
   }
 

@@ -25,7 +25,7 @@ export class VerPerfilMedicoComponent implements OnInit {
       this.getInfoMedico(id);
     });
   }
-
+ 
   getInfoMedico(id) {
 
     this._medicoService.getInfoMedico(id).subscribe( (response) => {

@@ -10,6 +10,27 @@
   <!-- </div> -->
 </div>
 
+<!-- ----------------------------------------- ALERTAS ------------------------------------------------- -->
+
+<div class="container">
+  <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
+    {{statusText}}
+ <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+   <span aria-hidden="true">&times;</span>
+ </button>
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status === 'error'">
+   {{statusText}}
+<button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+</div>
+
+<!-- ----------------------------------------- FIN ALERTAS ------------------------------------------------- -->
+
+
 <div id="btn-agregar-pub" class="text-center">
 
     <button type="button" class="btn btn-success" (click)="limpiarForm()"><i
@@ -23,19 +44,7 @@
   <h5>Aun no tienes medicos, crea uno ! </h5>
 </div>
  
-<div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status === 'success'">
-     {{statusText}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 
-<div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="status === 'error'">
-    {{statusText}}
-<button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
- <span aria-hidden="true">&times;</span>
-</button>
-</div>
 
 <!-- MODAL CREAR MEDICO -->
 
@@ -325,7 +334,7 @@
                       </div>
                       <div class="modal-body">
                         ¿ Estas seguro que deseas eliminar al medico {{m.nombre}}?
-                      </div>
+                      </div> 
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal"

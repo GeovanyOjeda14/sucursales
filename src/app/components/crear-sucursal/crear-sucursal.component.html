@@ -35,66 +35,94 @@
 
       <!--  -------------------------CONSULTORIOS CREAR SUCURSAL ----------------------------------  -->
 
-      <div *ngIf="infoConsultorios.length >= 1" style="padding-top: 30px;">
+      <div style="padding-top: 30px;">
       
-          <div class="contenedor" >
+          <div class="contenedor">
               <div class="tab-content scroll" id="nav-tabContent" >
-    
-                <div style="padding-top: 10px;" *ngFor="let ic of infoConsultorios; let i = index">
-                    <div class="card" >
-                        <div class="card-header"><div class="row">
-                            <div class="col-9">
-                              <div class="text-left">
-                                  Consultorio : {{ic.nombre}} 
-                              </div>  
-                             </div>
-                            <div class="col">
-                              <div class="text-right"><button class="btn btn-danger" (click)="posisionAEliminar(i, ic.medico_id)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash-alt"></i></button>
-                              </div>
 
-                              <!-- MODAL CONFIRMACION ELIMINAR Consultorio -->
-
-                              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel" style="color: black">Confirmacion</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <div class="text-left"><p style="color: black">¿ Estas seguro que deseas eliminar este consultorio ?</p> </div>         
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                      <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliminarConsultorio()">Eliminar</button>
-                                    </div>
+                <div *ngIf="(infoSucursal && infoSucursal.consultorio && infoSucursal.consultorio.length >= 1) && mymodel === 'consultorios'">
+                    <div style="padding-top: 10px;" *ngFor="let ic of infoSucursal.consultorio; let i = index">
+                        <div class="card" >
+                            <div class="card-header"><div class="row">
+                                <div class="col-9">
+                                  <div class="text-left">
+                                      Consultorio : {{ic.nombre}} 
                                   </div>
-                                </div>
-                              </div>
-
-                              <!-- FIN DE MODAL CONFIRMACION -->
-
-
+                                  </div>
+                            </div>       
+                        </div>
+                
+                          <div class="card-body">
+                            <p><strong>Medico : </strong>{{ic.medico}}</p>
+                            <p><strong>Servicio: </strong>{{ic.servicio}}</p>
+    
+                            <div class="text-right" style="padding-top: 10px;">
+                                <button class="btn btn-primary" style="margin-right: 5px;" data-toggle="modal" data-target="#exampleModal" (click)="verConsultorio(ic)"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" (click)="confirmacionEliminarConsulApi(ic)"><i class="fas fa-trash-alt"></i></button>
                             </div>
-                        </div>       
-                    </div>
-            
-                      <div class="card-body">
-                        <p><strong>Medico : </strong>{{ic.nombreMedico}}</p>
-                        <p><strong>Servicio: </strong>{{ic.nombreServicio}}</p>
+                          </div>
+                        </div> 
+                    </div> 
+                </div>
+
+                   
+               <div *ngIf="(infoConsultorios.length >= 1)">
+          
+                  <div style="padding-top: 20px;" *ngFor="let ic of infoConsultorios; let i = index">
+                      <div class="card" >
+                          <div class="card-header"><div class="row">
+                              <div class="col-9">
+                                <div class="text-left">
+                                    Consultorio : {{ic.nombre}} 
+                                </div>  
+                               </div>
+                              </div>
+                          </div>   
+                          
+                          <div class="card-body">
+                              <p><strong>Medico : </strong>{{ic.nombreMedico}}</p>
+                              <p><strong>Servicio: </strong>{{ic.nombreServicio}}</p>
+                              <div class="text-right" style="padding-top: 20px;"><button class="btn btn-danger" (click)="posisionAEliminar(i, ic.medico_id)" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash-alt"></i></button>
+    
+                                   <!-- MODAL CONFIRMACION ELIMINAR Consultorio -->
+      
+                                   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel" style="color: black">Confirmacion</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <div class="text-left"><p style="color: black">¿ Estas seguro que deseas eliminar este consultorio ?</p> </div>         
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliminarConsultorio()">Eliminar</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+      
+                                    <!-- FIN DE MODAL CONFIRMACION -->
+                            </div>
+                          </div>
+
                       </div>
-                    </div>
-                </div>               
-              </div>
+              
+                        
+                  </div> 
+               </div>  
+            </div>
           </div>  
       </div> 
 
 
       <!-- ----------------------------------- CONSULTORIOS EDITAR -------------------------------------------------- -->
 
-      <div *ngIf=" (infoSucursal && infoSucursal.consultorio.length >= 1) && mymodel === 'consultorios'" style="padding-top: 30px;">
+      <!-- <div *ngIf=" (infoSucursal && infoSucursal.consultorio.length >= 1) && mymodel === 'consultorios'" style="padding-top: 30px;">
       
           <div class="contenedor" >
               <div class="tab-content scroll" id="nav-tabContent" >
@@ -123,12 +151,30 @@
                 </div>               
               </div>
           </div>  
-      </div> 
+      </div>  -->
 
 
     </div>
 
     <div class="col-md-9 col-sm-8" style="padding-left: 20px; padding-right: 20px;">
+
+      <!-- ------------------------------------- ALERTAS ------------------------------------------------- -->
+
+        <div class="alert alert-success alert-dismissible fade show container" role="alert" *ngIf="status === 'success'">
+            {{statusText}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        <div class="alert alert-danger alert-dismissible fade show container" role="alert" *ngIf="status === 'error'">
+            {{statusText}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <!-- --------------------------------------- FIN ALERTAS ----------------------------------------------- -->
 
         <div [ngSwitch]="mymodel">
             <div *ngSwitchCase="'informacion'">
@@ -142,30 +188,37 @@
                         <div class="col">
                             <div class="form-group">
                                 <label class="form-label">Nombre sucursal *</label>
-                                <input type="text" class="form-control" [formControl]="nombreSucursal" maxlength="30">
+                                <input type="text" class="form-control" 
+                                [formControl]="nombreSucursal" 
+                                maxlength="50"
+                                [class.is-invalid]="nombreSucursal.touched && nombreSucursal.hasError('required')"
+                                >
+                                <div class="invalid-feedback" *ngIf="nombreSucursal.touched && nombreSucursal.hasError('required')">
+                                  Este campo es requerido.
+                              </div>
                               </div>
                         </div>
-      
+       
                         <div class="col">
                             <div class="form-group">
                                 <label class="form-label">Telefono *</label>
-                                <input type="text" class="form-control" [formControl]="telefonoSucursal" [class.is-invalid]="(telefonoSucursal.touched && telefonoSucursal.hasError('required')) || (telefonoSucursal.hasError('pattern')) || telefonoSucursal.hasError('minLength') || telefonoSucursal.hasError('maxLength')"
+                                <input type="text" class="form-control" [formControl]="telefonoSucursal" [class.is-invalid]="(telefonoSucursal.touched && telefonoSucursal.hasError('required')) || (telefonoSucursal.hasError('pattern')) || telefonoSucursal.hasError('minlength') || telefonoSucursal.hasError('maxlength')"
                                 minlength="6" maxlength="12">
       
                                 <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('required')">
-                                    Este campo es requerido.
-                                  </div>
+                                    * Este campo es requerido.
+                                </div>
         
                                   <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('pattern')">
-                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                    Este campo solo acepta numeros, sin espacios ni caracteres especiales.
                                   </div>
       
-                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('minLength')">
-                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('minlength')">
+                                      Cantidad minima de caracteres (7)
                                   </div>
       
-                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('maxLength')">
-                                    Este campo solo acepta numeros, sin espacion ni caracteres especiales.
+                                  <div class="invalid-feedback" *ngIf="telefonoSucursal.hasError('maxlength')">
+                                      Cantidad minima de caracteres (12)
                                   </div>
                               </div>
                         </div>
@@ -174,7 +227,10 @@
                       <div class="row">
                         <div class="col form-group">
                           <label class="form-label">Direccion *</label>
-                          <input type="text" class="form-control" [formControl]="direccionSucursal" maxlength="100">
+                          <input type="text" class="form-control" [formControl]="direccionSucursal" maxlength="100" [class.is-invalid]="direccionSucursal.touched && direccionSucursal.hasError('required')">
+                          <div class="invalid-feedback" *ngIf="direccionSucursal.touched && direccionSucursal.hasError('required')">
+                              * Este campo es requerido.
+                          </div>
                         </div>
                         <div class="col"></div>
                       </div>
@@ -207,21 +263,40 @@
                           <br />
                         </div>  
 
+                        <p class="color-prevenir">* Al crear una sucursal se crea una cuenta de usuario, con la cual se gestiona citas y pacientes.</p>
+                    
+
                         <div class="row">
                           <div class="col">
                             <label class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control" [formControl]="username">
+                            <input type="text" class="form-control" [formControl]="username" [class.is-invalid]="username.touched && username.hasError('required') || username.hasError('pattern')">
+                            <div class="invalid-feedback" *ngIf="username.touched && username.hasError('required')">
+                              * Este campo es requerido.
+                            </div>
+                            <div class="invalid-feedback" *ngIf="username.hasError('pattern')">
+                              El nombre de usuario no admite espacios, ni la letra ñ.
+                            </div>
                           </div>
                           <div class="col">
                               <label class="form-label">Contraseña</label>
-                              <input type="password" class="form-control" [formControl]="pssw">
+                              <input type="password" class="form-control" [formControl]="pssw" 
+                              [class.is-invalid]="( pssw.hasError('required') && pssw.touched ) 
+                              || pssw.hasError('minlength')" >
+                              <div class="invalid-feedback">
+                                <p *ngIf="pssw.hasError('required') && pssw.touched">* Este campo es requerido</p>
+                                <p *ngIf="pssw.hasError('minlength')">Cantidad minima de caracteres (8)</p>
+                              </div>
                           </div>
                         </div>
 
                         <div class="row">
                           <div class="col">
                               <label class="form-label">Confirmar contraseña</label>
-                              <input type="password" class="form-control" [formControl]="psswConfirm">
+                              <input type="password" class="form-control" [formControl]="psswConfirm" 
+                              [class.is-invalid]="psswConfirm.touched && (pssw.value != psswConfirm.value)">
+                              <div class="invalid-feedback">
+                                <p *ngIf="psswConfirm.touched && (pssw.value != psswConfirm.value)">Las contraseñas no coinciden</p>
+                              </div>
                           </div>
                           <div class="col"></div>
                         </div>
@@ -229,7 +304,16 @@
                     </form>
       
                     <div class="text-right" style="padding: 30px;">
-                      <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !this.muniSelect.value || !direccionSucursal.valid">Siguiente</button>
+                      <button class="btn btn-success"  (click)="siguiente()" [disabled]="
+                      !nombreSucursal.valid || 
+                      !telefonoSucursal.valid || 
+                      !this.muniSelect.value || 
+                      !direccionSucursal.valid || 
+                      (pssw.value != psswConfirm.value) ||
+                      pssw.invalid ||
+                      username.invalid
+                      
+                      ">Siguiente</button>
                     </div>
       
 
@@ -351,8 +435,9 @@
       
                     </form>
       
-                    <div class="text-right" style="padding-top: 10px;">
-                      <button class="btn btn-success"  (click)="siguiente()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !direccionSucursal.valid">Siguiente</button>
+                    <div class="text-center" style="padding-top: 10px;">
+                        <button class="btn btn-success" style="margin-right: 10px;" (click)="guardarInfoSucursal()" [disabled]="!nombreSucursal.valid || !telefonoSucursal.valid || !direccionSucursal.valid">Guardar Informacion</button>
+                      <button class="btn btn-primary" style="margin-right: 10px;" (click)="siguiente()" >Ir a Consultorios</button>
                     </div>
 
               </div>
@@ -697,43 +782,43 @@
 
             
               <!-- <app-consultorio *ngFor="let c of consultorios" [medicos]="medicos"></app-consultorio> -->
-              <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="status">
-                {{textoStatus}}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="status === 'warning'">
+                {{statusText}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="cerrarAlerta()">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
+            <div class="row" style="padding-top: 40px; padding-bottom: 40px;">
 
-              <div class="row" style="padding-top: 20px;">
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+
+                    <button class="btn btn-secondary btns-consultorio" (click)="atras(false)">Atras</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-success" (click)="mostrarHorario('false')" [disabled]="!btnHorario">Agregar otro Horario</button>
+                  </div>
+                  <div class="col-md-3">
+                      <button class="btn btn-info" (click)="crearConsultorio('true')" [disabled]="!this.medicoSelect.valid || !this.nombreConsultorio.valid || !this.servicioSelect.value">Crear consultorio</button>
+                  </div>
+            <div class="col-md-1.5"></div>
+          </div> 
+
+              <div class="row" style="padding-top: 20px; padding-bottom: 30px;">
 
                 <div class="col-md-1"></div>
                 <div class="col-md-3"></div>
                 <div class="col-md-3">
-                <button class="btn btn-success" (click)="mostrarHorario('false')" [disabled]="!btnHorario">Agregar Horario</button>
+                    <button class="btn btn-success btns-consultorio" (click)="guardarConsultorio()" [disabled]="infoConsultorios.length < 1" *ngIf="id_sucursal">Guardar Consultorios</button>
+                    <button class="btn btn-success btns-consultorio" (click)="guardar()" [disabled]="infoConsultorios.length < 1" *ngIf="!id_sucursal">Guardar Sucursal</button>
                 </div>
                 <div class="col-md-3"></div>
             <div class="col-md-1.5"></div>
           </div>
           
           
-              <div class="row" style="padding-top: 40px; padding-bottom: 40px;">
-
-                  <div class="col-md-1"></div>
-                  <div class="col-md-3">
-
-                      <button class="btn btn-secondary btns-consultorio" (click)="atras(false)">Atras</button>
-                  </div>
-                  <div class="col-md-3">
- 
-                      <button class="btn btn-info" (click)="crearConsultorio('true')" [disabled]="!this.medicoSelect.valid || !this.nombreConsultorio.valid || !this.servicioSelect.value">Crear consultorio</button>
-                    </div>
-                    <div class="col-md-3">
-
-                        <button class="btn btn-success btns-consultorio" (click)="guardar()" [disabled]="infoConsultorios.length < 1">Guardar</button>
-                    </div>
-              <div class="col-md-1.5"></div>
-            </div> 
+             
           </div>
         </div>
 
@@ -758,7 +843,7 @@
         </button>
       </div>
       <div class="modal-body">
-        La publicación ha sido creada correctamente.
+        La sucursal ha sido creada correctamente.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" routerLink="/gestionar-sucursales">Aceptar</button>
@@ -779,18 +864,32 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Confirmacion</h5>
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="infoEliminar">Confirmacion</h5>
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="!infoEliminar">Aviso</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-         ¿ Estas seguro que deseas eliminar este consultorio ? 2
+
+        <div *ngIf="infoEliminar">
+            <div class="modal-body">
+                ¿ Estas seguro que deseas eliminar este consultorio ?
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                 <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliConsul()">Eliminar</button>
+               </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="eliminarConsultorioApi()">Eliminar</button>
+
+        <div *ngIf="!infoEliminar">
+            <div class="modal-body">
+                Hay citas activas en el consultorio, por favor eliminalas antes de eliminar este consultorio.
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+               </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -840,16 +939,29 @@
                   
                     <div class="row">
 
-                      <div class="col">
-                          <h5>Mañana</h5>
-                          <p><strong>Desde : </strong> {{h.de_maniana}} a.m</p>
-                          <p><strong>Hasta :</strong> {{h.a_maniana}} a.m</p>
-                      </div>
+                        <div class="col">
+                            <h5><strong>Mañana</strong></h5>
+                            <div *ngIf="h.de_maniana || h.a_maniana">
+                                <p><strong>Desde : </strong> {{h.de_maniana | ampm}}</p>
+                                <p><strong>Hasta :</strong> {{h.a_maniana | ampm}}</p>
+                            </div>     
+                            
+                            <div *ngIf="!h.de_maniana || !h.a_maniana">
+                                <p><strong>Desde : </strong> Cerrado</p>
+                                <p><strong>Hasta :</strong>Cerrado</p>
+                            </div>
+                        </div>
 
                       <div class="col">
-                          <h5>Tarde</h5>
-                          <p><strong>Desde :</strong> {{h.de_tarde}}</p>
-                          <p><strong>Hasta :</strong> {{h.a_tarde}}</p>
+                          <h5><strong>Tarde</strong></h5>
+                          <div *ngIf="h.de_tarde || h.a_tarde">
+                              <p><strong>Desde :</strong> {{h.de_tarde | ampm}}</p>
+                              <p><strong>Hasta :</strong> {{h.a_tarde | ampm}}</p>
+                          </div>
+                          <div *ngIf="!h.de_tarde || !h.a_tarde">
+                              <p><strong>Desde :</strong>  Cerrado</p>
+                              <p><strong>Hasta :</strong> Cerrado</p>
+                          </div>
                       </div>
                       
                     </div>

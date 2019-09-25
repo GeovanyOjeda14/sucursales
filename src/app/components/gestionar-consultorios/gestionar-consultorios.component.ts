@@ -60,7 +60,7 @@ export class GestionarConsultoriosComponent implements OnInit {
     localStorage.removeItem('consultorio');
     localStorage.setItem('consultorio', JSON.stringify(info));
     this._router.navigate(['consultorio']);
-  }
+  } 
 
   eliminarConsultorio(id_consultorio){
   console.log('aqui eli');
@@ -77,7 +77,7 @@ export class GestionarConsultoriosComponent implements OnInit {
      } else {
        console.log('no se puse eliminar');
        this.infoEliminar = false;
-       document.getElementById('btn-modal-eliminar-consultorio').click();
+       document.getElementById('btn-modal-eliminar-consultorio').click(); 
      }
    }, (err) => {
      this.loading = false;
@@ -112,7 +112,7 @@ export class GestionarConsultoriosComponent implements OnInit {
     let identity = this._userService.getIdentity().id_provedor;
     this._provedorService.getMedicosProvedor(identity).subscribe( (response)=>{
       // this.medicos = response;
-      // console.log(response);
+      console.log('medicos',response);
       this.medicos = response;
       if(this.medicos.length >= 1) {
         for(let i = 0; i < this.medicos.length; i++) {

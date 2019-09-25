@@ -1,0 +1,95 @@
+  <div *ngIf="!identity.medico_id && !identity.id_sucursales">
+  <!-- ------------------------------------------ MENU ADMINISTRADOR ------------------------------------------------------------ -->  
+  <div class="wrapper">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Panel de administracion</h3>
+        </div>
+        
+        <div class="text-center" style="padding-top: 20px;">
+                <img class="img-circle center-block" src="{{global.apiUrl + identity.avatar}}"
+                style="border-radius: 138px; background: white; height: 200px; width: 200px; " alt="">
+        </div>
+
+        <!-- gestionar medicos, gestionar servicios, gestionar sucursales, cantactenos, terminos y condicones,. -->
+
+        <ul class="list-unstyled components"> 
+            
+                <li class="active"><a routerLink="/contactenos">Gestionar medicos</a></li>
+                <li><a routerLink="/perfil">Gestionar servicios</a></li>
+                <li><a href="">Gestionar sucursales</a></li>
+                <li><a href="">Contactenos</a></li>
+                <li><a href="">Terminos y condiciones</a></li>
+           
+            <!-- <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="#">Home 1</a>
+                    </li>
+                    <li>
+                        <a href="#">Home 2</a>
+                    </li>
+                    <li>
+                        <a href="#">Home 3</a>
+                    </li>
+                </ul>
+            </li>        -->
+        </ul>
+
+        <!-- <ul class="list-unstyled CTAs">
+            <li>
+                <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
+            </li>
+            <li>
+                <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+            </li>
+        </ul> -->
+    </nav>
+
+     <!-- Page Content Holder -->
+     <div id="content" style="width: 100%">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="navbar-btn" (click)="colapse()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                       <li>
+                        <div id="sesion">
+                            <img *ngIf="identity.id_provedor" src="{{global.apiUrl + identity.avatar}}" alt="">       
+                        </div>
+                       </li>
+                           
+                       <li class="nav-item dropdown">                  
+                           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{identity.nombre}}</a>
+                           <div class="dropdown-menu">
+                               <a class="dropdown-item" href="#">cambiar de sesion</a>
+                               <a class="dropdown-item" href="#">cerrar sesion</a>
+                           </div> 
+                       </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>   
+
+        <div style="padding: 20px;">
+          <!-- <app-contactenos></app-contactenos> -->
+        </div>
+    </div>
+   
+</div>
+  
+  </div>
+  
+ 
