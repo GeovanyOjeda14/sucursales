@@ -65,19 +65,19 @@ export class BuscarCitaComponent implements OnInit {
     if (identity !== undefined) {
       this.medico = false;
     //   // console.log('es sucursal');
-      // this.citasUsuario();
+      this.citasUsuario();
 
-      // this.intervalo =  setInterval(() => {
-      // this.citasUsuario() }, 30000);
+      this.intervalo =  setInterval(() => {
+      this.citasUsuario() }, 30000);
     } else {
       this.medico = true;
       // // console.log('es medico');
       this.medico_id = this._userService.getIdentity().medico_id;
-      // this.getCitasMedico(this._userService.getIdentity().medico_id);
+      this.getCitasMedico(this._userService.getIdentity().medico_id);
 
-      // this.intervalo =  setInterval(() => {
-      // this.getCitasMedico(this._userService.getIdentity().medico_id);
-      // }, 30000);
+      this.intervalo =  setInterval(() => {
+      this.getCitasMedico(this._userService.getIdentity().medico_id);
+      }, 30000);
     }
 
   }
@@ -297,7 +297,7 @@ export class BuscarCitaComponent implements OnInit {
       this.mascota = false;
 
       this.infoUser = info;
-      // console.log(this.infoUser);
+      console.log('usert', this.infoUser);
       document.getElementById('btn-modal-info-paciente').click();
 
     } else {
