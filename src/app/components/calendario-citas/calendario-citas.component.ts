@@ -103,11 +103,14 @@ export class CalendarioCitasComponent implements OnInit {
  
   // FormsControls
   nombre = new FormControl('', [Validators.required, Validators.pattern('[A-Z a-z ñ]*')]);
+  confirmarIdentificacion = new FormControl('', [Validators.required, Validators.min(6), Validators.pattern('[0-9]*')]);
   apellidos = new FormControl('', [Validators.required, Validators.pattern('[A-Z a-z ñ]*')]);
   cedula = new FormControl('', [Validators.required, Validators.min(6), Validators.pattern('[0-9]*')]);
   fechaNacimiento = new FormControl('', Validators.required);
   email = new FormControl('', [Validators.required, Validators.email,
                                Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')]);
+  confirmacionEmail = new FormControl('', [Validators.required, Validators.email,
+    Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')]);
   telefono = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
   barrio = new FormControl('');
   direccion = new FormControl('');
@@ -410,27 +413,27 @@ export class CalendarioCitasComponent implements OnInit {
         benef = {fecha_n: this.fechaBeneficiario.value, nombre: this.nombresBeneficiario.value, apellidos: this.apellidosBeneficiario.value, ident: this.noIdentificacionBeneficiario.value,
         parent : this.parentescoBeneficiario.value, tel : this.telefonoBeneficiario.value,  id_usu: this.datosUser.id, pais: 47, nuevo : true};
 
-        datos = {  apellidos: this.apellidos.value, color : '#07a9df', existe : false, mascota: undefined,
+        datos = {  apellidos: this.apellidos.value.toUpperCase(), color : '#07a9df', existe : false, mascota: undefined,
         servicio : this.serviciosSelect.value.id_servicios, fecha_nacimiento: this.fechaNacimiento.value,
-        start: date, contacto: this.telefono.value, nombres: this.nombre.value, usuario: this.cedula.value,
+        start: date, contacto: this.telefono.value, nombres: this.nombre.value.toUpperCase(), usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
-        ocupacion : this.ocupacion.value, direccion : this.direccion.value, barrio : this.barrio.value,
-        eps : this.eps.value, acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
+        ocupacion : this.ocupacion.value.toUpperCase(), direccion : this.direccion.value.toUpperCase(), barrio : this.barrio.value.toUpperCase(),
+        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value.toUpperCase(), consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       } else {
 
-        datos = {  apellidos: this.apellidos.value, color : '#07a9df', existe : false, mascota: undefined,
+        datos = {  apellidos: this.apellidos.value.toUpperCase(), color : '#07a9df', existe : false, mascota: undefined,
         servicio : this.serviciosSelect.value.id_servicios, fecha_nacimiento: this.fechaNacimiento.value,
-        start: date, contacto: this.telefono.value, nombres: this.nombre.value, usuario: this.cedula.value,
+        start: date, contacto: this.telefono.value, nombres: this.nombre.value.toUpperCase(), usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
-        ocupacion : this.ocupacion.value, direccion : this.direccion.value, barrio : this.barrio.value,
-        eps : this.eps.value, acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
+        ocupacion : this.ocupacion.value.toUpperCase(), direccion : this.direccion.value.toUpperCase(), barrio : this.barrio.value.toUpperCase(),
+        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value.toUpperCase(), consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       }
       
-      console.log(datos);
+      // console.log(datos);
       this.loading = true;
       this._provedorService.postCitasProvedor(datos, token).subscribe ((response) => {
         console.log('no existe', response);
@@ -494,7 +497,7 @@ export class CalendarioCitasComponent implements OnInit {
 
       if(this.formBene === true) {
 
-        benef = {fecha_n: this.fechaBeneficiario.value, nombre: this.nombresBeneficiario.value, apellidos: this.apellidosBeneficiario.value, ident: this.noIdentificacionBeneficiario.value,
+        benef = {fecha_n: this.fechaBeneficiario.value, nombre: this.nombresBeneficiario.value.toUpperCase(), apellidos: this.apellidosBeneficiario.value.toUpperCase(), ident: this.noIdentificacionBeneficiario.value,
         parent : this.parentescoBeneficiario.value, tel : this.telefonoBeneficiario.value,  id_usu: this.datosUser.id, pais: 47, nuevo : true};
 
         datos = { color : '#07a9df', existe : true, mascota: undefined, servicio : this.serviciosSelect.value.id_servicios,
@@ -704,7 +707,7 @@ export class CalendarioCitasComponent implements OnInit {
               }
             }
 
-            // console.log(horaInicio, horaFinal);
+            console.log(horaInicio, horaFinal);
 
             if (coincide === false) {
               this.status = true;
@@ -818,7 +821,7 @@ export class CalendarioCitasComponent implements OnInit {
               }
             }
 
-            // console.log(horaInicio, horaFinal);
+            console.log(horaInicio, horaFinal);
 
             if (coincide === false) {
                this.status = true;
@@ -1543,7 +1546,7 @@ export class CalendarioCitasComponent implements OnInit {
     console.log(info.id_eventos, id_consultorio, categoria);
 
     this._provedorService.dltCitaProvedor(info.id_eventos, id_consultorio, categoria, token).subscribe( (response) => {
-            console.log(response);
+            console.log('eli',response);
             this.loading = false;
             if (response[0].borrado === true) {
               // this.getEventos();

@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
 import { PlatformLocation } from '@angular/common';
-import * as jsPDF from 'jspdf'
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-historia-clinica',

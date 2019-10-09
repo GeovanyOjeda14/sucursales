@@ -55,8 +55,8 @@ export class LoginComponent implements OnInit {
       if (response.login === true) {
 
         if (response.esAdmin === 2) {
-          this.status = 'error';
-          this.statusText = 'Error cuenta de usuario.';
+          this.status = 'warning';
+          this.statusText = 'Error cuenta de usuario, para loguearse con una cuenta de usuario por favor utiliza la' ;
           this.loading = false;
         }
 

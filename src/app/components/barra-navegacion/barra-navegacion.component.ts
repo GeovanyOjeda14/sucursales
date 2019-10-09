@@ -8,7 +8,8 @@ import { ProvedorService } from '../../services/provedor.service';
 import { MedicoService } from '../../services/medico.service';
 import { SucursalService } from '../../services/sucursales.service';
 import { ApplicationService } from '../../services/app.service';
-import { a } from '@angular/core/src/render3';
+// import { HomeComponent } from '../home/home.component';
+
 
 @Component({ 
   selector: 'app-barra-navegacion',
@@ -32,7 +33,9 @@ export class BarraNavegacionComponent implements OnInit {
                private _provedorService: ProvedorService,
                private _medicoService: MedicoService,
                private _sucursalService: SucursalService,
-               private _aplicationService: ApplicationService) { }
+               private _aplicationService: ApplicationService,
+              //  private home: HomeComponent
+               ) { }
 
   ngOnInit() {
 
@@ -41,7 +44,7 @@ export class BarraNavegacionComponent implements OnInit {
 
   getIdentity() {
     this.identity = this._userService.getIdentity();
-    // console.log(this.identity);
+    console.log('identity', this.identity);
   }
 
   logOut() {
@@ -88,22 +91,23 @@ export class BarraNavegacionComponent implements OnInit {
         }
 
          if (response.esAdmin === 1) {
- 
           localStorage.setItem('token', JSON.stringify(response.token));
-
           // true admin
           this.identityMember(response.id_usuario, 'admin');
-        } 
+          document.getElementById('btn-cerrar-modal').click();
+        }
          if (response.esAdmin === 3) {
 
           localStorage.setItem('token', JSON.stringify(response.token));
           this.identityMember(response.id_usuario, 'med');
+          document.getElementById('btn-cerrar-modal').click();
         }
 
         if (response.esAdmin === 4) {
 
           localStorage.setItem('token', JSON.stringify(response.token));
           this.identityMember(response.id_usuario, 'sucu');
+          document.getElementById('btn-cerrar-modal').click();
         }
 
       } else {
@@ -116,8 +120,8 @@ export class BarraNavegacionComponent implements OnInit {
 
     }, (err) => {
       console.log(err);
-      this.status = 'error';
-      this.statusText = 'Error en la conexión, intentalo más tarde o revisa tu conexión.'
+      // this.home.status = 'error';
+      // this.home.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
       this.loading = false;
     });
 
@@ -144,14 +148,14 @@ export class BarraNavegacionComponent implements OnInit {
           //  this.loading = false;
 
         }, (err) => {
-          this.status = 'error';
-          this.statusText = 'Error en la conexión, intentalo más tarde o revisa tu conexión.'
+          // this.home.status = 'error';
+          // this.home.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
           this.loading = false;
         });
 
-      } 
-      
-      if(member === 'med') {
+      }
+
+      if (member === 'med') {
 
         // this.locket(id);
         this._medicoService.getInfoMedico(id).subscribe( (response) => {
@@ -162,24 +166,27 @@ export class BarraNavegacionComponent implements OnInit {
           this.locket(id);
           this.loading = false;
         }, (err) => {
-          this.status = 'error';
-          this.statusText = 'Error en la conexión, intentalo más tarde o revisa tu conexión.'
+          // this.home.status = 'error';
+          // this.home.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
           this.loading = false;
         });
 
       }
 
       if(member === 'sucu') {
-        
         this._sucursalService.getIdentitySucursal(id).subscribe( (response) => {
           console.log(response);
           let identity = response[0];
           localStorage.setItem('identity', JSON.stringify(identity));
           localStorage.setItem('confirmar', JSON.stringify(true));
           this.loading = false;
-          location.reload();
+          // location.reload();
+          this._router.navigate(['']);
+          this.getIdentity();
           // this._router.navigate(['home']);
         }, (err) => {
+          // this.home.status = 'error';
+          // this.home.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
           console.log(err);
         } );
       }
@@ -194,7 +201,9 @@ export class BarraNavegacionComponent implements OnInit {
       if (response === true) {
         console.log('aqui home');
         localStorage.setItem('confirmar', JSON.stringify(true));
-        location.reload();
+        // location.reload();
+        this._router.navigate(['']);
+        this.getIdentity();
       } else {
         this._router.navigate(['confirmar-cuenta']);
         localStorage.setItem('confirmar', JSON.stringify(false));
@@ -202,8 +211,8 @@ export class BarraNavegacionComponent implements OnInit {
       this.loading = false;
 
     } , (err) => {
-      this.status = 'error';
-      this.statusText = 'Error en la conexión, intentalo más tarde o revisa tu conexión.'
+      // this.home.status = 'error';
+      // this.home.statusText = 'Error en la conexión, por favor intentalo más tarde o revisa tu conexión.';
       this.loading = false;
     });
   }

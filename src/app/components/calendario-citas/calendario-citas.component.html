@@ -408,6 +408,26 @@
 
                           <div class="col">
                               <div class="form-group">
+                                  <label class="modal-label">Fecha de nacimiento</label>
+                                  <input id="exampleInputEmail1" class="form-control" type="date" max="{{today}}"
+                                    [formControl]="fechaNacimiento"
+                                    [class.is-invalid]="fechaNacimiento.touched && fechaNacimiento.hasError('required')">
+                                  <div class="invalid-feedback">
+                                    Este campo es requerido.
+                                  </div>
+                                </div>
+                          </div>
+
+                        </div>
+
+                        <!-- FECHA NACIMIENTO Y CORREO ELECTRONICO -->
+
+                        
+                        <div class="row">       
+
+                          <div class="col">
+
+                              <div class="form-group">
 
                                   <label class="modal-label">No. Identificación</label>
                                   <input type="text" class="form-control" value="{{datosUser.cedula}}" readonly minlength=6
@@ -426,26 +446,33 @@
                                         </div> -->
         
                                 </div>
+
+
+                             
+                          </div>
+
+                          <div class="col">
+                              
+                              <div class="form-group">
+                                <label class="form-label">Confirmar Identificación</label>
+                                <input type="text" class="form-control" [formControl]="confirmarIdentificacion"
+                                [class.is-invalid]="(confirmarIdentificacion.touched && confirmarIdentificacion.hasError('required')) || 
+                                confirmarIdentificacion.hasError('pattern') || 
+                                (confirmarIdentificacion.touched && !confirmarIdentificacion.valid)
+                                || (confirmarIdentificacion.touched && (cedula.value != confirmarIdentificacion.value)) "
+                                minlength="6" maxlength="15" onpaste="alert('No puedes pegar en este campo');return false">
+                                <div class="invalid-feedback" *ngIf="(confirmarIdentificacion.touched && (cedula.value != confirmarIdentificacion.value))">
+                                  <p>El numero de identificacion no coincide</p>
+                                </div>
+                              </div>
                           </div>
 
                         </div>
 
-                        <!-- FECHA NACIMIENTO Y CORREO ELECTRONICO -->
+
+                        <!-- CORREO Y CONFIRMACION DE CORREO -->
 
                         <div class="row">
-
-                          <div class="col">
-                              <div class="form-group">
-                                  <label class="modal-label">Fecha de nacimiento</label>
-                                  <input id="exampleInputEmail1" class="form-control" type="date" max="{{today}}"
-                                    [formControl]="fechaNacimiento"
-                                    [class.is-invalid]="fechaNacimiento.touched && fechaNacimiento.hasError('required')">
-                                  <div class="invalid-feedback">
-                                    Este campo es requerido.
-                                  </div>
-                                </div>
-                          </div>
-
                           <div class="col">
                               <div class="form-group">
                                   <label class="modal-label">Correo electronico</label>
@@ -461,6 +488,19 @@
                                 </div>
                           </div>
 
+
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="modal-label">Confirmacion Correo electronico</label>
+                                  <input type="email" class="form-control" [formControl]="confirmacionEmail" [class.is-invalid]="(confirmacionEmail.touched && (confirmacionEmail.value != email.value))" onpaste="alert('No puedes pegar en este campo');return false">
+        
+                                  <div class="invalid-feedback" *ngIf="confirmacionEmail.touched && (confirmacionEmail.value != email.value)">
+                                    Los correos no coinciden.
+                                  </div>
+        
+                                 
+                                </div>
+                          </div>
                         </div>
 
 
@@ -826,69 +866,123 @@
 
                       <form *ngIf="mascotas === 'false'">
 
-                        <div class="form-group">
-                          <label class="modal-label">Nombres del propietario </label>
-                          <input type="text" class="form-control" [formControl]="nombre"
-                            [class.is-invalid]="(nombre.touched && nombre.hasError('required')) || (nombre.hasError('pattern'))">
-                          <div class="invalid-feedback" *ngIf="nombre.hasError('required')">
-                            Este campo es requerido
+                        <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="modal-label">Nombres del propietario </label>
+                                  <input type="text" class="form-control" [formControl]="nombre"
+                                    [class.is-invalid]="(nombre.touched && nombre.hasError('required')) || (nombre.hasError('pattern'))">
+                                  <div class="invalid-feedback" *ngIf="nombre.hasError('required')">
+                                    Este campo es requerido
+                                  </div>
+        
+                                  <div class="invalid-feedback" *ngIf="nombre.hasError('pattern')">
+                                    Este campo solo acepta letras
+                                  </div>
+                                </div>
                           </div>
 
-                          <div class="invalid-feedback" *ngIf="nombre.hasError('pattern')">
-                            Este campo solo acepta letras
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="modal-label">Apellidos del propietario </label>
+                                  <input type="text" class="form-control" [formControl]="apellidos"
+                                    [class.is-invalid]="(apellidos.touched && apellidos.hasError('required')) || (apellidos.hasError('pattern'))">
+                                  <div class="invalid-feedback" *ngIf="apellidos.hasError('required')">
+                                    Este campo es requerido
+                                  </div>
+        
+                                  <div class="invalid-feedback" *ngIf="apellidos.hasError('pattern')">
+                                    Este campo solo acepta letras
+                                  </div>
+                                </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="modal-label">No. Identificación</label>
+                                  <input type="text" class="form-control" value="{{datosUser.cedula}}" readonly minlength=6
+                                    maxlength=15>
+                                </div>
+                          </div>
+
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="form-label">Confirmar Identificación</label>
+                                  <input type="text" class="form-control" [formControl]="confirmarIdentificacion"
+                                  [class.is-invalid]="(confirmarIdentificacion.touched && confirmarIdentificacion.hasError('required')) || 
+                                  confirmarIdentificacion.hasError('pattern') || 
+                                  (confirmarIdentificacion.touched && !confirmarIdentificacion.valid)
+                                  || (confirmarIdentificacion.touched && (cedula.value != confirmarIdentificacion.value)) "
+                                  minlength="6" maxlength="15" onpaste="alert('No puedes pegar en este campo');return false">
+                                  <div class="invalid-feedback" *ngIf="(confirmarIdentificacion.touched && (cedula.value != confirmarIdentificacion.value))">
+                                    <p>El numero de identificacion no coincide</p>
+                                  </div>
+                                </div>
+                          </div>
+                        </div>
+                        
+
+                        <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label class="modal-label">Correo electronico</label>
+                                  <input type="email" class="form-control" [formControl]="email" [class.is-invalid]="email.touched && email.errors">
+        
+                                  <div class="invalid-feedback" *ngIf="email.touched && email.hasError('required')">
+                                    Este campo es requerido.
+                                  </div>
+        
+                                  <div class="invalid-feedback" *ngIf="email.hasError('email') || email.hasError('pattern')">
+                                    Este email no es valido.
+                                  </div>
+                                </div>
+                          </div>
+                          <div class="col">
+
+                              <div class="form-group">
+                                  <label class="modal-label">Confirmacion Correo electronico</label>
+                                  <input type="email" class="form-control" [formControl]="confirmacionEmail" [class.is-invalid]="(confirmacionEmail.touched && (confirmacionEmail.value != email.value))" onpaste="alert('No puedes pegar en este campo');return false">
+        
+                                  <div class="invalid-feedback" *ngIf="confirmacionEmail.touched && (confirmacionEmail.value != email.value)">
+                                    Los correos no coinciden.
+                                  </div>                              
+                                </div>
                           </div>
                         </div>
 
-                        <div class="form-group">
-                          <label class="modal-label">Apellidos del propietario </label>
-                          <input type="text" class="form-control" [formControl]="apellidos"
-                            [class.is-invalid]="(apellidos.touched && apellidos.hasError('required')) || (apellidos.hasError('pattern'))">
-                          <div class="invalid-feedback" *ngIf="apellidos.hasError('required')">
-                            Este campo es requerido
-                          </div>
+                       
 
-                          <div class="invalid-feedback" *ngIf="apellidos.hasError('pattern')">
-                            Este campo solo acepta letras
-                          </div>
-                        </div>
+                       
 
                         <div class="form-group">
-                          <label class="modal-label">No. Identificación</label>
-                          <input type="text" class="form-control" value="{{datosUser.cedula}}" readonly minlength=6
-                            maxlength=15>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="modal-label">No. Contacto</label>
-                          <input type="text" class="form-control" [formControl]="telefono"
-                            [class.is-invalid]="(telefono.touched && telefono.hasError('required')) || telefono.hasError('pattern') || (telefono.touched && !telefono.valid) "
-                            minlength=6 maxlength=15>
-                          <div class="invalid-feedback" *ngIf="telefono.touched && telefono.hasError('required')">
-                            Este es requerido
+                            <label class="modal-label">No. Contacto del propietario</label>
+                            <input type="text" class="form-control" [formControl]="telefono"
+                              [class.is-invalid]="(telefono.touched && telefono.hasError('required')) || telefono.hasError('pattern') || (telefono.touched && !telefono.valid) "
+                              minlength=6 maxlength=15>
+                            <div class="invalid-feedback" *ngIf="telefono.touched && telefono.hasError('required')">
+                              Este es requerido
+                            </div>
+  
+                            <div class="invalid-feedback" *ngIf="telefono.hasError('pattern')">
+                              Este campo solo acepta numeros, sin puntos ni caracteres especiales.
+                            </div>
+  
+                            <div class="invalid-feedback" *ngIf="!telefono.valid">
+                              minimo 6 caracteres, maximo 15
+                            </div>
+  
                           </div>
 
-                          <div class="invalid-feedback" *ngIf="telefono.hasError('pattern')">
-                            Este campo solo acepta numeros, sin puntos ni caracteres especiales.
-                          </div>
-
-                          <div class="invalid-feedback" *ngIf="!telefono.valid">
-                            minimo 6 caracteres, maximo 15
-                          </div>
-
-                        </div>
-
-                        <div class="form-group">
-                          <label class="modal-label">Correo electronico</label>
-                          <input type="email" class="form-control" [formControl]="email" [class.is-invalid]="email.touched && email.errors">
-
-                          <div class="invalid-feedback" *ngIf="email.touched && email.hasError('required')">
-                            Este campo es requerido.
-                          </div>
-
-                          <div class="invalid-feedback" *ngIf="email.hasError('email') || email.hasError('pattern')">
-                            Este email no es valido.
-                          </div>
-                        </div>
+                          <div class="container-fluid">
+                              <br />
+                              <div class="card-header">
+                                <h3>Información de la mascota</h3>
+                              </div>
+                              <br />
+                            </div>
+                         
 
                         <div class="form-group">
                           <label class="modal-label">Nombre Peludito</label>
@@ -977,15 +1071,9 @@
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
-                    </div>
-
-         
-
-                   
+                    </div> 
                   </div>
                 </div>
-
-
               </div>
 
               <div class="loading" id="modal-loading" *ngIf="loading">
@@ -1005,24 +1093,53 @@
 
                 <!-- Boton para sacar cita a un usuario no registrado -->
                 <button type="button" class="btn btn-primary" (click)="agregarCita()"
-                  [disabled]="!apellidos.valid || !telefono.valid || !fechaNacimiento.valid || !nombre.valid || !email.valid || !ocupacion.valid || !acompanante.valid || !telAcompanante.valid"
-                  *ngIf="(existe === 'false') && !formBene ">Sacar cita</button>
+                  [disabled]="!apellidos.valid || 
+                  !telefono.valid || 
+                  !fechaNacimiento.valid || 
+                  !nombre.valid || 
+                  !email.valid || 
+                  !ocupacion.valid || 
+                  !acompanante.valid || 
+                  !telAcompanante.valid ||
+                  cedula.value != confirmarIdentificacion.value ||
+                  confirmacionEmail.value != email.value"
+                  *ngIf="(existe === 'false') && !formBene">Sacar cita</button>
 
                 <!-- Boton para sacar cita a un beneficiario de un usuario registrado -->
                 <button type="button" class="btn btn-primary" (click)="agregarCita()"
                   *ngIf="(existe === 'true') && formBene
-                  " [disabled]="!nombresBeneficiario.valid || !apellidosBeneficiario.valid || !fechaBeneficiario.valid || !noIdentificacionBeneficiario.valid 
-                  || !telefonoBeneficiario.valid || !parentescoBeneficiario.valid || loading">Sacar cita beneficiario</button>
+                  " [disabled]="!nombresBeneficiario.valid || 
+                  !apellidosBeneficiario.valid || 
+                  !fechaBeneficiario.valid || 
+                  !noIdentificacionBeneficiario.valid 
+                  || !telefonoBeneficiario.valid || 
+                  !parentescoBeneficiario.valid || 
+                  loading">Sacar cita beneficiario</button>
 
                 <!-- Boton para sacar cita a un beneficiario de un usuario no registrado -->
                 <button type="button" class="btn btn-primary" (click)="agregarCita()"
-                  [disabled]="!apellidos.valid || !telefono.valid || !fechaNacimiento.valid || !nombre.valid || !email.valid || !ocupacion.valid || !acompanante.valid || !telAcompanante.valid ||
-                  !nombresBeneficiario.valid || !apellidosBeneficiario.valid || !fechaBeneficiario.valid || !noIdentificacionBeneficiario.valid 
-                  || !telefonoBeneficiario.valid || !parentescoBeneficiario.valid || loading"
+                  [disabled]="!apellidos.valid || 
+                  !telefono.valid || 
+                  !fechaNacimiento.valid || 
+                  !nombre.valid || 
+                  !email.valid || 
+                  !ocupacion.valid || 
+                  !acompanante.valid || 
+                  !telAcompanante.valid ||
+                  !nombresBeneficiario.valid || 
+                  !apellidosBeneficiario.valid || 
+                  !fechaBeneficiario.valid || 
+                  !noIdentificacionBeneficiario.valid || 
+                  !telefonoBeneficiario.valid || 
+                  !parentescoBeneficiario.valid || 
+                  loading || 
+                  cedula.value != confirmarIdentificacion.value ||
+                  confirmacionEmail.value != email.value"
                   *ngIf="(existe === 'false') && formBene">Sacar cita beneficiario</button>
 
                 <!-- Boton para sacar cita y agregar mascota nueva a un usuario registrado -->
                 <button type="button" class="btn btn-primary" data-dismiss="modal"
+                
                   (click)="agregarCitaMascota('agregar')" *ngIf="mascotas === 'true' && mascotaSlt === 'agregarOtra'"
                   [disabled]="!nombreMascota.valid || !especieMascota.valid || !raza.valid || !sexoMascota.valid || !fechaNacimientoMascota.valid || !esterilizado.valid">Sacar
                   cita</button>
@@ -1035,8 +1152,16 @@
                 <!-- Boton para sacar cita a mascota y usuario que no estan registrados -->
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="agregarCitaMascota('nueva')"
                   *ngIf="mascotas === 'false'"
-                  [disabled]="!nombre.valid || !apellidos.valid || !telefono.valid || !nombreMascota.valid || !especieMascota.valid || !sexoMascota.valid || !esterilizado.valid || !email.valid">Sacar
-                  cita</button>
+                  [disabled]="!nombre.valid || 
+                  !apellidos.valid || 
+                  !telefono.valid || 
+                  !nombreMascota.valid || 
+                  !especieMascota.valid || 
+                  !sexoMascota.valid || 
+                  !esterilizado.valid || 
+                  !email.valid ||
+                  cedula.value != confirmarIdentificacion.value ||
+                  confirmacionEmail.value != email.value">Sacar cita</button>
               </div>
             </div>
           </div>
