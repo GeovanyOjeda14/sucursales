@@ -124,6 +124,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this.loading = true;
     this._aplicationService.getUser(id).subscribe( (response) => {
       // console.log(response);
+      localStorage.setItem('user', JSON.stringify(response));
       this.infoUser = response;
       this.validaciones();
       this.loading = false;

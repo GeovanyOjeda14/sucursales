@@ -15,10 +15,18 @@ import * as jsPDF from 'jspdf';
   providers: [ApplicationService, MedicoService, UserService]
 })
 export class HistoriaGeneralComponent implements OnInit {
+  public user;
 
   constructor() { }
 
   ngOnInit() {
+    this.getInfoUser();
   }
+
+  getInfoUser(){
+    let user = localStorage.getItem('user');
+    this.user = JSON.parse(user);
+    console.log(this.user);
+  } 
 
 }

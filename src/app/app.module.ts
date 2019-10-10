@@ -92,6 +92,8 @@ import { GestionarConsultoriosComponent } from './components/gestionar-consultor
 import { PanelAdministradorComponent } from './components/panel-administrador/panel-administrador.component';
 import { HistoriaGeneralComponent } from './components/historia-general/historia-general.component';
 import { HistoriaOptometriaComponent } from './components/historia-optometria/historia-optometria.component';
+import { BarraLateralComponent } from './components/barra-lateral/barra-lateral.component';
+import { HstGeneralComponent } from './components/hst-general/hst-general.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +135,8 @@ import { HistoriaOptometriaComponent } from './components/historia-optometria/hi
     PanelAdministradorComponent,
     HistoriaGeneralComponent,
     HistoriaOptometriaComponent,
+    BarraLateralComponent,
+    HstGeneralComponent,
   ],
   imports: [
     BrowserModule,
