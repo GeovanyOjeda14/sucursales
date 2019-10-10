@@ -57,15 +57,20 @@ export class ConfirmarCuentaComponent implements OnInit {
 
   reenviar() {
     this.loading = true;
-    let identity = this._userService.getIdentity().id_provedor;
+    let identity = this._userService.getIdentity();
     var id;
+    console.log(identity);
 
-    if (identity === undefined) {
-      id = this._userService.getIdentity().medico_id;
-    } else {
-      id = identity;
+    if (identity.medico_id) {
+      id = identity.medico_id;
     }
 
+    if (identity.id_provedor) {
+      id = identity.id_provedor;
+    }
+
+
+    console.log('iddd', id);
     this._appService.getReenviarCodigoCorreo(id).subscribe( (response) => {
       // console.log(response);
       if (response === true) {

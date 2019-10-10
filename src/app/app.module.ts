@@ -40,6 +40,7 @@ import { SucursalService } from './services/sucursales.service';
 import { UserAdmin } from './services/user_admin.guard';
 import { UserMedico } from './services/user_medico.guard';
 import { UserSucursal } from './services/user_sucursal.guard';
+import { SucursalMedico } from './services/sucursal_medico.guard';
 
 // Modulo de loader
 import { NgxLoadingModule } from 'ngx-loading';
@@ -165,6 +166,7 @@ import { PanelAdministradorComponent } from './components/panel-administrador/pa
     UserAdmin,
     UserMedico,
     UserSucursal,
+    SucursalMedico,
     Global,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
