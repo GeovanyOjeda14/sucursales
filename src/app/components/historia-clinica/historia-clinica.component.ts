@@ -47,6 +47,7 @@ export class HistoriaClinicaComponent implements OnInit {
   public id_servicio;
   public res;
   public imagen;
+  public generos;
 
   constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private _route: ActivatedRoute,
     private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation) {
@@ -83,7 +84,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this.getParentescos();
     this.tpDocumento();
     this.loadPage();
-  }
+   }
 
   // tslint:disable-next-line:use-life-cycle-interface
   // ngOnDestroy() {
@@ -149,6 +150,10 @@ export class HistoriaClinicaComponent implements OnInit {
                         {tipo : 'Divorciad@' , nombre : 'Divorciad@'},
                         {tipo : 'Viud@' , nombre : 'Viud@'},
                         {tipo : 'Noviazgo' , nombre : 'Noviazgo'}];
+
+    this.generos = [{tipo : 'Masculino' , nombre : 'Masculino'},
+                        {tipo : 'Femenino' , nombre : 'Femenino'},
+                        {tipo : 'Otro' , nombre : 'Otro'}];
   }
 
   pestana(tipo) {
@@ -210,6 +215,7 @@ export class HistoriaClinicaComponent implements OnInit {
       acompanante : [this.infoUser.acompanante, Validators.pattern('[a-z A-z ñ]*')],
       parentesco : [this.infoUser.pareentesco, ],
       // parentescoStr : ['', ],
+      genero : [this.infoUser.genero, ],
       telefonoAcompanante : [this.infoUser.telefonoAcompanante, [Validators.pattern('[0-9 ]*')]]
 
     });
@@ -509,6 +515,7 @@ export class HistoriaClinicaComponent implements OnInit {
       barrio : this.datosUsuario.value.barrio, telefono : this.datosUsuario.value.telefono,
       eps : this.datosUsuario.value.eps, acompanante : this.datosUsuario.value.acompanante,
       parentesco : this.datosUsuario.value.parentesco, telefonoAcompanante : this.datosUsuario.value.telefonoAcompanante ,
+      genero : this.datosUsuario.value.genero,
       id: this.id_usuario, apellidos : this.infoUser.apellidos, nombre : this.infoUser.nombre,
       telefonowatshapp : this.infoUser.telefonowatshapp
   };
@@ -530,6 +537,7 @@ export class HistoriaClinicaComponent implements OnInit {
       // console.log(err);
     });
   }
+
 
   cerrarAlerta() {
     this.status = null;

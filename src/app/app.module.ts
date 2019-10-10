@@ -89,6 +89,7 @@ import { ConsultorioComponent } from './components/consultorio/consultorio.compo
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { GestionarConsultoriosComponent } from './components/gestionar-consultorios/gestionar-consultorios.component';
 import { PanelAdministradorComponent } from './components/panel-administrador/panel-administrador.component';
+import { HistoriaGeneralComponent } from './components/historia-general/historia-general.component';
 
 @NgModule({
   declarations: [
@@ -128,6 +129,7 @@ import { PanelAdministradorComponent } from './components/panel-administrador/pa
     ConsultorioComponent,
     GestionarConsultoriosComponent,
     PanelAdministradorComponent,
+    HistoriaGeneralComponent,
   ],
   imports: [
     BrowserModule,

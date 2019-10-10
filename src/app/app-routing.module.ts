@@ -31,7 +31,7 @@ import { GestionarSucursalesComponent } from './components/gestionar-sucursales/
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 import { GestionarConsultoriosComponent } from './components/gestionar-consultorios/gestionar-consultorios.component';
 import { ConsultorioComponent } from './components/consultorio/consultorio.component';
-
+import { HistoriaGeneralComponent } from './components/historia-general/historia-general.component';
 // Servicios
 
 // Este servicio sirve para restringuir el acceso a los usuarios no authentificados.
@@ -74,6 +74,7 @@ const routes: Routes = [
     {path : 'vermedico/:id', component: VerPerfilMedicoComponent, canActivate: [UserGuard]},
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},
     {path : 'historia-clinica/:id/:id_servicio', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
+    {path : 'historia-general', component: HistoriaGeneralComponent, canActivate: [UserGuard, UserMedico]},
     {path: '**', component: LoginComponent}
 
 ];

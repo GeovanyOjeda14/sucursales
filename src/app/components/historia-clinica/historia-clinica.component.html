@@ -158,7 +158,130 @@
 
             <div *ngSwitchCase="'historia'">
                 <!-- data-backdrop="false" -->
-                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".crear-historia-clinica" >Crear Historia clinica</button>
+
+              <div class="row">
+                <div class="col-md-6"> <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".crear-historia-clinica" >Crear Historia clinica</button></div>
+                <div class="col-md-6"><button type="button" class="btn btn-primary btn-lg float-left" routerLink="/historia-general">Nueva Historia</button></div>
+              </div>
+
+              
+              <!-- MODAL NUEVA HISTORIA CLINICA -->
+
+           
+
+              <div class="modal fade nuevaHistoriaClinica" tabindex="-1" role="dialog"
+            aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Historia Clinica</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" *ngIf="estadoModal === 'datos'">
+                    <form [formGroup]="datosUsuario" (submit)="prueba()" novalidate style="padding: 30px;">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="" class="label-formulario-user">Tipo documento</label>
+                                  <input type="text" class="form-control" value="{{infoUser.tipoDocumento}}" readonly>
+                                </div>
+                              </div>
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="" class="label-formulario-user">Numero Documento</label>
+                                  <input type="text" value="{{infoUser.cedula}}" class="form-control" readonly>
+                                </div>
+                              </div>
+                            <div class="col-md-4" style="padding-left: 0px;">
+                              <div class="form-group">
+                                <label for="" class="label-formulario-user">Nombres y apellidos</label>
+                                <input type="text" class="form-control" value="{{infoUser.nombres}}" readonly>
+                              </div>
+                            </div>
+              
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                <label for="" class="label-formulario-user">Fecha Nacimiento</label>
+                                <input type="text" class="form-control" value="{{infoUser.fecha_nacimiento | fecha}}" readonly>
+                                </div>
+                            </div>
+              
+                           
+                          </div>
+
+                          <div class="row">
+                              <div class="col-md-1">
+                                  <div class="form-group">
+                                  <label for="" class="label-formulario-user">Edad</label>
+                                  <input type="text" class="form-control" value="{{infoUser.edad}}" readonly>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label for="" class="label-formulario-user">Género</label>
+                                      <select name="" id="" class="form-control" formControlName="genero"
+                                        [class.is-invalid]="datosUsuario.get('genero').errors && datosUsuario.get('genero').touched">
+                                        <option *ngFor="let g of generos" value="{{g.tipo}}">{{g.nombre}}</option>
+                                      </select>
+            
+                                      <div class="invalid-feedback"
+                                        *ngIf="datosUsuario.get('genero').errors && datosUsuario.get('genero').touched">
+                                        <p *ngIf="datosUsuario.get('genero').hasError('required')">*Este campo es requedido.</p>
+                                      </div>
+                                </div>
+                              </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="txt-motivo-consulta" class="label-formulario-user">Causa de Consulta</label>
+                                <textarea name="txt-motivo-consulta" rows="5" class="form-control"
+                                  formControlName="motivoConsulta"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="txt-enfermedadActual" class="label-formulario-user">Enfermedad Actual</label>
+                                <textarea name="txt-enfermedadActual" rows="3" class="form-control"
+                                  formControlName="motivoConsulta"></textarea>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="txt-antecedentesF" class="label-formulario-user">Antecedentes Familiares</label>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                      <label for="txt-antecedentesF" class="label-formulario-user">Categorias</label>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <label for="txt-otroAntecedente" class="label-formulario-user">Otros</label>
+                                      <textarea name="txt-otroAntecedente" rows="3" class="form-control"
+                                      formControlName="motivoConsulta"></textarea>
+                                  </div>
+                                </div>
+                               
+                              </div>
+                            </div>
+                          </div>
+                
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+              <!-- FIN MODAL NUEVA HISTORIA CLINICA -->
+
+
 
                 <!-- MODAL HISTORIA CLINICA  -->
                 <div id="crear-historia-clinica" class="modal fade crear-historia-clinica" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
