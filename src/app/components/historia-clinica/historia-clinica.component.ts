@@ -124,8 +124,10 @@ export class HistoriaClinicaComponent implements OnInit {
     this.loading = true;
     this._aplicationService.getUser(id).subscribe( (response) => {
       // console.log(response);
-      localStorage.setItem('user', JSON.stringify(response));
       this.infoUser = response;
+      let user = {nombres : this.infoUser.nombres, avatar: this.infoUser.avatar, cedula: this.infoUser.cedula,
+                  fecha_nacimiento: this.infoUser.fecha_nacimiento, id_servicio : this.id_servicio };
+      localStorage.setItem('user', JSON.stringify(user));
       this.validaciones();
       this.loading = false;
     }, (err) => {
@@ -135,6 +137,7 @@ export class HistoriaClinicaComponent implements OnInit {
       // console.log(err);
     });
   }
+
 
   tpDocumento() {
     this.tipoDocumento = [{tipo : 'CC' , nombre : 'Cédula de Ciudadanía'},
