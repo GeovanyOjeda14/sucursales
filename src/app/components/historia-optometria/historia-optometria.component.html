@@ -1,3 +1,38 @@
-<p>
-  historia-optometria works!
-</p>
+<div style="padding: 20px;">
+  <form [formGroup]="datosOptometria" (submit)="prueba()" novalidate>
+
+    <div class="row">
+      <div class="col">
+          <label  class="label-formulario-user">Tipo de consulta</label>
+          <select name="" id="" class="form-control" formControlName="tipoConsulta" [class.is-invalid]="datosOptometria.get('tipoConsulta').errors && datosOptometria.get('tipoConsulta').touched">
+              <option value="Control">Control</option>
+              <option value="Primera vez">Primera vez</option>
+          </select>
+          <!-- <section class="form-control" formControlName="tipoConsulta" ></section>>
+            <option value="Control"></option>
+            <option value="Primera vez"></option>
+          </section> -->
+      </div>
+      <div class="col"></div>
+    </div>
+    <br>
+    <div class="row"> 
+      <div class="col">
+
+        <div class="form-group">
+            <label for="txt-motivo-consulta" class="label-formulario-user">Motivo de la consulta</label>
+            <textarea name="txt-motivo-consulta"  rows="5" class="form-control" formControlName="motivoConsulta"></textarea>
+        </div>
+
+      </div>
+      <div class="col">
+
+          <div class="form-group">
+              <label for="txt-motivo-consulta" class="label-formulario-user">Antecedentes</label>
+              <textarea name="txt-motivo-consulta"  rows="5" class="form-control" formControlName="antecedentes"></textarea>
+          </div>
+
+      </div>
+    </div>
+  </form>
+</div>
