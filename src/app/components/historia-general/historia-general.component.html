@@ -1,12 +1,12 @@
 <div class="container-fluid">
     <div class="text-center" style="padding-top: 50px;">
-      <h1 class="display-4">Historia Clinica</h1>
+      <h1 class="card-header">Historia Clinica</h1>
     </div>
-    <hr class="my-4">
+
   
     <div class="row">
       <div class="col-lg-3 fichasPerfiles" id="info-perfil-medico">
-        <app-barra-lateral [img]="user.avatar" [nombres]="user.nombres"></app-barra-lateral>
+        <app-barra-lateral [img]="user.avatar" [nombres]="user.nombres" [cedula]="user.cedula" [fecha_nacimiento]="user.fecha_nacimiento"></app-barra-lateral>
       </div>
   
   
