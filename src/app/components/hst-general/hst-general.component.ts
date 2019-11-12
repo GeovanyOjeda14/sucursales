@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy , OnInit, ViewChild} from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationService } from '../../services/app.service';
-import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
 import { PlatformLocation } from '@angular/common';
-import * as jsPDF from 'jspdf';
-import { CalendarDayViewComponent } from 'angular-calendar';
+import { FormControl } from '@angular/forms';
+import { ReplaySubject, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
+
 
 @Component({
   selector: 'app-hst-general',
@@ -15,18 +17,50 @@ import { CalendarDayViewComponent } from 'angular-calendar';
   styleUrls: ['./hst-general.component.css'],
   providers: [ApplicationService, MedicoService, UserService]
 })
-export class HstGeneralComponent implements OnInit {
+export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
+// cambios
+
+
 
   public antecedentesF;
   public listaAntecedentesF = [];
   public listaHabitos = [];
   public grupoAntecedentesF;
+
+  protected AntecedentesF : AntecedentesF[] = ANTECEDENTESF;
+
+  public antecedentesFMultiCtrl: FormControl = new FormControl();
+  public antecedentesFMultiFilterCtrl: FormControl = new FormControl();
+  public filteredAntecedentesFMulti: ReplaySubject<AntecedentesF[]> = new ReplaySubject<AntecedentesF[]>(1);
+ 
+
+  @ViewChild('multiSelect') multiSelect: MatSelect;
+
+  protected _onDestroy = new Subject<void>();
+
   public grupoHabitos;
   public datos: FormGroup; 
   public datos2: FormGroup;
   public infoUser;
+
+  public consulta;
+  public causa : string;
+  public enfermedad : string;
+
+  public antecedeneFCombo : string;
+  public antecedenteOtro : string;
  
   public sistema = [];
+
+  public antecedentesFamiliaresArray = [];
+  public txtOtroAntecedente: string;
+
+  public antecedentesPersonalesArray = [];
+  public txtAntePatologicos: string;
+  public txtAnteQuirurgicos: string;
+  public txtAnteTraumaticos: string;
+
+
 
   public varCardio;
   public varVascular;
@@ -110,7 +144,9 @@ export class HstGeneralComponent implements OnInit {
   public codDiag:string;
   public iDiagnostico : Int16Array;
 
+  public diagnosticos;
 
+  public datoDiagnostico = '';
 
 
   constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private _route: ActivatedRoute,
@@ -118,48 +154,164 @@ export class HstGeneralComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.tpDatos();
+    // this.tpDatos();
     this.habitosyRiesgos();
     this.validaciones();
     this.revisionSistemas();
     this.examenMedico();
-    this.diagnostico();
+    // this.diagnostico();
+    
+
+    this.antecedentesFMultiCtrl.setValue([this.AntecedentesF[1]]);
+    this.filteredAntecedentesFMulti.next(this.AntecedentesF.slice());
+
+    this.antecedentesFMultiFilterCtrl.valueChanges
+    .pipe(takeUntil(this._onDestroy))
+    .subscribe(()=>{
+      this.filterAntecedentesFMulti();
+    });
+
+    
+
+  }
+
+  guardarAnteFMulti(ev){
+    this.antecedentesFamiliaresArray = ev.value;
+    console.log(this.txtOtroAntecedente);
+    let txtOtroAntecedente = this.txtOtroAntecedente;
+    this.antecedentesFamiliaresArray.push(txtOtroAntecedente);
+
+    //console.log(this.antecedentesFamiliaresArray);
+  }
+
+  guardarAntecedentesPersonales(){
+    
+    console.log(this.antecedentesPersonalesArray);
+  }
+
+  guardar(){
+    let txtAntePatologicos = this.txtAntePatologicos;
+    let txtAnteQuirurgicos = this.txtAnteQuirurgicos;
+    let txtAnteTraumaticos = this.txtAnteTraumaticos;
+    console.log(txtAntePatologicos, txtAnteQuirurgicos, txtAnteTraumaticos);
+
+    this.antecedentesPersonalesArray.push(txtAntePatologicos,txtAnteQuirurgicos,txtAnteTraumaticos);
+    console.log(this.antecedentesPersonalesArray);
+  }
+
+  getDiagnosticos(argumento) {
+    this._medicoService.getDiagnosticos(argumento).subscribe( (response) => {
+      // console.log(response);
+      this.diagnosticos = response;
+      console.log(this.diagnosticos);
+    }, (err) => {
+      // console.log(err);
+    });
+  }
+
+  guardarConsulta(){
+
+    let causa = this.causa;
+    let enfermedad = this.enfermedad;
+
+    console.log(causa, enfermedad);
+    
+  }
+
+  guardarAntecedenteF(){
+
+   let antecedeneFCombo = this.antecedentesFMultiCtrl.value;
+   let antecedenteOtro = this.txtOtroAntecedente;
+
+   
+
+   console.log(antecedenteOtro,antecedeneFCombo);
+
    
   }
 
+  ngAfterViewInit() {
+    this.setInitialValue();
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  toggleSelectAll(selectAllValue: boolean) {
+    this.filteredAntecedentesFMulti.pipe(take(1), takeUntil(this._onDestroy))
+      .subscribe(val => {
+        if (selectAllValue) {
+          this.antecedentesFMultiCtrl.patchValue(val);
+        } else {
+          this.antecedentesFMultiCtrl.patchValue([]);
+        }
+      });
+  }
+
+  protected setInitialValue() {
+    this.filteredAntecedentesFMulti
+      .pipe(take(1), takeUntil(this._onDestroy))
+      .subscribe(() => {
+
+        this.multiSelect.compareWith = (a: AntecedentesF, b: AntecedentesF) => a && b && a.id === b.id;
+      });
+  }
+
+  protected filterAntecedentesFMulti() {
+    if (!this.AntecedentesF) {
+      return;
+    }
+    // get the search keyword
+    let search = this.antecedentesFMultiFilterCtrl.value;
+    if (!search) {
+      this.filteredAntecedentesFMulti.next(this.AntecedentesF.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredAntecedentesFMulti.next(
+      this.AntecedentesF.filter(AntecedentesF => AntecedentesF.nombre.toLowerCase().indexOf(search) > -1)
+    );
+  }
  
 
-  tpDatos() {
-    let Cardio = { nombre: 'Cardiopatías', disponible: true };
-    let Diab = { nombre: 'Diabetes', disponible: true };
-    let Hiper = { nombre: 'Hipertensión', disponible: true };
-    let Asma = { nombre: 'Asma', disponible: true };
-    let Psiqui = { nombre: 'Enfermedad Psiquiátrica', disponible: true };
-    let Enfi = { nombre: 'Enfisema', disponible: true };
-    let Cancer = { nombre: 'Cáncer', disponible: true };
-    let Epilepsia = { nombre: 'Epilepsia', disponible: true };
+  // tpDatos() {
+  //   let Cardio = { nombre: 'Cardiopatías', disponible: true };
+  //   let Diab = { nombre: 'Diabetes', disponible: true };
+  //   let Hiper = { nombre: 'Hipertensión', disponible: true };
+  //   let Asma = { nombre: 'Asma', disponible: true };
+  //   let Psiqui = { nombre: 'Enfermedad Psiquiátrica', disponible: true };
+  //   let Enfi = { nombre: 'Enfisema', disponible: true };
+  //   let Cancer = { nombre: 'Cáncer', disponible: true };
+  //   let Epilepsia = { nombre: 'Epilepsia', disponible: true };
 
-    let antecedentesF = [Cardio, Diab, Hiper, Asma, Psiqui, Enfi, Cancer, Epilepsia];
+  //   let antecedentesF = [Cardio, Diab, Hiper, Asma, Psiqui, Enfi, Cancer, Epilepsia];
 
-    for (var i = 0; i < antecedentesF.length; i++) {
-      let antF = antecedentesF[i];
-      this.listaAntecedentesF.push({antF});
-    }
-  }
+  //   for (var i = 0; i < antecedentesF.length; i++) {
+  //     let antF = antecedentesF[i];
+  //     this.listaAntecedentesF.push({antF});
+  //   }
+  // }
+
 
 
   revisionSistemas(){
-    let cardioRes = {nombre:'Cardio-Respiratorio', variable:this.varCardio, descripcion:this.descripcionCardio};
-    let vascular = {nombre:'Vascular', variable:this.varVascular, descripcion:this.descripcionVascular};
-    let gastro = {nombre:'Gastro Intestinal', variable:this.varGastro, descripcion:this.descripcionGastro};
-    let genito = {nombre:'Genito-Urinario', variable:this.varGenito, descripcion:this.descripcionGenito};
-    let endo = {nombre:'Endocrino', variable:this.varEndo, descripcion:this.descripcionEndo};
-    let osteo = {nombre:'Osteomuscular', variable:this.varOsteo, descripcion:this.descripcionOsteo};
-    let neuro = {nombre:'Neurológico', variable:this.varNeuro, descripcion:this.descripcionNeuro};
-    let piel = {nombre:'Piel y Faneras', variable:this.varPiel, descripcion:this.descripcionPiel};
+    let cardioRes = {id:1,nombre:'Cardio-Respiratorio', variable:this.varCardio, descripcion:this.descripcionCardio};
+    let vascular = {id:2,nombre:'Vascular', variable:this.varVascular, descripcion:this.descripcionVascular};
+    let gastro = {id:3,nombre:'Gastro Intestinal', variable:this.varGastro, descripcion:this.descripcionGastro};
+    let genito = {id:4,nombre:'Genito-Urinario', variable:this.varGenito, descripcion:this.descripcionGenito};
+    let endo = {id:5,nombre:'Endocrino', variable:this.varEndo, descripcion:this.descripcionEndo};
+    let osteo = {id:6,nombre:'Osteomuscular', variable:this.varOsteo, descripcion:this.descripcionOsteo};
+    let neuro = {id:7,nombre:'Neurológico', variable:this.varNeuro, descripcion:this.descripcionNeuro};
+    let piel = {id:8,nombre:'Piel y Faneras', variable:this.varPiel, descripcion:this.descripcionPiel};
 
     this.sistema.push(cardioRes,vascular,gastro,genito,endo,osteo,neuro,piel);
    }
+
+
 
    examenMedico(){
     let cabeza = {nombre:'Cabeza', variable:this.varCabeza, descripcion:this.descripcionCabeza};
@@ -198,52 +350,48 @@ export class HstGeneralComponent implements OnInit {
   }
   
 
-  diagnostico(){
+  // diagnostico(){
+  //   let diag1 =  {id: "1", descripcion: "Fumador", codigo: "510" };
+  //   let diag2 =  {id: "2", descripcion: "Sufre de presión arterial", codigo: "8220" };
+  //   let diag3 =  {id: "3", descripcion: "Sufre de presión arterial", codigo: "5320" };
 
-
-
-
-    let diag1 =  {id: "1", descripcion: "Fumador", codigo: "510" };
-    let diag2 =  {id: "2", descripcion: "Sufre de presión arterial", codigo: "8220" };
-    let diag3 =  {id: "3", descripcion: "Sufre de presión arterial", codigo: "5320" };
-
-    let diagnosticos = [diag1,diag2,diag3];
+  //   let diagnosticos = [diag1,diag2,diag3];
 
       
     
-    for(var i = 0 ; i < diagnosticos.length; i++)
-    {
-      let diag = diagnosticos[i];
-      this.listaDiagnosticos.push({diag});
-     
-    }
+  //   for(var i = 0 ; i < diagnosticos.length; i++)
+  //   {
+      
+  //     let diag = diagnosticos[i];
+  //     this.listaDiagnosticos.push({diag});
+  //   }
    
-  }
+  // }
 
-guardarDiagnostico(){
+// guardarDiagnostico(){
  
-  console.log(this.descripcionDiag);
+//   console.log(this.descripcionDiag);
 
-  let nuevo = {id: "-" ,descripcion: this.descripcionDiag, codigo:this.codDiag};
-  let diagnosticos = [nuevo];
+//   let nuevo = {id: "-" ,descripcion: this.descripcionDiag, codigo:this.codDiag};
+//   let diagnosticos = [nuevo];
 
-  for(var i = 0 ; i < diagnosticos.length; i++)
-  {
-    let diag = diagnosticos[i];
-    this.listaDiagnosticos.push({diag});
+//   for(var i = 0 ; i < diagnosticos.length; i++)
+//   {
+//     let diag = diagnosticos[i];
+//     this.listaDiagnosticos.push({diag});
    
-  }
-  this.descripcionDiag = "";
-  this.codDiag = "";
-}
+//   }
+//   this.descripcionDiag = "";
+//   this.codDiag = "";
+// }
 
-editarDiagnostico(descripcionDiag,codDiag){
+// editarDiagnostico(descripcionDiag,codDiag){
 
-  console.log(descripcionDiag.codigo);
+//   console.log(descripcionDiag.codigo);
 
-  this.descripcionDiag = descripcionDiag.descripcion;
-  this.codDiag = descripcionDiag.descripcion;
-}
+//   this.descripcionDiag = descripcionDiag.descripcion;
+//   this.codDiag = descripcionDiag.descripcion;
+// }
 
   validaciones(){
 
@@ -272,10 +420,6 @@ editarDiagnostico(descripcionDiag,codDiag){
       presion : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
       peso : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
     });
-
-    
-    
-    
   }
 
  
@@ -287,9 +431,16 @@ editarDiagnostico(descripcionDiag,codDiag){
     this.grupoHabitos = ev.value;
   }
 
+  prueba(ev){
+    console.log(ev);
+    this.getDiagnosticos(ev.target.value);
+  }
+
   checkRevisionSistema(ev, tipo){ 
     console.log(tipo);
     let valor = true;
+    let identificador = 0;
+
     switch(valor === true){
       case (tipo === 'Cardio-Respiratorio') : 
       this.sistema[0].variable = ev.checked;
@@ -317,6 +468,7 @@ editarDiagnostico(descripcionDiag,codDiag){
       break;
     }
   }
+
 
   
   checkExamenMedico(ev, tipo){ 
@@ -368,10 +520,33 @@ editarDiagnostico(descripcionDiag,codDiag){
       case (tipo === 'Faneras') : 
       this.examen[14].variable = ev.checked;
       break;
+
+      
+
     }
   }
- 
 
 }
 
+export interface AntecedentesF{
+  id : string;
+  nombre : string;
+  disponible : string;
+}
 
+export interface AntecedentesFGroup{
+  nombre : string; 
+  disponible : string;
+  antecedentesF: AntecedentesF[];
+}
+
+export const ANTECEDENTESF : AntecedentesF[] = [
+  {nombre: 'Cardiopatías', disponible:'true', id: '1'},
+  {nombre: 'Diabetes', disponible:'true', id: '2'},
+  {nombre: 'Hipertensión', disponible:'true', id: '3'},
+  {nombre: 'Asma', disponible:'true', id: '4'},
+  {nombre: 'Enfermedad Psiquiátrica', disponible:'true', id: '5'},
+  {nombre: 'Enfisema', disponible:'true', id: '6'},
+  {nombre: 'Cáncer', disponible:'true', id: '7'},
+  {nombre: 'Epilepsia', disponible:'true', id: '8'},
+];

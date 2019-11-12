@@ -95,6 +95,10 @@ import { HistoriaOptometriaComponent } from './components/historia-optometria/hi
 import { BarraLateralComponent } from './components/barra-lateral/barra-lateral.component';
 import { HstGeneralComponent } from './components/hst-general/hst-general.component';
 
+// search selected
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -137,9 +141,12 @@ import { HstGeneralComponent } from './components/hst-general/hst-general.compon
     HistoriaOptometriaComponent,
     BarraLateralComponent,
     HstGeneralComponent,
+    
   ],
   imports: [
     BrowserModule,
+    //Search Selected
+    NgxMatSelectSearchModule,
     ImageCropperModule,
     // routing,
     RouterModule,
@@ -159,7 +166,8 @@ import { HstGeneralComponent } from './components/hst-general/hst-general.compon
     BrowserAnimationsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
-      useFactory: adapterFactory
+      useFactory: adapterFactory,
+      
     }),
     FormsModule,
     FlatpickrModule.forRoot(),
