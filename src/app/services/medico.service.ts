@@ -102,4 +102,9 @@ export class MedicoService {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/histmed/' + mes + '/' + anio + '/' + id_medico + '/' + id_categoria + '/' + id_consultorio , {headers : headers});
       }
+
+      getActiveHist(id_servicio) {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/activhist/' + id_servicio, {headers : headers});
+      }
 }

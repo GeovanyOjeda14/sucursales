@@ -100,7 +100,6 @@ export class CalendarioCitasComponent implements OnInit {
 
   // fechas de hoy
   public today;
- 
   // FormsControls
   nombre = new FormControl('', [Validators.required, Validators.pattern('[A-Z a-z ñ]*')]);
   confirmarIdentificacion = new FormControl('', [Validators.required, Validators.min(6), Validators.pattern('[0-9]*')]);
@@ -152,8 +151,7 @@ export class CalendarioCitasComponent implements OnInit {
   constructor(private _aplicatioService: ApplicationService, private _userService: UserService, private _sucursalService : SucursalService,
               private _provedorService: ProvedorService, private _medicoService: MedicoService, location: PlatformLocation) {
   this.today = moment(new Date().toISOString()).format('YYYY-MM-DD');
-  // this.mymodel = 'agenda';             
-
+  // this.mymodel = 'agenda';
     location.onPopState(() => {
         document.getElementById('btn-cerrar-modal-ver-cita').click();
         document.getElementById('btn-cerrar-agregar-cita').click();
@@ -408,7 +406,7 @@ export class CalendarioCitasComponent implements OnInit {
       // cedula
       // {color:"#07a9df" , start:start,usuario:id,servicio:this.id_servicio , consultorio : this.medicoSelect.value.consultorio, mascota : this.mascota};
 
-      if(this.formBene === true) {
+      if (this.formBene === true) {
 
         benef = {fecha_n: this.fechaBeneficiario.value, nombre: this.nombresBeneficiario.value, apellidos: this.apellidosBeneficiario.value, ident: this.noIdentificacionBeneficiario.value,
         parent : this.parentescoBeneficiario.value, tel : this.telefonoBeneficiario.value,  id_usu: this.datosUser.id, pais: 47, nuevo : true};
@@ -418,7 +416,7 @@ export class CalendarioCitasComponent implements OnInit {
         start: date, contacto: this.telefono.value, nombres: this.nombre.value.toUpperCase(), usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
         ocupacion : this.ocupacion.value.toUpperCase(), direccion : this.direccion.value.toUpperCase(), barrio : this.barrio.value.toUpperCase(),
-        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value.toUpperCase(), consultorio : this.consultorioSelecionado.id_consultorio,
+        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       } else {
@@ -428,7 +426,7 @@ export class CalendarioCitasComponent implements OnInit {
         start: date, contacto: this.telefono.value, nombres: this.nombre.value.toUpperCase(), usuario: this.cedula.value,
         correo: this.email.value, tipoDocumento: this.tipoDocumento.value, estadoCivil : this.estadoCivil.value,
         ocupacion : this.ocupacion.value.toUpperCase(), direccion : this.direccion.value.toUpperCase(), barrio : this.barrio.value.toUpperCase(),
-        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value.toUpperCase(), consultorio : this.consultorioSelecionado.id_consultorio,
+        eps : this.eps.value.toUpperCase(), acompanante : this.acompanante.value, consultorio : this.consultorioSelecionado.id_consultorio,
         parentesco : this.parentesco.value, telefonoAcompanante : this.telAcompanante.value, benef};
 
       }
