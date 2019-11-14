@@ -27,10 +27,8 @@ export class BuscarCitaComponent implements OnInit {
 
   // Informacion de una cita a eliminar
   public infoCita;
-
   // Informacion de cita actal en curso segun servicio
   public infoSiguienteCita;
-
   //
   public citasAgregadas;
   public citasAgregadasMasc;
@@ -84,10 +82,11 @@ export class BuscarCitaComponent implements OnInit {
 
 
   getCitasMedico(id) {
+    // console.log('oe ?');
     this.home.cerrarAlerta();
     this.home.loading = true;
     this._medicoService.getCitasActivas(id).subscribe( (response) => {
-      console.log('1 ', response);
+      // console.log('1 aquiiiiii', response);
       this.citasAgregadas = response[0];
       this.citasAgregadasMasc =  response[1];
       this.home.loading = false;
@@ -297,7 +296,7 @@ export class BuscarCitaComponent implements OnInit {
       this.mascota = false;
 
       this.infoUser = info;
-      console.log('usert', this.infoUser);
+      // console.log('usert', this.infoUser);
       document.getElementById('btn-modal-info-paciente').click();
 
     } else {

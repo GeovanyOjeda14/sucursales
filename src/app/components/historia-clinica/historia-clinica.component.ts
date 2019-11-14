@@ -48,6 +48,7 @@ export class HistoriaClinicaComponent implements OnInit {
   public res;
   public imagen;
   public generos;
+  public idCategoria;
 
   constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private _route: ActivatedRoute,
     private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation) {
@@ -93,6 +94,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this._route.params.subscribe(params => {
       this.id_usuario = params['id'];
       this.id_servicio = params['id_servicio'];
+      this.idCategoria = params['idCategoria'];
       // console.log(id);
       this.getUser(this.id_usuario);
       this.getHistoriasClinicas(this.id_usuario, this.id_servicio);
@@ -102,9 +104,9 @@ export class HistoriaClinicaComponent implements OnInit {
 
   getActiveHist(id_servicio) {
     this._medicoService.getActiveHist(id_servicio).subscribe( (response) => {
-      console.log(response);
-    }, (err)=> {
-      console.log(err);
+      // console.log(response);
+    }, (err) => {
+      // console.log(err);
     } );
   }
 
@@ -114,7 +116,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this.loading = true;
 
     this._medicoService.getHistoriaClinicaPorServicio(id_usuario, id_servicio).subscribe( (response) => {
-      console.log(response);
+      // console.log(response);
       this.infoHc = response;
       this.loading = false;
     }, (err) => {

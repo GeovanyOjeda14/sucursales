@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Global } from './global';
 import CryptoJS from 'crypto-js';
 
-@Injectable( )
+@Injectable()
 export class MedicoService {
     public url;
 

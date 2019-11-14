@@ -161,13 +161,11 @@
 
               <div class="row">
                 <div class="col-md-6"> <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".crear-historia-clinica" >Crear Historia clinica</button></div>
-                <div class="col-md-6"><button type="button" class="btn btn-primary btn-lg float-left" routerLink="/historia-general">Nueva Historia</button></div>
+                <div class="col-md-6"><button type="button" class="btn btn-primary btn-lg float-left" [routerLink]="['/historia-general', idCategoria]">Nueva Historia</button></div>
               </div>
-
+ 
               
-              <!-- MODAL NUEVA HISTORIA CLINICA -->
-
-           
+            <!-- MODAL NUEVA HISTORIA CLINICA -->
 
             <div class="modal fade nuevaHistoriaClinica" tabindex="-1" role="dialog"
             aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">

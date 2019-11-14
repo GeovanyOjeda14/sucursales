@@ -1,88 +1,474 @@
+<div ng-app="myApp" ng-controller="miController">
 <div class="container-fluid">
 
-   <div class="row divisiones">
-    <div class="col-md-12">
+  <form [formGroup]="datosHistGeneral">
+    
+    <div class="row divisiones">
+      <div class="col-md-6 form-group">
+        <label class="form-label">Tipo consulta</label>
+        <select class="form-control" formControlName="tipoConsulta">
+          <option value="Primera vez">Primera vez</option>
+          <option value="Control">Control</option>
+        </select>
+      </div>
+
+      <div class="col-md-12">
         <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label for="txt-motivo-consulta" class="form-label label-formulario-user">Causa de Consulta</label>
-                <textarea name="txt-motivo-consulta" rows="5" class="form-control"
-                  formControlName="motivoConsulta"></textarea>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="txt-motivo-consulta" class="form-label label-formulario-user">Motivo de la Consulta</label>
+              <textarea name="txt-motivo-consulta" rows="5" formControlName="motivoConsulta" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="txt-enfermedadActual" class="form-label label-formulario-user">Enfermedad Preexistente</label>
+              <textarea name="txt-enfermedadActual" rows="3" class="form-control" formControlName="enfermedadPreexistente"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <button (click)="guardarConsulta()">Siguiente</button> -->
+
+    </div>
+
+  </form>
+
+  <!-- ---------------------------------------- ANTECEDENTES FAMILIARES --------------------------------------------------- -->
+
+    <div class="row divisiones"  id="demo">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <label for="txt-antecedentesF" class="tituloDivision">Antecedentes Familiares</label>
+            <div class="row">
+              <div class="col-lg-12">
+              
+                  <mat-form-field class="w-100">
+                    <mat-select placeholder="Antecedentes Familiares" [formControl]= "antecedentesFMultiCtrl" [multiple]="true" #multiSelect (selectionChange)="guardarAnteFMulti($event)">
+                      <ngx-mat-select-search [showToggleAllCheckbox]="true" (toggleAll)="toggleSelectAll($event)" [formControl]="antecedentesFMultiFilterCtrl"></ngx-mat-select-search>
+                      <mat-option  *ngFor="let AntecedenteF of filteredAntecedentesFMulti | async" [value]="AntecedenteF.id" >
+                        {{AntecedenteF.nombre}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <form [formGroup]="datosHistGeneral">
+                    <div class="form-group">
+                        <label for="txt-otroAntecedente" class="form-label label-formulario-user">Otros</label>
+                        <textarea  rows="3" class="form-control" formControlName="otroAntecedentesFamiliares"></textarea>
+                      </div>
+                </form>
               </div>
             </div>
           </div>
-          
+          <button (click)="guardarAntecedenteF()">Siguiente</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ------------------------------------------ ANTECEDENTES PERSONALES  --------------------------------------------------------->
+  
+    <form [formGroup]="datosHistGeneral">
+
+    <div class="row divisiones">
+      <div class="col-md-12">
+        <label for="txt-antecedentesP" class="tituloDivision">Antecedentes Personales</label>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="txt-patologicos" class="form-label label-formulario-user">Patológicos</label>
+              <textarea name="txtPatologicos" formControlName="patologicos" rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="txt-quirurgicos" class="form-label label-formulario-user">Quirúrgicos</label>
+              <textarea name="txtQuirurgicos" formControlName="quirurgicos" rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="txt-traumaticos" class="form-label label-formulario-user">Traumáticos</label>
+              <textarea name="txtTraumaticos" formControlName="traumaticos" rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+ 
+  </form>
+
+    <!-- ------------------------------------------ GINECO OBSTETRA ------------------------------------------------------------ -->
+
+  <form [formGroup]="datosHistGeneral">
+    <div class="row divisiones">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 ">
+            <label for="" class="tituloDivision">Gineco - Obstetra</label>
+          </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
               <div class="form-group">
-                <label for="txt-enfermedadActual" class="form-label label-formulario-user">Enfermedad Actual</label>
-                <textarea name="txt-enfermedadActual" rows="3" class="form-control"
-                  formControlName="motivoConsulta"></textarea>
+                <label for="" class="form-label label-formulario-user">Menarquía</label>
+                <input type="text" class="form-control" formControlName="gine_menarquia">
               </div>
             </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="" class="form-label label-formulario-user">Gravidez</label>
+                <input type="text" class="form-control" formControlName="gine_gravidez">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="" class="form-label label-formulario-user">Partos</label>
+                <input type="text" class="form-control" formControlName="gine_partos">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="" class="form-label label-formulario-user">Abortos</label>
+                <input type="text" class="form-control" formControlName="gine_abortos">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="" class="form-label label-formulario-user">Hijos Vivos</label>
+                <input type="text" class="form-control" formControlName="gine_hijosvivos">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="" class="form-label label-formulario-user">Planficación</label>
+                <input type="text" class="form-control" formControlName="gine_planificacion">
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="txt-otroHabitoRiesgo" class="form-label label-formulario-user">Toxico Alergicos</label>
+                <textarea name="txt-otroHabitoRiesgo" rows="3" class="form-control" formControlName="toxicos_alergicos"></textarea>
+              </div>
+            </div>
+
           </div>
 
-          
+         
+        </div>
+
+
+      </div>
+      <!-- <button (click)="guardarGineco()">Siguiente</button> -->
+    </div>
+  </form>
+
+
+
+  <!-- ------------------------------------ HABITOS Y FACTORES DE RIESGO  ----------------------------------------------- -->
+
+  <form [formGroup]="datosHistGeneral">
+    <div class="row divisiones">
+    
+        <label for="" class="tituloDivision">Habitos y factores de riesgo</label>
+      <div class="col-md-12" *ngFor="let h of habitos; let i = index">
+  
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-check">
+              <mat-checkbox (change)="checkHabitosFactores($event, h.nombre)">{{h.nombre}}
+              </mat-checkbox>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="w-100" *ngIf="h.variable">
+                  <textarea matInput placeholder="Hallazgos" [formControlName]="h.formControl"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="txt-otroHabitoRiesgo" class="form-label label-formulario-user">Otros</label>
+          <textarea name="txt-otroHabitoRiesgo" rows="3" class="form-control" formControlName="otrosHabitos"></textarea>
+        </div>
+      </div>
+  
+      <!-- <button class="btn btn-success" (click)="probar2()">Probar</button> -->
+  
+  
+      </div>
+    </form>
+
+    <!-- ----------------------------------- REVISION POR SISTEMAS  --------------------------------------------------->
+
+
+<form [formGroup]="datosHistGeneral">
+  <div class="row divisiones">
+    <label for="" class="tituloDivision">Revisión por Sistemas</label>
+    <div class="col-md-12" *ngFor="let s of sistema; let i = index">
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-check">
+            <mat-checkbox (change)="checkRevisionSistema($event, s.nombre)">{{s.nombre}}
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field class="w-100" *ngIf="s.variable">
+                <textarea matInput placeholder="Hallazgos" [formControlName]="s.formControl"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <button class="btn btn-success" (click)="probar()">Probar</button> -->
+
+
+    </div>
+  </form>
+
+
+  <!-- ---------------------------------------------- EXAMEN FISICO ------------------------------------------------------ -->
+
+
+  <form [formGroup]="datosHistGeneral">
+
+  <div class="row divisiones">
+    <label for="" class="tituloDivision">Examen Físico</label>
+
+
+    <div class="col-md-12">
+      <label for="" class="form-label label-formulario-user">Apariencia General</label>
+      <textarea name="txt-AparienciaGeneral" rows="3" class="form-control" formControlName="aparienciaGeneral"></textarea>
+    </div>
+
+
+      <div class="row" style="padding: 30px;">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Frecuencia cardiaca</label>
+              <input type="text" class="form-control" formControlName="frecuencia_cardica">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Temperatura (Si es pertinente)</label>
+              <input type="text" class="form-control" formControlName="temperetura">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Frecuencia Respiratoria</label>
+              <input type="text" class="form-control" formControlName="frecuencia_resp">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Talla(cm)</label>
+              <input type="text" class="form-control" formControlName="talla">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Presión Arterial</label>
+              <input type="text" class="form-control" formControlName="presion_art">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="" class="form-label label-formulario-user">Peso (kg)</label>
+              <input type="text" class="form-control" formControlName="peso">
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+
+    <div class="col-md-12" *ngFor="let e of examen; let i = index">
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-check">
+            <mat-checkbox (change)="checkExamenMedico($event, e.nombre)" >{{e.nombre}}
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field class="w-100" *ngIf="e.variable">
+                <textarea matInput placeholder="Hallazgos"  [formControlName]="e.formControl"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  
-  <div class="row divisiones">
-      <div class="col-md-12">
-          
-          <label for="txt-antecedentesF" class="form-label label-formulario-user">Antecedentes Familiares</label>
+</form>
+
+
+<div class="text-center">
+  <button class="btn btn-success" (click)="guardarHistoriaClinica()">Guardar historia clinica</button>
+</div>
+
+  <!-- ----------------------------------------------- POR HACER ---------------------------------------------------------  -->
+
+  <!-- <div class="row divisiones">
+    <label for="" class="tituloDivision">Impresión Diagnostica</label>
+
+    <div class="col-md-12">
+      <div class="col-md-12"> -->
+        <!-- <ul class="list-group">
+          <li *ngFor="let di of listaDiagnosticos" class="list-group-item list-group-item-action">
+            <span class="badge badge-primary">{{di.diag.id}}</span>
+            {{di.diag.descripcion}} - {{di.diag.codigo}}
+            
+          </li>
+        </ul> -->
+        <!-- <div class="card mt-4">
+          <div class="card-body">
             <div class="row">
-              <div class="col-md-12">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="" class="form-label label-formulario-user">Descripción</label>
+                <input type="text" class="form-control" [(ngModel)]="descripcionDiag">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="" class="form-label label-formulario-user">Código</label>
+                <input type="text" class="form-control" [(ngModel)]="codDiag">
+              </div>
+            </div>
+          </div>
+           
+            
+            
+          </div>
+        </div> -->
+        
+      <!-- <div class="form-group">
+        <label for="datoDiagnostico" class="form-label label-formulario-user">Dato Diagnostico</label>
+        <input class="form-control" ng-change="prueba($event)" type="text">
+      </div>
+
+      <mat-form-field class="w-100">
+        <mat-select placeholder="Antecedentes Familiares" [formControl]= "antecedentesFMultiCtrl" [multiple]="true" #multiSelect (selectionChange)="guardarAnteFMulti($event)">
+          <ngx-mat-select-search [formControl]="antecedentesFMultiFilterCtrl"></ngx-mat-select-search>
+          <mat-option  *ngFor="let AntecedenteF of filteredAntecedentesFMulti | async" [value]="AntecedenteF.id" >
+            {{AntecedenteF.nombre}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+        <select name="" id="" class="form-control">
+          <option *ngFor="let d of impdiagnostica" value="{{d.id_impresiondiag}}">{{d.nombre}}</option>
+        </select>
+      </div>
+  
+    </div> -->
+    <!-- <div class="col-md-12" style="display: block;">
+        <button class="btn btn-primary ng-star-inserted" (click)="guardarDiagnostico()">Guardar</button>
+    </div> -->
+     
+  <!-- </div> -->
+
+
+  <!-- <form [formGroup]="datos">
+      <div class="row divisiones">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12 ">
+              <label for="" class="tituloDivision">Final Consulta</label>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
                 <div class="form-group">
-                
-                  <div class="row">
-                    <div class="col-md-6">
-                        <label for="txt-antecedentesF" class="form-label label-formulario-user">Categorias</label>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="txt-otroAntecedente" class="form-label label-formulario-user">Otros</label>
-                        <textarea name="txt-otroAntecedente" rows="3" class="form-control"
-                        formControlName="motivoConsulta"></textarea>
-                    </div>
+                  <label for="" class="form-label label-formulario-user">Control</label>
+                  <input type="text" class="form-control" formControlName="control"
+                    [class.is-invalid]="datos.get('control').errors && datos.get('control').touched">
+                  <div class="invalid-feedback" *ngIf="datos.get('control').errors && datos.get('control').touched">
+                    <p *ngIf="datos.get('control').hasError('pattern')">Esta campo solo acepta letras.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="" class="form-label label-formulario-user">Incapacidad</label>
+                  <div class="">
+                    <mat-checkbox>Si</mat-checkbox>
+                    <mat-checkbox>No</mat-checkbox>
                   </div>
                  
                 </div>
               </div>
-            </div>
-      </div>
-    </div>
-
-    <div class="row divisiones">
-        <div class="col-md-12">
-            
-            <label for="txt-antecedentesF" class="form-label label-formulario-user">Antecedentes Personales</label>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <div class="row">
-                      <div class="col-md-6">
-                          <label for="txt-otroAntecedente" class="form-label label-formulario-user">Patológicos</label>
-                          <textarea name="txt-otroAntecedente" rows="3" class="form-control"
-                          formControlName="motivoConsulta"></textarea>
-                      </div>
-                      <div class="col-md-6">
-                          <label for="txt-otroAntecedente" class="form-label label-formulario-user">Quirúrgicos</label>
-                          <textarea name="txt-otroAntecedente" rows="3" class="form-control"
-                          formControlName="motivoConsulta"></textarea>
-                      </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="txt-otroAntecedente" class="form-label label-formulario-user">Traumáticos</label>
-                            <textarea name="txt-otroAntecedente" rows="3" class="form-control"
-                            formControlName="motivoConsulta"></textarea>
-                        </div>
-                        
-                      </div>
-                   
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="" class="form-label label-formulario-user">Dias</label>
+                  <input type="text" class="form-control" formControlName="dias"
+                    [class.is-invalid]="datos.get('dias').errors && datos.get('dias').touched">
+                  <div class="invalid-feedback" *ngIf="datos.get('dias').errors && datos.get('dias').touched">
+                    <p *ngIf="datos.get('dias').hasError('pattern')">Esta campo solo acepta letras.</p>
                   </div>
                 </div>
               </div>
+            </div>
+         
+          </div>
         </div>
-      </div>  
+      </div>
+    </form> -->
+
+
 </div>
+</div>
+
+
+<!-- <script>
+// $scope.mostrar = false;
+
+// $scope.siguiente = function(){
+//   $scope.mostrar = true;
+//   console.log($scope.mostrar)
+// }
+
+$(document).ready(function(){
+  $("#hide").click(function(){
+    console.log("entra");
+    $("demo").hide();
+  });
+  $("#show").click(function(){
+    $("demo").show();
+  });
+})
+
+</script> -->
+
+

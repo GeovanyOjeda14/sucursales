@@ -420,9 +420,9 @@
                                     <p><strong>Fecha Nacimiento : </strong> {{infoUser.fecha_nacimiento | fecha}}</p>
                                     <p><strong>No. Contacto : </strong> {{infoUser.telefono}}</p>
                                     <!-- (infoUser.estado === 0 && infoUser.categoria === 3) && !medico -->
-                                    <button class="btn btn-primary" [disabled]="medico === false && infoUser.estado !== 0 && infoUser.categoria === 3" [routerLink]="['/historia-clinica', infoUser.id, infoUser.servicios_idservicios]" data-dismiss="modal"> Historia Clinica </button>
+                                    <button class="btn btn-primary" [disabled]="medico === false && infoUser.estado != 0" [routerLink]="['/historia-clinica', infoUser.id, infoUser.servicios_idservicios, infoUser.categoria]" data-dismiss="modal"> Historia Clinica </button>
                                </div>
-
+ 
                                <div *ngIf="mascota && infoUser">
                                   <p><strong>Nombre : </strong> {{infoUser.nombre}}</p>
                                   <p><strong>Raza : </strong> {{infoUser.raza}}</p>
