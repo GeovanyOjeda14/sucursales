@@ -94,9 +94,12 @@ import { HistoriaGeneralComponent } from './components/historia-general/historia
 import { HistoriaOptometriaComponent } from './components/historia-optometria/historia-optometria.component';
 import { BarraLateralComponent } from './components/barra-lateral/barra-lateral.component';
 import { HstGeneralComponent } from './components/hst-general/hst-general.component';
+import { DiagnosticoService } from './services/diagnostico.service';
 
 // search selected
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { DiagnosticoComponent } from './components/diagnostico/diagnostico.component';
+
 
 
 @NgModule({
@@ -141,6 +144,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     HistoriaOptometriaComponent,
     BarraLateralComponent,
     HstGeneralComponent,
+    DiagnosticoComponent
     
   ],
   imports: [
@@ -184,6 +188,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     UserSucursal,
     SucursalMedico,
     Global,
+    DiagnosticoService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,13 @@
+<!-- <select class="selectpicker" multiple title="Choose one of the following...">
+    <option *ngFor="let diag of diagnosticos | async" [value]="diag.id_impresiondiag" ></option>
+   
+  </select> -->
+
+
+  <select data-live-search = "true" id = "idcategoria" name = "idcategoria" class = "selectpicker" multiple>
+
+      <!-- <option  *ngFor="let diag of diagnosticos" [value]="diag.id_impresiondiag" >{{diag.nombre}}</option>
+       -->
+     <option *ngFor="let diag of diagnosticos" [value]="diag.id_impresiondiag" >{{diag.nombre}}</option>
+     
+      </select>

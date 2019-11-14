@@ -1,6 +1,6 @@
 <div ng-app="myApp" ng-controller="miController">
 <div class="container-fluid">
- 
+    <app-diagnostico></app-diagnostico>
     <div class="row divisiones">
       <div class="col-md-12">
         <div class="row">
@@ -48,6 +48,7 @@
                   <textarea [(ngModel)]="txtOtroAntecedente" rows="3" class="form-control"></textarea>
                 </div>
               </div>
+             
             </div>
           </div>
           <button (click)="guardarAntecedenteF()">Siguiente</button>
@@ -432,6 +433,7 @@
 
 </div>
 </div>
+
 
 
 <script>

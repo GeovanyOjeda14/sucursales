@@ -40,6 +40,7 @@ import { UserAdmin } from './services/user_admin.guard';
 import { UserMedico } from './services/user_medico.guard';
 import { UserSucursal } from './services/user_sucursal.guard';
 import { SucursalMedico } from './services/sucursal_medico.guard';
+// import { DiagnosticoPruebaComponent } from './components/diagnostico-prueba/diagnostico-prueba.component';
 
 const routes: Routes = [
     {path: '', component : LoginComponent},
@@ -76,7 +77,8 @@ const routes: Routes = [
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},
     {path : 'historia-clinica/:id/:id_servicio', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
     {path : 'historia-general', component: HistoriaGeneralComponent, canActivate: [UserGuard, UserMedico]},
-    {path: '**', component: LoginComponent}
+    {path: '**', component: LoginComponent},
+    // {path : 'diagnostico', component: DiagnosticoPruebaComponent}
 
 ];
 
