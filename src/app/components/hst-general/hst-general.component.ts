@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy , OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy , OnInit, ViewChild, Input} from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationService } from '../../services/app.service';
 import { ActivatedRoute } from '@angular/router';
@@ -19,49 +19,27 @@ import { MatSelect } from '@angular/material/select';
 })
 export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 // cambios
-
-
-
   public antecedentesF;
   public listaAntecedentesF = [];
   public listaHabitos = [];
   public grupoAntecedentesF;
-
-  protected AntecedentesF : AntecedentesF[] = ANTECEDENTESF;
-
+  protected AntecedentesF: AntecedentesF[] = ANTECEDENTESF;
   public antecedentesFMultiCtrl: FormControl = new FormControl();
   public antecedentesFMultiFilterCtrl: FormControl = new FormControl();
   public filteredAntecedentesFMulti: ReplaySubject<AntecedentesF[]> = new ReplaySubject<AntecedentesF[]>(1);
- 
-
   @ViewChild('multiSelect') multiSelect: MatSelect;
-
   protected _onDestroy = new Subject<void>();
-
   public grupoHabitos;
-  public datos: FormGroup; 
+  public datos: FormGroup;
   public datos2: FormGroup;
   public infoUser;
-
   public consulta;
-  public causa : string;
-  public enfermedad : string;
-
-  public antecedeneFCombo : string;
-  public antecedenteOtro : string;
- 
+  public antecedeneFCombo: string;
+  public antecedenteOtro: string;
   public sistema = [];
-
   public antecedentesFamiliaresArray = [];
   public txtOtroAntecedente: string;
-
   public antecedentesPersonalesArray = [];
-  public txtAntePatologicos: string;
-  public txtAnteQuirurgicos: string;
-  public txtAnteTraumaticos: string;
-
-
-
   public varCardio;
   public varVascular;
   public varGastro;
@@ -70,27 +48,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
   public varOsteo;
   public varNeuro;
   public varPiel;
-
-  public cardioRes;
-  public descripcionCardio : string;
-  public vascular;
-  public descripcionVascular : string;
-  public gastro;
-  public descripcionGastro : string;
-  public genito;
-  public descripcionGenito : string;
-  public endo;
-  public descripcionEndo : string;
-  public osteo;
-  public descripcionOsteo : string;
-  public neuro;
-  public descripcionNeuro : string;
-  public piel;
-  public descripcionPiel : string;
-
-
   public examen = [];
- 
   public varCabeza;
   public varOjos;
   public varOidos;
@@ -106,128 +64,126 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
   public varExtremidades;
   public varNeurologico;
   public varFanereas;
-
   public cabeza;
-  public descripcionCabeza : string;
   public ojos;
-  public descripcionOjos : string;
   public oidos;
-  public descripcionOidos : string;
   public nariz;
-  public descripcionNariz : string;
   public boca;
-  public descripcionBoca : string;
   public cuello;
-  public descripcionCuello : string;
   public torax;
-  public descripcionTorax : string;
   public pulmones;
-  public descripcionPulmones : string;
   public corazon;
-  public descripcionCorazon : string;
   public abdomen;
-  public descripcionAbdomen : string;
   public genitoUrinario;
-  public descripcionGenitoUrinario : string;
   public columna;
-  public descripcionColumna : string;
   public extremidades;
-  public descripcionExtremidades : string;
   public neurologico;
-  public descripcionNeurologico : string;
   public fanereas;
-  public descripcionFanereas : string;
-
+  public descripcionFanereas: string;
   public listaDiagnosticos = [];
   public nuevoDiagnostico = [];
   public descripcionDiag: string;
-  public codDiag:string;
-  public iDiagnostico : Int16Array;
-
+  public codDiag: string;
+  public iDiagnostico: Int16Array;
   public diagnosticos;
-
   public datoDiagnostico = '';
 
 
+
+  // Formularios
+
+  public datosHistGeneral: FormGroup;
+  public habitos = [];
+  public cigarrillo = false;
+  public alcohol = false;
+  public estres = false;
+  public humo = false;
+  public polvo = false;
+  public ejercicio = false;
+  public antecedentes = [];
+  @Input() id_usuario;
+  @Input() id_servicio;
+
+  public vista;
+
   constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private _route: ActivatedRoute,
-    private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation) { 
+    private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation) {
+    this.vista = 'consulta';
     }
 
   ngOnInit() {
     // this.tpDatos();
-    this.habitosyRiesgos();
-    this.validaciones();
+    this.habitosFactoresDeRiesgo();
+    // this.validaciones();
     this.revisionSistemas();
     this.examenMedico();
     // this.diagnostico();
-    
-
-    this.antecedentesFMultiCtrl.setValue([this.AntecedentesF[1]]);
+    this.iniciarFormsHistGeneral();
+    // this.antecedentesFMultiCtrl.setValue([this.AntecedentesF[1]]);
     this.filteredAntecedentesFMulti.next(this.AntecedentesF.slice());
-
     this.antecedentesFMultiFilterCtrl.valueChanges
     .pipe(takeUntil(this._onDestroy))
-    .subscribe(()=>{
+    .subscribe(() => {
       this.filterAntecedentesFMulti();
     });
-
-    
-
   }
 
-  guardarAnteFMulti(ev){
-    this.antecedentesFamiliaresArray = ev.value;
-    console.log(this.txtOtroAntecedente);
-    let txtOtroAntecedente = this.txtOtroAntecedente;
-    this.antecedentesFamiliaresArray.push(txtOtroAntecedente);
+  iniciarFormsHistGeneral () {
 
-    //console.log(this.antecedentesFamiliaresArray);
-  }
-
-  guardarAntecedentesPersonales(){
-    
-    console.log(this.antecedentesPersonalesArray);
-  }
-
-  guardar(){
-    let txtAntePatologicos = this.txtAntePatologicos;
-    let txtAnteQuirurgicos = this.txtAnteQuirurgicos;
-    let txtAnteTraumaticos = this.txtAnteTraumaticos;
-    console.log(txtAntePatologicos, txtAnteQuirurgicos, txtAnteTraumaticos);
-
-    this.antecedentesPersonalesArray.push(txtAntePatologicos,txtAnteQuirurgicos,txtAnteTraumaticos);
-    console.log(this.antecedentesPersonalesArray);
-  }
-
-  getDiagnosticos(argumento) {
-    this._medicoService.getDiagnosticos(argumento).subscribe( (response) => {
-      // console.log(response);
-      this.diagnosticos = response;
-      console.log(this.diagnosticos);
-    }, (err) => {
-      // console.log(err);
+    this.datosHistGeneral = this.formBuilder.group({
+      tipoConsulta: [''],
+      motivoConsulta: [''],
+      enfermedadPreexistente: [''],
+      otroAntecedentesFamiliares: [''],
+      patologicos: [''],
+      quirurgicos: [''],
+      traumaticos: [''],
+      gine_menarquia: [''],
+      gine_gravidez: [''],
+      gine_partos: [''],
+      gine_abortos: [''],
+      gine_hijosvivos: [''],
+      gine_planificacion: [''],
+      toxicos_alergicos: [''],
+      card_resp_desc: [''],
+      vascular_desc: [''],
+      gastro_int_desc: [''],
+      genito_uri_desc: [''],
+      endocrino_desc: [''],
+      osteomuscular_desc: [''],
+      neurologico_desc: [''],
+      pielyfan_desc: [''],
+      cigarrillo: [''],
+      alcohol: [''],
+      estres: [''],
+      humo: [''],
+      polvo: [''],
+      ejercicio: [''],
+      otrosHabitos: [''],
+      aparienciaGeneral: [''],
+      frecuencia_cardica: [''],
+      frecuencia_resp: [''],
+      presion_art: [''],
+      temperetura: [''],
+      talla: [''],
+      peso: [''],
+      cabeza_desc: [''],
+      ojos_desc: [''],
+      oidos_desc: [''],
+      nariz_desc: [''],
+      boca_desc: [''],
+      cuello_desc: [''],
+      torax_ma_desc: [''],
+      pulmones_desc: [''],
+      corazon_desc: [''],
+      abdomen_desc: [''],
+      genitourinario_desc: [''],
+      columna_desc: [''],
+      extremidades_desc: [''],
+      neurologico_desc_fisico: [''],
+      pielyfane_desc: ['']
     });
-  }
 
-  guardarConsulta(){
-
-    let causa = this.causa;
-    let enfermedad = this.enfermedad;
-
-    console.log(causa, enfermedad);
-    
-  }
-
-  guardarAntecedenteF(){
-
-   let antecedeneFCombo = this.antecedentesFMultiCtrl.value;
-   let antecedenteOtro = this.txtOtroAntecedente;
-
-   
-
-   console.log(antecedenteOtro,antecedeneFCombo);
-
-   
   }
 
   ngAfterViewInit() {
@@ -254,7 +210,6 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
     this.filteredAntecedentesFMulti
       .pipe(take(1), takeUntil(this._onDestroy))
       .subscribe(() => {
-
         this.multiSelect.compareWith = (a: AntecedentesF, b: AntecedentesF) => a && b && a.id === b.id;
       });
   }
@@ -276,78 +231,67 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
       this.AntecedentesF.filter(AntecedentesF => AntecedentesF.nombre.toLowerCase().indexOf(search) > -1)
     );
   }
- 
 
-  // tpDatos() {
-  //   let Cardio = { nombre: 'Cardiopatías', disponible: true };
-  //   let Diab = { nombre: 'Diabetes', disponible: true };
-  //   let Hiper = { nombre: 'Hipertensión', disponible: true };
-  //   let Asma = { nombre: 'Asma', disponible: true };
-  //   let Psiqui = { nombre: 'Enfermedad Psiquiátrica', disponible: true };
-  //   let Enfi = { nombre: 'Enfisema', disponible: true };
-  //   let Cancer = { nombre: 'Cáncer', disponible: true };
-  //   let Epilepsia = { nombre: 'Epilepsia', disponible: true };
+  revisionSistemas() {
+    let cardioRes = {id: 1, nombre: 'Cardio-Respiratorio', variable: this.varCardio, formControl: 'card_resp_desc'};
+    let vascular = {id: 2, nombre: 'Vascular', variable: this.varVascular, formControl: 'vascular_desc'};
+    let gastro = {id: 3, nombre: 'Gastro Intestinal', variable: this.varGastro, formControl: 'gastro_int_desc'};
+    let genito = {id: 4, nombre: 'Genito-Urinario', variable: this.varGenito, formControl: 'genito_uri_desc'};
+    let endo = {id: 5, nombre: 'Endocrino', variable: this.varEndo, formControl: 'endocrino_desc'};
+    let osteo = {id: 6, nombre: 'Osteomuscular', variable: this.varOsteo, formControl: 'osteomuscular_desc'};
+    let neuro = {id: 7, nombre: 'Neurológico', variable: this.varNeuro, formControl: 'neurologico_desc'};
+    let piel = {id: 8, nombre: 'Piel y Faneras', variable: this.varPiel, formControl: 'pielyfan_desc'};
 
-  //   let antecedentesF = [Cardio, Diab, Hiper, Asma, Psiqui, Enfi, Cancer, Epilepsia];
+    this.sistema.push(cardioRes, vascular, gastro, genito, endo, osteo, neuro, piel);
+   }
 
-  //   for (var i = 0; i < antecedentesF.length; i++) {
-  //     let antF = antecedentesF[i];
-  //     this.listaAntecedentesF.push({antF});
+   habitosFactoresDeRiesgo() {
+    let cigarrillo = {id: 1, nombre: 'Cigarrillo', variable: this.cigarrillo, formControl: 'cigarrillo'};
+    let alcohol = {id: 2, nombre: 'Alcohol', variable: this.alcohol, formControl: 'alcohol'};
+    let estres = {id: 3, nombre: 'Estres', variable: this.estres, formControl: 'estres'};
+    let humo = {id: 4, nombre: 'Humo', variable: this.humo, formControl: 'humo'};
+    let polvo = {id: 5, nombre: 'Polvo', variable: this.polvo, formControl: 'polvo'};
+    let ejercicio = {id: 5, nombre: 'Ejercicio', variable: this.ejercicio, formControl: 'ejercicio'};
+
+    this.habitos.push(cigarrillo, alcohol, estres, humo, polvo, ejercicio);
+   }
+
+   examenMedico() {
+    let cabeza = {nombre: 'Cabeza', variable: this.varCabeza, formControl: 'cabeza_desc'};
+    let ojos = {nombre: 'Ojos', variable: this.varOjos, formControl: 'ojos_desc'};
+    let oidos = {nombre: 'Oidos', variable: this.varOidos, formControl: 'oidos_desc'};
+    let nariz = {nombre: 'Nariz', variable: this.varNariz, formControl: 'nariz_desc'};
+    let boca = {nombre: 'Boca', variable: this.varBoca, formControl: 'boca_desc'};
+    let cuello = {nombre: 'Cuello', variable: this.varCuello, formControl: 'cuello_desc'};
+    let torax = {nombre: 'Tórax Mama', variable: this.varTorax, formControl: 'torax_ma_desc'};
+    let pulmones = {nombre: 'Pulmones', variable: this.varPulmones, formControl: 'pulmones_desc'};
+    let corazon = {nombre: 'Corazón', variable: this.varCorazon, formControl: 'corazon_desc'};
+    let abdomen = {nombre: 'Abdomen', variable: this.abdomen, formControl: 'abdomen_desc'};
+    let genitoUrinario = {nombre: 'GenitoUrinario', variable: this.varGenitoUrinario, formControl: 'genitourinario_desc'};
+    let columna = {nombre: 'Columna', variable: this.varColumna, formControl: 'columna_desc'};
+    let extremidades = {nombre: 'Extremidades', variable: this.varExtremidades, formControl: 'extremidades_desc'};
+    let neurologico = {nombre: 'Neurológico', variable: this.varNeurologico, formControl: 'neurologico_desc_fisico'};
+    let faneras = {nombre: 'Piel y Faneras', variable: this.varOsteo, formControl: 'pielyfane_desc'};
+
+    this.examen.push(cabeza , ojos, oidos, nariz, boca, cuello, torax,
+                     pulmones, corazon, abdomen, genitoUrinario, columna, extremidades, neurologico, faneras);
+   }
+
+  // habitosyRiesgos() {
+
+  //   let Cigarrillo = { nombre: 'Cigarrillo', disponible: true };
+  //   let Alcohol = { nombre: 'Alcohol', disponible: true };
+  //   let Estres = { nombre: 'Estrés', disponible: true };
+  //   let Humo = { nombre: 'Humo', disponible: true };
+  //   let Polvo = { nombre: 'Polvo', disponible: true };
+  //   let habitos = [Cigarrillo, Alcohol, Estres, Humo, Polvo];
+
+  //   for (var i = 0; i < habitos.length; i++) {
+  //     let hyfr = habitos[i];
+  //     this.listaHabitos.push({hyfr});
   //   }
-  // }
-
-
-
-  revisionSistemas(){
-    let cardioRes = {id:1,nombre:'Cardio-Respiratorio', variable:this.varCardio, descripcion:this.descripcionCardio};
-    let vascular = {id:2,nombre:'Vascular', variable:this.varVascular, descripcion:this.descripcionVascular};
-    let gastro = {id:3,nombre:'Gastro Intestinal', variable:this.varGastro, descripcion:this.descripcionGastro};
-    let genito = {id:4,nombre:'Genito-Urinario', variable:this.varGenito, descripcion:this.descripcionGenito};
-    let endo = {id:5,nombre:'Endocrino', variable:this.varEndo, descripcion:this.descripcionEndo};
-    let osteo = {id:6,nombre:'Osteomuscular', variable:this.varOsteo, descripcion:this.descripcionOsteo};
-    let neuro = {id:7,nombre:'Neurológico', variable:this.varNeuro, descripcion:this.descripcionNeuro};
-    let piel = {id:8,nombre:'Piel y Faneras', variable:this.varPiel, descripcion:this.descripcionPiel};
-
-    this.sistema.push(cardioRes,vascular,gastro,genito,endo,osteo,neuro,piel);
-   }
-
-
-
-   examenMedico(){
-    let cabeza = {nombre:'Cabeza', variable:this.varCabeza, descripcion:this.descripcionCabeza};
-    let ojos = {nombre:'Ojos', variable:this.varOjos, descripcion:this.descripcionOjos};
-    let oidos = {nombre:'Oidos', variable:this.varOidos, descripcion:this.descripcionOidos};
-    let nariz = {nombre:'Nariz', variable:this.varNariz, descripcion:this.descripcionNariz};
-    let boca = {nombre:'Boca', variable:this.varBoca, descripcion:this.descripcionBoca};
-    let cuello = {nombre:'Cuello', variable:this.varCuello, descripcion:this.descripcionCuello};
-    let torax = {nombre:'Tórax Mama', variable:this.varTorax, descripcion:this.descripcionTorax};
-    let pulmones = {nombre:'Pulmones', variable:this.varPulmones, descripcion:this.descripcionPulmones};
-    let corazon = {nombre:'Corazón', variable:this.varCorazon, descripcion:this.descripcionCorazon};
-    let abdomen = {nombre:'Abdomen', variable:this.abdomen, descripcion:this.descripcionAbdomen};
-    let genitoUrinario = {nombre:'GenitoUrinario', variable:this.varGenitoUrinario, descripcion:this.descripcionGenitoUrinario};
-    let columna = {nombre:'Columna', variable:this.varColumna, descripcion:this.descripcionColumna};
-    let extremidades = {nombre:'Extremidades', variable:this.varExtremidades, descripcion:this.descripcionExtremidades};
-    let neurologico = {nombre:'Neurológico', variable:this.varNeurologico, descripcion:this.descripcionNeurologico};
-    let faneras = {nombre:'Faneras', variable:this.varOsteo, descripcion:this.descripcionOsteo};
-    
-    this.examen.push(cabeza,ojos,oidos,nariz,boca,cuello,torax,pulmones,corazon,abdomen,genitoUrinario,columna,extremidades,neurologico,faneras);
-   }
-
-  habitosyRiesgos(){
-
-    let Cigarrillo = { nombre: 'Cigarrillo', disponible: true };
-    let Alcohol = { nombre: 'Alcohol', disponible: true };
-    let Estres = { nombre: 'Estrés', disponible: true };
-    let Humo = { nombre: 'Humo', disponible: true };
-    let Polvo = { nombre: 'Polvo', disponible: true };
-    let habitos = [Cigarrillo, Alcohol, Estres, Humo, Polvo];
-
-    for (var i = 0; i < habitos.length; i++) {
-      let hyfr = habitos[i];
-      this.listaHabitos.push({hyfr});
-    }
    
-  }
+  // }
   
 
   // diagnostico(){
@@ -393,36 +337,34 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 //   this.codDiag = descripcionDiag.descripcion;
 // }
 
-  validaciones(){
+  // validaciones() {
 
-    this.datos = this.formBuilder.group({
-      menarquia : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      gravidez : ['', [Validators.pattern('[a-z A-z ñ] * || [0-9]')]],
-      partos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      abortos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      hijosVivos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      planificacion : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //   this.datos = this.formBuilder.group({
+  //     menarquia : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     gravidez : ['', [Validators.pattern('[a-z A-z ñ] * || [0-9]')]],
+  //     partos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     abortos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     hijosVivos : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     planificacion : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
 
-      cigarrillo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      alcohol : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      estres : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      humo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      polvo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      otros : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      control: ['',[Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      dias: ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     cigarrillo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     alcohol : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     estres : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     humo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     polvo : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     otros : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     control: ['',[Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     dias: ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
 
-     
-      frecuenciaCardiaca : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      temperatura : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      frecuenciaRespiratoria : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      talla : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      presion : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-      peso : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
-    });
-  }
+  //     frecuenciaCardiaca : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     temperatura : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     frecuenciaRespiratoria : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     talla : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     presion : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //     peso : ['', [Validators.pattern('[a-z A-z ñ]* || [0-9]')]],
+  //   });
+  // }
 
- 
   agruparAntecedentesF(ev) {
     this.grupoAntecedentesF = ev.value;
   }
@@ -431,100 +373,267 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
     this.grupoHabitos = ev.value;
   }
 
-  prueba(ev){
-    console.log(ev);
-    this.getDiagnosticos(ev.target.value);
-  }
+  // prueba(ev) {
+  //   console.log(ev);
+  //   this.getDiagnosticos(ev.target.value);
+  // }
 
-  checkRevisionSistema(ev, tipo){ 
-    console.log(tipo);
+  checkRevisionSistema(ev, tipo) {
+    // console.log(tipo);
     let valor = true;
     let identificador = 0;
 
-    switch(valor === true){
-      case (tipo === 'Cardio-Respiratorio') : 
+    switch (valor === true) {
+      case (tipo === 'Cardio-Respiratorio') :
       this.sistema[0].variable = ev.checked;
       break;
-      case (tipo === 'Vascular') : 
+      case (tipo === 'Vascular') :
       this.sistema[1].variable = ev.checked;
       break;
-      case (tipo === 'Gastro Intestinal') : 
+      case (tipo === 'Gastro Intestinal') :
       this.sistema[2].variable = ev.checked;
       break;
-      case (tipo === 'Genito-Urinario') : 
+      case (tipo === 'Genito-Urinario') :
       this.sistema[3].variable = ev.checked;
       break;
-      case (tipo === 'Endocrino') : 
+      case (tipo === 'Endocrino') :
       this.sistema[4].variable = ev.checked;
       break;
-      case (tipo === 'Osteomuscular') : 
+      case (tipo === 'Osteomuscular') :
       this.sistema[5].variable = ev.checked;
       break;
-      case (tipo === 'Neurológico') : 
+      case (tipo === 'Neurológico') :
       this.sistema[6].variable = ev.checked;
       break;
-      case (tipo === 'Piel y Faneras') : 
+      case (tipo === 'Piel y Faneras') :
       this.sistema[7].variable = ev.checked;
       break;
     }
   }
 
-
-  
-  checkExamenMedico(ev, tipo){ 
-    console.log(tipo);
+  checkHabitosFactores(ev, tipo) {
+    // console.log(tipo);
     let valor = true;
-    switch(valor === true){
-      case (tipo === 'Cabeza') : 
-      this.examen[0].variable = ev.checked;
-      break;
-      case (tipo === 'Ojos') : 
-      this.examen[1].variable = ev.checked;
-      break;
-      case (tipo === 'Oidos') : 
-      this.examen[2].variable = ev.checked;
-      break;
-      case (tipo === 'Nariz') : 
-      this.examen[3].variable = ev.checked;
-      break;
-      case (tipo === 'Boca') : 
-      this.examen[4].variable = ev.checked;
-      break;
-      case (tipo === 'Cuello') : 
-      this.examen[5].variable = ev.checked;
-      break;
-      case (tipo === 'Tórax Mama') : 
-      this.examen[6].variable = ev.checked;
-      break;
-      case (tipo === 'Pulmones') : 
-      this.examen[7].variable = ev.checked;
-      break;
-      case (tipo === 'Corazón') : 
-      this.examen[8].variable = ev.checked;
-      break;
-      case (tipo === 'Abdomen') : 
-      this.examen[9].variable = ev.checked;
-      break;
-      case (tipo === 'GenitoUrinario') : 
-      this.examen[10].variable = ev.checked;
-      break;
-      case (tipo === 'Columna') : 
-      this.examen[11].variable = ev.checked;
-      break;
-      case (tipo === 'Extremidades') : 
-      this.examen[12].variable = ev.checked;
-      break;
-      case (tipo === 'Neurológico') : 
-      this.examen[13].variable = ev.checked;
-      break;
-      case (tipo === 'Faneras') : 
-      this.examen[14].variable = ev.checked;
-      break;
+    // let identificador = 0;
 
-      
-
+    switch (valor === true) {
+      case (tipo === 'Cigarrillo') :
+      this.habitos[0].variable = ev.checked;
+      break;
+      case (tipo === 'Alcohol') :
+      this.habitos[1].variable = ev.checked;
+      break;
+      case (tipo === 'Estres') :
+      this.habitos[2].variable = ev.checked;
+      break;
+      case (tipo === 'Humo') :
+      this.habitos[3].variable = ev.checked;
+      break;
+      case (tipo === 'Polvo') :
+      this.habitos[4].variable = ev.checked;
+      break;
+      case (tipo === 'Ejercicio') :
+      this.habitos[5].variable = ev.checked;
+      break;
     }
   }
+
+  checkExamenMedico(ev, tipo) {
+    // console.log(tipo);
+    let valor = true;
+    switch(valor === true){
+      case (tipo === 'Cabeza') :
+      this.examen[0].variable = ev.checked;
+      break;
+      case (tipo === 'Ojos') :
+      this.examen[1].variable = ev.checked;
+      break;
+      case (tipo === 'Oidos') :
+      this.examen[2].variable = ev.checked;
+      break;
+      case (tipo === 'Nariz') :
+      this.examen[3].variable = ev.checked;
+      break;
+      case (tipo === 'Boca') :
+      this.examen[4].variable = ev.checked;
+      break;
+      case (tipo === 'Cuello') :
+      this.examen[5].variable = ev.checked;
+      break;
+      case (tipo === 'Tórax Mama') :
+      this.examen[6].variable = ev.checked;
+      break;
+      case (tipo === 'Pulmones') :
+      this.examen[7].variable = ev.checked;
+      break;
+      case (tipo === 'Corazón') :
+      this.examen[8].variable = ev.checked;
+      break;
+      case (tipo === 'Abdomen') :
+      this.examen[9].variable = ev.checked;
+      break;
+      case (tipo === 'GenitoUrinario') :
+      this.examen[10].variable = ev.checked;
+      break;
+      case (tipo === 'Columna') :
+      this.examen[11].variable = ev.checked;
+      break;
+      case (tipo === 'Extremidades') :
+      this.examen[12].variable = ev.checked;
+      break;
+      case (tipo === 'Neurológico') :
+      this.examen[13].variable = ev.checked;
+      break;
+      case (tipo === 'Piel y Faneras') :
+      this.examen[14].variable = ev.checked;
+      break;
+    }
+  }
+
+
+  guardarHistoriaClinica() {
+
+
+    // ANTECEDENTES FAMILIARES
+
+      let antecedeneFCombo = this.antecedentesFMultiCtrl.value;
+      let antecedentes = [
+      {nombre: 'Cardiopatías', disponible: 0, id: '1'},
+      {nombre: 'Diabetes', disponible: 0, id: '2'},
+      {nombre: 'Hipertensión', disponible: 0, id: '3'},
+      {nombre: 'Asma', disponible: 0, id: '4'},
+      {nombre: 'Enfermedad Psiquiátrica', disponible: 0, id: '5'},
+      {nombre: 'Enfisema', disponible: 0, id: '6'},
+      {nombre: 'Cáncer', disponible: 0, id: '7'},
+      {nombre: 'Epilepsia', disponible: 0, id: '8'},
+   ];
+
+   if (antecedeneFCombo) {
+      // console.log('aqui');
+      for (let i = 0; i < antecedentes.length; i ++) {
+        // console.log(antecedentes[i].nombre);
+        for (let j = 0; j < antecedeneFCombo.length; j ++) {
+          console.log(antecedentes,antecedeneFCombo)
+          if (antecedentes[i].id === antecedeneFCombo[j]) {
+            antecedentes[i].disponible = 1;
+            
+          }
+
+        }
+      }
+   }
+
+    let antecedentes_f = {cardiopatias: antecedentes[0].disponible, diabetes: antecedentes[1].disponible,
+                          hipertension: antecedentes[2].disponible, asma: antecedentes[3].disponible,
+                          enfermedad_psiquiatrica: antecedentes[4].disponible, efisema: antecedentes[5].disponible,
+                          cancer: antecedentes[6].disponible, epilepcia: antecedentes[7].disponible,
+                          otro: this.datosHistGeneral.value.otroAntecedentesFamiliares
+                        };
+
+    // ANTECEDENTES PERSONALES
+
+    let antecedentes_p = {patologias: this.datosHistGeneral.value.patologicos, quirurgicos: this.datosHistGeneral.value.quirurgicos,
+                          traumaticos: this.datosHistGeneral.value.traumaticos, gine_menarquia: this.datosHistGeneral.value.gine_menarquia,
+                          gine_gravidez: this.datosHistGeneral.value.gine_gravidez, gine_partos: this.datosHistGeneral.value.gine_partos,
+                          gine_abortos: this.datosHistGeneral.value.gine_abortos,
+                          toxicos_alergicos: this.datosHistGeneral.value.toxicos_alergicos,
+                          gine_hijosvivos: this.datosHistGeneral.value.gine_hijosvivos,
+                          gine_planificacion: this.datosHistGeneral.value.gine_planificacion
+                          };
+
+    let habitosyfactores = { cigarrillo: this.datosHistGeneral.value.cigarrillo, alcohol: this.datosHistGeneral.value.alcohol,
+                             estres: this.datosHistGeneral.value.estres, humo: this.datosHistGeneral.value.humo,
+                             polvo: this.datosHistGeneral.value.polvo, ejercicio: this.datosHistGeneral.value.ejercicio,
+                             otros: this.datosHistGeneral.value.ejercicio };
+
+    let revisionpsistemas = { card_resp_desc: this.datosHistGeneral.value.card_resp_desc,
+                              vascular_desc: this.datosHistGeneral.value.vascular_desc,
+                              gastro_int_desc: this.datosHistGeneral.value.gastro_int_desc,
+                              genito_uri_desc: this.datosHistGeneral.value.genito_uri_desc,
+                              endocrino_desc: this.datosHistGeneral.value.endocrino_desc,
+                              osteomuscular_desc: this.datosHistGeneral.value.osteomuscular_desc,
+                              neurologico_desc: this.datosHistGeneral.value.neurologico_desc,
+                              pielyfan_desc: this.datosHistGeneral.value.pielyfan_desc};
+
+    let examenf = { aparienciaGeneral: this.datosHistGeneral.value.aparienciaGeneral,
+                    frecuencia_cardica: this.datosHistGeneral.value.frecuencia_cardica,
+                    temperetura: this.datosHistGeneral.value.temperetura, frecuencia_resp: this.datosHistGeneral.value.frecuencia_resp,
+                    talla: this.datosHistGeneral.value.talla, presion_art: this.datosHistGeneral.value.presion_art,
+                    peso: this.datosHistGeneral.value.peso, cabeza_desc: this.datosHistGeneral.value.cabeza_desc,
+                    ojos_desc: this.datosHistGeneral.value.ojos_desc,
+                    oidos_desc: this.datosHistGeneral.value.oidos_desc,
+                    nariz_desc: this.datosHistGeneral.value.nariz_desc, boca_desc: this.datosHistGeneral.value.boca_desc,
+                    cuello_desc: this.datosHistGeneral.value.cuello_desc,
+                    torax_ma_desc: this.datosHistGeneral.value.torax_ma_desc, pulmones_desc: this.datosHistGeneral.value.pulmones_desc,
+                    corazon_desc: this.datosHistGeneral.value.corazon_desc,
+                    abdomen_desc: this.datosHistGeneral.value.abdomen_desc,
+                    genitourinario_desc: this.datosHistGeneral.value.genitourinario_desc,
+                    columna_desc: this.datosHistGeneral.value.columna_desc,
+                    extremidades_desc: this.datosHistGeneral.value.extremidades_desc,
+                    neurologico_desc: this.datosHistGeneral.value.neurologico_desc_fisico,
+                    pielyfane_desc: this.datosHistGeneral.value.pielyfane_desc
+     };
+
+    let info = { tipo_consulta: this.datosHistGeneral.value.tipoConsulta, motivo_consulta: this.datosHistGeneral.value.motivoConsulta,
+                 enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario, 
+                 id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas, examenf };
+
+    console.log(info);
+  }
+
+  siguiente(parametro: string){
+
+    let variable  = true
+
+    switch(variable === true){
+      case parametro === 'consulta':
+        this.vista = 'familiares'
+      break;
+      case parametro === 'familiares':
+        this.vista = 'personales'
+      break;
+      case parametro === 'personales':
+        this.vista = 'gineco'
+      break;
+      case parametro === 'gineco':
+          this.vista = 'habitos'
+      break;
+      case parametro === 'habitos':
+          this.vista = 'sistemas'
+      break;
+      case parametro === 'sistemas':
+          this.vista = 'fisico'
+      break;
+    }
+  }
+
+  anterior(parametro: string){
+
+    let variable  = true
+
+    switch(variable === true){
+      case parametro === 'familiares':
+        console.log(this.vista);
+        this.vista = 'consulta'
+      break;
+      case parametro === 'personales':
+        this.vista = 'familiares'
+      break;
+      case parametro === 'gineco':
+        this.vista = 'personales'
+      break;
+      case parametro === 'habitos':
+          this.vista = 'gineco'
+      break;
+      case parametro === 'sistemas':
+          this.vista = 'habitos'
+      break;
+      case parametro === 'fisico':
+          this.vista = 'sistemas'
+      break;
+    }
+  }
+
 
 }
 
@@ -540,13 +649,13 @@ export interface AntecedentesFGroup{
   antecedentesF: AntecedentesF[];
 }
 
-export const ANTECEDENTESF : AntecedentesF[] = [
-  {nombre: 'Cardiopatías', disponible:'true', id: '1'},
-  {nombre: 'Diabetes', disponible:'true', id: '2'},
-  {nombre: 'Hipertensión', disponible:'true', id: '3'},
-  {nombre: 'Asma', disponible:'true', id: '4'},
-  {nombre: 'Enfermedad Psiquiátrica', disponible:'true', id: '5'},
-  {nombre: 'Enfisema', disponible:'true', id: '6'},
-  {nombre: 'Cáncer', disponible:'true', id: '7'},
-  {nombre: 'Epilepsia', disponible:'true', id: '8'},
+export const ANTECEDENTESF: AntecedentesF[] = [
+  {nombre: 'Cardiopatías', disponible: 'true', id: '1'},
+  {nombre: 'Diabetes', disponible: 'true', id: '2'},
+  {nombre: 'Hipertensión', disponible: 'true', id: '3'},
+  {nombre: 'Asma', disponible: 'true', id: '4'},
+  {nombre: 'Enfermedad Psiquiátrica', disponible: 'true', id: '5'},
+  {nombre: 'Enfisema', disponible: 'true', id: '6'},
+  {nombre: 'Cáncer', disponible: 'true', id: '7'},
+  {nombre: 'Epilepsia', disponible: 'true', id: '8'},
 ];

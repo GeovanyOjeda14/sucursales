@@ -75,10 +75,9 @@ const routes: Routes = [
     {path : 'gestionar-pacientes/:cedula', component: ListadoPacientesComponent, canActivate: [UserGuard, UserMedico]},
     {path : 'vermedico/:id', component: VerPerfilMedicoComponent, canActivate: [UserGuard]},
     {path : 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [UserGuard]},
-    {path : 'historia-clinica/:id/:id_servicio', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
-    {path : 'historia-general', component: HistoriaGeneralComponent, canActivate: [UserGuard, UserMedico]},
-    {path: '**', component: LoginComponent},
-    // {path : 'diagnostico', component: DiagnosticoPruebaComponent}
+    {path : 'historia-clinica/:id/:id_servicio/:idCategoria', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
+    {path : 'historia-general/:idCategoria', component: HistoriaGeneralComponent, canActivate: [UserGuard, UserMedico]},
+    {path: '**', component: LoginComponent}
 
 ];
 

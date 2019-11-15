@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../../services/app.service';
-import * as moment from 'moment';
-import { ActivatedRoute } from '@angular/router';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
-import { PlatformLocation } from '@angular/common';
-import * as jsPDF from 'jspdf';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-historia-general',
@@ -16,14 +12,22 @@ import * as jsPDF from 'jspdf';
 })
 export class HistoriaGeneralComponent implements OnInit {
   public user;
+  public idCategoria;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
+    
     this.getInfoUser();
+
+    this.route.params.subscribe( (categoria) => {
+      console.log(categoria);
+      this.idCategoria = categoria.idCategoria;
+      console.log(this.idCategoria);
+    } );
   }
 
-  getInfoUser(){
+  getInfoUser() {
     let user = localStorage.getItem('user');
     this.user = JSON.parse(user);
     console.log(this.user);

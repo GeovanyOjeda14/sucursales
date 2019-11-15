@@ -161,13 +161,11 @@
 
               <div class="row">
                 <div class="col-md-6"> <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".crear-historia-clinica" >Crear Historia clinica</button></div>
-                <div class="col-md-6"><button type="button" class="btn btn-primary btn-lg float-left" routerLink="/historia-general">Nueva Historia</button></div>
+                <div class="col-md-6"><button type="button" class="btn btn-primary btn-lg float-left" [routerLink]="['/historia-general', idCategoria]">Nueva Historia</button></div>
               </div>
-
+ 
               
-              <!-- MODAL NUEVA HISTORIA CLINICA -->
-
-           
+            <!-- MODAL NUEVA HISTORIA CLINICA -->
 
             <div class="modal fade nuevaHistoriaClinica" tabindex="-1" role="dialog"
             aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -778,8 +776,11 @@
                                               <div class="input-group-text etiqueta">OD</div>
                                           </div> -->
                                           <!-- <input type="text" class="form-control" placeholder="OD" formControlName="examenExternoOd"> -->
-                                          <label for="" class="label-formulario-user">Ojo derecho</label>
-                                          <textarea name="" id=""  rows="3" formControlName="examenExternoOd"></textarea>
+                                          <div display="flex">
+                                              <label for="" class="label-formulario-user">Ojo derecho</label>
+                                              <textarea name="" id=""  rows="3" formControlName="examenExternoOd"></textarea>
+                                          </div>
+                                          
                                         </div>
                       
                                         <div class="input-group" style="padding-top: 20px;">

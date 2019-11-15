@@ -13,8 +13,8 @@ export class Global {
   public apiUrl = 'http://cdn.prevenirexpress.com:3000';
 
   // API MAC
-  //  public apiUrl = 'http://192.168.2.105:3000';
-  
+  // public apiUrl = 'http://192.168.2.105:3000';
+
   public infoPerfil = {};
   public foto;
   public nombre;

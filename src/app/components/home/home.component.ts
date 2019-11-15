@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.identity = this._userService.getIdentity();
-    console.log('oeee homee', this.identity);
+    // console.log('oeee homee', this.identity);
   }
 
   cerrarAlerta() {
