@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy , OnInit, ViewChild, Input} from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationService } from '../../services/app.service';
-import { ActivatedRoute } from '@angular/router';
+//import { ActivatedRoute } from '@angular/router';
 import { MedicoService } from '../../services/medico.service';
 import { UserService } from '../../services/user.service';
 import { PlatformLocation } from '@angular/common';
@@ -9,13 +9,25 @@ import { FormControl } from '@angular/forms';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
+import { DiagnosticoService } from 'src/app/services/diagnostico.service';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+import { Router} from '@angular/router';
+
+
+export interface User {
+  nombre: string;
+  id_impresiondiag: number;
+  rips : string;
+}
 
 
 @Component({
   selector: 'app-hst-general',
   templateUrl: './hst-general.component.html',
   styleUrls: ['./hst-general.component.css'],
-  providers: [ApplicationService, MedicoService, UserService]
+  providers: [ApplicationService, MedicoService, UserService, DiagnosticoService]
 })
 export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 // cambios
@@ -88,6 +100,22 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
   public diagnosticos;
   public datoDiagnostico = '';
 
+  public cajaDiagnostico = [];
+
+  diagnosticoSeleccionado : string = '0';
+
+  myControl = new FormControl('', [Validators.required]);
+  options: User[];
+  filteredOptions: Observable<User[]>;
+
+
+  // Diagnostico
+
+  public registroDiag : FormGroup;
+
+ public idImpDiag = [];
+
+
 
 
   // Formularios
@@ -106,8 +134,20 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 
   public vista;
 
-  constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private _route: ActivatedRoute,
-    private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation) {
+  public identificadorDiag = [];
+
+   public status: any;
+  public statusText;
+  public token;
+
+  // prueba
+  buscar = '';
+
+
+  public infoHistoriaGeneral;
+
+  constructor(private formBuilder: FormBuilder, private _aplicationService: ApplicationService, private router: Router,
+    private _medicoService: MedicoService, private _userService: UserService, location: PlatformLocation, private _diagnosticoService : DiagnosticoService) {
     this.vista = 'consulta';
     }
 
@@ -126,12 +166,53 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
     .subscribe(() => {
       this.filterAntecedentesFMulti();
     });
+    this.inicializarFormDiagnostico();
+    this.getDiagnosticos();
+
+
+  }
+
+  displayFn(user?: User): string | undefined {
+    return user ? user.nombre : undefined;
+  }
+
+  private _filter(nombre: string): User[]{
+    const filterValue = nombre.toLowerCase();
+    return this.options.filter(option => option.nombre.toLowerCase().indexOf(filterValue) > -1);
+  }
+
+
+  getDiagnosticos(){
+    this._diagnosticoService.getDiagnostico().subscribe( (res) => {
+
+      this.options = res;
+     // console.log(this.options);
+      this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith<string | User>(''),
+        map(value => typeof value === 'string' ? value : value.nombre),
+        map(nombre => nombre ? this._filter(nombre) : this.options.slice())
+
+      );
+
+
+
+    }, (err) => {
+
+    });
+  }
+
+  inicializarFormDiagnostico (){
+    this.registroDiag = this.formBuilder.group({
+      descripDiag : [''],
+      coDiag : ['']
+    });
   }
 
   iniciarFormsHistGeneral () {
 
     this.datosHistGeneral = this.formBuilder.group({
-      tipoConsulta: [''],
+      tipoConsulta: ['', [Validators.required]],
       motivoConsulta: [''],
       enfermedadPreexistente: [''],
       otroAntecedentesFamiliares: [''],
@@ -164,9 +245,9 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
       frecuencia_cardica: [''],
       frecuencia_resp: [''],
       presion_art: [''],
-      temperetura: [''],
-      talla: [''],
-      peso: [''],
+      temperetura: [0],
+      talla: [0],
+      peso: [0],
       cabeza_desc: [''],
       ojos_desc: [''],
       oidos_desc: [''],
@@ -210,7 +291,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
     this.filteredAntecedentesFMulti
       .pipe(take(1), takeUntil(this._onDestroy))
       .subscribe(() => {
-        this.multiSelect.compareWith = (a: AntecedentesF, b: AntecedentesF) => a && b && a.id === b.id;
+//this.multiSelect.compareWith = (a: AntecedentesF, b: AntecedentesF) => a && b && a.id === b.id;
       });
   }
 
@@ -290,9 +371,9 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
   //     let hyfr = habitos[i];
   //     this.listaHabitos.push({hyfr});
   //   }
-   
+
   // }
-  
+
 
   // diagnostico(){
   //   let diag1 =  {id: "1", descripcion: "Fumador", codigo: "510" };
@@ -301,19 +382,19 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 
   //   let diagnosticos = [diag1,diag2,diag3];
 
-      
-    
+
+
   //   for(var i = 0 ; i < diagnosticos.length; i++)
   //   {
-      
+
   //     let diag = diagnosticos[i];
   //     this.listaDiagnosticos.push({diag});
   //   }
-   
+
   // }
 
 // guardarDiagnostico(){
- 
+
 //   console.log(this.descripcionDiag);
 
 //   let nuevo = {id: "-" ,descripcion: this.descripcionDiag, codigo:this.codDiag};
@@ -323,7 +404,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 //   {
 //     let diag = diagnosticos[i];
 //     this.listaDiagnosticos.push({diag});
-   
+
 //   }
 //   this.descripcionDiag = "";
 //   this.codDiag = "";
@@ -513,10 +594,10 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
       for (let i = 0; i < antecedentes.length; i ++) {
         // console.log(antecedentes[i].nombre);
         for (let j = 0; j < antecedeneFCombo.length; j ++) {
-          console.log(antecedentes,antecedeneFCombo)
+         // console.log(antecedentes,antecedeneFCombo)
           if (antecedentes[i].id === antecedeneFCombo[j]) {
             antecedentes[i].disponible = 1;
-            
+
           }
 
         }
@@ -574,11 +655,32 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
                     pielyfane_desc: this.datosHistGeneral.value.pielyfane_desc
      };
 
+     let conDiagnostico = { descripDiag : this.registroDiag.value.descripDiag};
+
+     var token = this._userService.getToken();
+
+     let impresion_diag = this.idImpDiag
+
+     let historia_opt = {};
+
     let info = { tipo_consulta: this.datosHistGeneral.value.tipoConsulta, motivo_consulta: this.datosHistGeneral.value.motivoConsulta,
-                 enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario, 
-                 id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas, examenf };
+                 enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario,
+                 id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas, examenf, impresion_diag, historia_opt};
 
     console.log(info);
+    this._diagnosticoService.postDiagnostico(info, token).subscribe( (response) => {
+      //console.log(response);
+      if(response === true) {
+        this.status = 'success';
+        this.statusText = 'Historia clinica guardada con exito';
+        document.getElementById('btn-publicacion-exitosa').click();
+       // document.getElementById('cerrarModal').click();
+      }
+    } )
+  }
+
+  pubExitosa(){
+     this.router.navigate(['/home']);
   }
 
   siguiente(parametro: string){
@@ -604,6 +706,9 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
       case parametro === 'sistemas':
           this.vista = 'fisico'
       break;
+      case parametro === 'fisico':
+          this.vista = 'diagnosticosPanel'
+      break;
     }
   }
 
@@ -613,7 +718,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 
     switch(variable === true){
       case parametro === 'familiares':
-        console.log(this.vista);
+        //console.log(this.vista);
         this.vista = 'consulta'
       break;
       case parametro === 'personales':
@@ -631,8 +736,46 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
       case parametro === 'fisico':
           this.vista = 'sistemas'
       break;
+      case parametro === 'diagnosticosPanel':
+          this.vista = 'fisico'
+      break;
     }
   }
+
+  guardarClick(o,){
+   // console.log(o)
+
+     this.cajaDiagnostico.push(o);
+      this.idImpDiag.push(o.id_impresiondiag);
+
+
+      // if(this.cajaDiagnostico != [])
+      // {
+      //   //console.log("entro");
+
+
+      //   for(let i = 0; i < this.cajaDiagnostico.length; i++){
+      //     this.idImpDiag.push(this.cajaDiagnostico[i].id_impresiondiag);
+
+      //   }
+
+      //   //console.log(this.idImpDiag);
+      // }
+    //this.datosHistGeneral.reset();
+
+  }
+
+  borrarDiagnostico(i){
+    this.cajaDiagnostico.splice(i,1);
+  }
+
+  verHistoriaGeneral(info) {
+    this.infoHistoriaGeneral = info;
+    // console.log(this.infoHistoriaClinica);
+    document.getElementById('btn-ver-hg').click();
+  }
+
+
 
 
 }
@@ -644,7 +787,7 @@ export interface AntecedentesF{
 }
 
 export interface AntecedentesFGroup{
-  nombre : string; 
+  nombre : string;
   disponible : string;
   antecedentesF: AntecedentesF[];
 }

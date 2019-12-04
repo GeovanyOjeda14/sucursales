@@ -41,10 +41,12 @@ import { UserMedico } from './services/user_medico.guard';
 import { UserSucursal } from './services/user_sucursal.guard';
 import { SucursalMedico } from './services/sucursal_medico.guard';
 // import { DiagnosticoPruebaComponent } from './components/diagnostico-prueba/diagnostico-prueba.component';
+import { VisiometriaComponent } from './components/visiometria/visiometria.component';
 
 const routes: Routes = [
     {path: '', component : LoginComponent},
     {path : 'login', component: LoginComponent},
+    {path : 'visiometria' , component: VisiometriaComponent},
     {path : 'recuperar-cuenta', component: OlvidoContraseniaComponent},
     {path : 'terminos-y-condiciones', component: TerminosYCondicionesComponent},
     {path : 'registro', component: RegistroComponent},
@@ -78,6 +80,7 @@ const routes: Routes = [
     {path : 'historia-clinica/:id/:id_servicio/:idCategoria', component: HistoriaClinicaComponent, canActivate: [UserGuard, UserMedico]},
     {path : 'historia-general/:idCategoria', component: HistoriaGeneralComponent, canActivate: [UserGuard, UserMedico]},
     {path: '**', component: LoginComponent}
+
 
 ];
 

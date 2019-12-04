@@ -15,4 +15,10 @@ export class DiagnosticoService {
     return this.http.get(this.url + '/impdiagnostica');
   }
 
+  postDiagnostico(info, token) : Observable <any>{
+    var headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(this.url + '/histclinica/' + '?token=' + token, info, {headers : headers});
+  }
+
+
 }

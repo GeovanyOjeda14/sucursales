@@ -8,6 +8,7 @@ import { UserService } from '../../services/user.service';
 import { PlatformLocation } from '@angular/common';
 import * as jsPDF from 'jspdf';
 
+
 @Component({
   selector: 'app-historia-clinica',
   templateUrl: './historia-clinica.component.html',
@@ -44,6 +45,7 @@ export class HistoriaClinicaComponent implements OnInit {
   public id_usuario;
   public infoHc;
   public infoHistoriaClinica;
+  public infoHistoriaGeneral;
   public id_servicio;
   public res;
   public imagen;
@@ -112,9 +114,36 @@ export class HistoriaClinicaComponent implements OnInit {
 
   getHistoriasClinicas(id_usuario, id_servicio) {
 
+    console.log(id_usuario, id_servicio);
 
     this.loading = true;
 
+    if (this.idCategoria == 3) {
+      this.getHistoriasClinicasOptometria(id_usuario, id_servicio);
+    } else {
+      console.log('aquiii');
+      this.getHistoriasClinicasGeneral(id_usuario, id_servicio);
+    }
+
+   
+  }
+
+  getHistoriasClinicasGeneral(id_usuario, id_servicio) {
+    this.loading = true;
+    this._medicoService.getHistoriaClinicaGeneral(id_usuario, id_servicio).subscribe( (response) => {
+      this.loading = false;
+      console.log('historia clinica general', response);
+      this.infoHc = response;
+    }, () => {
+      // console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
+      this.loading = false;
+    } );
+
+  }
+
+  getHistoriasClinicasOptometria(id_usuario, id_servicio) {
     this._medicoService.getHistoriaClinicaPorServicio(id_usuario, id_servicio).subscribe( (response) => {
       // console.log(response);
       this.infoHc = response;
@@ -534,9 +563,16 @@ export class HistoriaClinicaComponent implements OnInit {
   }
 
   verHistoriaClinica(info) {
-    this.infoHistoriaClinica = info;
-    // console.log(this.infoHistoriaClinica);
-    document.getElementById('btn-ver-hc').click();
+    if (this.idCategoria == 3) {
+      this.infoHistoriaClinica = info;
+       console.log(this.infoHistoriaClinica);
+      document.getElementById('btn-ver-hc').click();
+    }else{
+     this.infoHistoriaGeneral = info;
+     console.log(this.infoHistoriaGeneral);
+     document.getElementById('btn-ver-hg').click();
+    }
+   
   }
 
   getParentescos() {

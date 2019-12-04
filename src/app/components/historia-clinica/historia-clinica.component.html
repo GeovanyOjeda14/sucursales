@@ -1409,10 +1409,11 @@
                 <hr class="my-4">
 
                 <div class="jumbotron jumbotron-fluid titulo" style="padding: 20px" *ngFor="let hc of infoHc">
-                    <h3 class="card-title" (click)="verHistoriaClinica(hc)">Historia Clinica No. {{hc.idhistoria_opt}}</h3>
+                    <h3 class="card-title" (click)="verHistoriaClinica(hc)">Historia Clinica No. {{hc.id_historiacl}}</h3>
                     <hr>
-                    <h6 class="card-text">Fecha : {{hc.CreatedAT | fecha}}</h6>
-                    <h6 class="card-text">Hora : {{hc.CreatedAT | hora}}</h6>
+                    <h6 class="card-text">Nombre Paciente : {{infoUser.nombres}}</h6>
+                    <h6 class="card-text">Fecha : {{hc.createdAd | fecha}}</h6>
+                    <h6 class="card-text">Hora : {{hc.createdAd | hora}}</h6>
                     <h6 class="card-text">Tipo de consulta : {{hc.tipo_consulta}}</h6>
                 </div>
 
@@ -1424,6 +1425,136 @@
   </div>
 
 </div>
+
+
+<!--Modal Historia General-->
+
+<!-- Button trigger modal -->
+<button type="button" id="btn-ver-hg" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable"></button>
+
+<!-- Modal -->
+
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf="infoHistoriaGeneral">
+        <h5 class="modal-title" id="exampleModalScrollableTitle">Historia Clinica No. {{infoHistoriaGeneral.id_historiacl}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="infoHistoriaGeneral">
+
+        <!--Tipo Consulta-->
+
+
+    <div class="row divisiones">
+      <div class="col-md-6 form-group">
+        <label class="form-label">Tipo consulta</label>
+        <input name="txt-motivo-consulta"  rows="5" class="form-control" value="{{infoHistoriaGeneral.tipo_consulta}}" readonly />
+      </div>
+
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="txt-motivo-consulta" class="form-label label-formulario-user">Motivo de la Consulta</label>
+              <textarea name="txt-motivo-consulta" rows="5" class="form-control">{{infoHistoriaGeneral.motiv_oconsulta}}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="txt-enfermedadActual" class="form-label label-formulario-user">Enfermedad
+                Preexistente</label>
+              <textarea name="txt-enfermedadActual" rows="3" class="form-control">{{infoHistoriaGeneral.enfermedades_preex}}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+<!-- Fin Tipo Consulta-->
+
+<!--Antecedentes Familiares-->
+<div class="row divisiones">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12">
+        <label for="txt-antecedentesF" class="tituloDivision">Antecedentes Familiares</label>
+        <div class="row">
+          <div class="col-lg-12">
+              <input name="txt-motivo-consulta"  rows="5" class="form-control" value="{{infoHistoriaGeneral.id_antecedentesf}}" readonly />
+          </div>
+          <div class="col-md-12">
+              <div class="form-group">
+                <label for="txt-otroAntecedente" class="form-label label-formulario-user">Otros</label>
+                <textarea rows="3" class="form-control"></textarea>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Fin Antecedentes Familiares-->
+
+<!--Antecedentes Personales-->
+
+<div class="row divisiones">
+  <div class="col-md-12">
+    <label for="txt-antecedentesP" class="tituloDivision">Antecedentes Personales</label>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="txt-patologicos" class="form-label label-formulario-user">Patológicos</label>
+          <textarea name="txtPatologicos" rows="3" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="txt-quirurgicos" class="form-label label-formulario-user">Quirúrgicos</label>
+          <textarea name="txtQuirurgicos" rows="3" class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="txt-traumaticos" class="form-label label-formulario-user">Traumáticos</label>
+          <textarea name="txtTraumaticos" rows="3" class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Fin Antecedentes Personales-->
+
+        
+
+      </div>
+
+  <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    </div>
+    </div>
+
+<!-- Fin Modal -->
+
+<!-- Fin Modal Historia General-->
+
 
 
 <!-- MODAL VER HISTORIA CLINICA -->

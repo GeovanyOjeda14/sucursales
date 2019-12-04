@@ -85,6 +85,12 @@ export class MedicoService {
         return this.http.get(this.url + '/opticah/' + id_usuario + id_servicio , {headers : headers});
       }
 
+      // Ruta para pedir historia clinica General
+      getHistoriaClinicaGeneral(id_usuario, id_servicio): Observable<any> {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/darhistclinica/' + id_usuario + '/' + id_servicio , {headers : headers});
+      }
+
       // Ruta para ver historias clinicas usuario por servicio
       getHistoriaClinicaPorServicio(id_usuario, id_servicio): Observable<any> {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
