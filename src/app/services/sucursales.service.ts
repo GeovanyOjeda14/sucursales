@@ -28,11 +28,11 @@ export class SucursalService {
     // Ruta para pedir informacion de los servicios que pesta una sucursal
     getServiciosSucursal(id_sucursal) {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/serviciosuc/' + id_sucursal , {headers : headers});   
+        return this.http.get(this.url + '/serviciosuc/' + id_sucursal , {headers : headers});
     }
 
     // Ruta para obtener las citas sugun un servicio en la sucursal
-    getEventsSucursal(mes, anio, id_serv, id_sucursal, id_cate, id_consultorio){
+    getEventsSucursal(mes, anio, id_serv, id_sucursal, id_cate, id_consultorio) {
         // console.log('peticion ev sucu');
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/eventsuc/' + mes + '/' + anio + '/' + id_serv + '/'+ id_sucursal + '/' + id_cate + '/' + id_consultorio, {headers : headers} ); 
@@ -59,7 +59,7 @@ export class SucursalService {
     // Ruta para eliminar el horario de un consultorio
     dltHorarioConsultorio(id_horario){
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.delete(this.url + '/delhorario/' + id_horario, {headers : headers});    
+        return this.http.delete(this.url + '/delhorario/' + id_horario, {headers : headers});
     }
 
     // Ruta para pedir informacion de un consultorio

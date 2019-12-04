@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { FormGroup, FormBuilder} from '@angular/forms';
 import { SucursalService } from '../../services/sucursales.service';
-import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-gestionar-sucursales',
@@ -111,18 +110,18 @@ export class GestionarSucursalesComponent implements OnInit {
   }
 
   eliminarSucursal() {
-    console.log('oe');
-    window.scroll(0,0);
+    // console.log('oe');
+    window.scroll(0, 0);
     // console.log(this.sucursalEliminar);
     this.loading = true;
-    this._sucursalService.dltSucursal(this.sucursalEliminar.id_sucursales).subscribe( (response)=> {
+    this._sucursalService.dltSucursal(this.sucursalEliminar.id_sucursales).subscribe( (response) => {
       console.log(response);
       this.loading = false;
-      if(response === true) { 
+      if(response === true) {
         let identity = this._userService.getIdentity().id_provedor;
         this.getSucursales(identity);
         this.status = 'success';
-        this.statusText = 'Sucursal eliminada con exito.'; 
+        this.statusText = 'Sucursal eliminada con exito.';
       }
     }, (err) => {
       console.log(err);

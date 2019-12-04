@@ -1323,7 +1323,7 @@ _handleReaderLoaded(readerEvt) {
 
  /////////////////////////////// PUBLICAR SERVICIO ///////////////////////////////////////
 
- publicarServicio(){
+ publicarServicio() {
 
   if(this.terminosYCondiciones === false) {
     this.statusImgs = true;
@@ -1518,14 +1518,11 @@ _handleReaderLoaded(readerEvt) {
     this.statusImgs = true;
     this.textoStatus = 'Solo se admiten imagenes tipo png, jpg, jpeg. Por favor selecciona una';
    }
-
-  
  }
  imageCropped(event: ImageCroppedEvent) {
    this.croppedImage = event.base64;
  }
- 
- recorte(){
+ recorte() {
   //  console.log(this.croppedImage);
    this.imagenes.push({base64Image: this.croppedImage});
    this.recortar = false;

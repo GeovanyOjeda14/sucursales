@@ -104,7 +104,7 @@ export class BuscarCitaComponent implements OnInit {
     this.confirmacionEli = false;
     let identity = this._userService.getIdentity();
     this._provedorService.ordenCita(this.cedula.value, identity.id_sucursales).subscribe( (response) => {
-      console.log(response);
+      console.log('orden cita', response);
 
       let bol = true;
       switch (bol === true) {

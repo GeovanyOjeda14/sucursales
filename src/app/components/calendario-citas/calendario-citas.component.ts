@@ -169,16 +169,16 @@ export class CalendarioCitasComponent implements OnInit {
       let mes =  moment(new Date).format('M');
       this.getEventos(anio, mes);
       this.nombreAgenda = identity.nombres + ' ' + identity.apellidos;
-    } 
-    
-    if(identity.id_provedor && !identity.id_sucursales) {
+    }
+
+    if (identity.id_provedor && !identity.id_sucursales) {
       this.tipoCuenta = 'provedor';
       this.getPublicacionesProvedor();
     }
 
-    if(identity.id_provedor && identity.id_sucursales) {
+    if (identity.id_provedor && identity.id_sucursales) {
       // console.log('es sucursal');
-      this.tipoCuenta = 'sucursal'
+      this.tipoCuenta = 'sucursal';
       this.getServiciosSucursal(identity.id_sucursales);
       this.nombreAgenda = identity.nombre;
     }
@@ -1015,7 +1015,7 @@ export class CalendarioCitasComponent implements OnInit {
     this.statusT = false;
     this.consultorioSelecionado = undefined;
     // console.log(this.id_consultorio);
-    if(this.tipoCuenta === 'provedor') {
+    if (this.tipoCuenta === 'provedor') {
 
         // this.getEventos();
         // let anio = moment(new Date).format('YYYY');
@@ -1266,9 +1266,9 @@ export class CalendarioCitasComponent implements OnInit {
         let jinf = JSON.parse(inf);
         id_consultorio = jinf.id_consultorio;
         id_categoria = jinf.id_categoria;
-    } 
-    
-    if(this.tipoCuenta === 'provedor'){
+    }
+
+    if (this.tipoCuenta === 'provedor') {
       id_consultorio = this.serviciosSelect.value.id_consultorio;
       id_categoria =  this.serviciosSelect.value.id_categoria;
     }
