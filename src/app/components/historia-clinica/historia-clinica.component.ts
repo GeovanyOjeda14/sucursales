@@ -125,8 +125,7 @@ export class HistoriaClinicaComponent implements OnInit {
       this.getHistoriasClinicasGeneral(id_usuario, id_servicio);
     }
 
-   
-  }
+    }
 
   getHistoriasClinicasGeneral(id_usuario, id_servicio) {
     this.loading = true;
@@ -141,6 +140,18 @@ export class HistoriaClinicaComponent implements OnInit {
       this.loading = false;
     } );
 
+  }
+
+  getHistoriaGeneral2(id_historiacl) {
+    this.loading = true;
+    this._medicoService.getHistoriaGeneral2(id_historiacl).subscribe( (response) => {
+      this.loading = false;
+      this.infoHc = response;
+    }, () => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
+      this.loading = false;
+    });
   }
 
   getHistoriasClinicasOptometria(id_usuario, id_servicio) {
@@ -572,7 +583,7 @@ export class HistoriaClinicaComponent implements OnInit {
      console.log(this.infoHistoriaGeneral);
      document.getElementById('btn-ver-hg').click();
     }
-   
+
   }
 
   getParentescos() {
@@ -592,7 +603,7 @@ export class HistoriaClinicaComponent implements OnInit {
 
   pdfMedicamentos() {
     var doc = new jsPDF();
-    
+
     let content = this.content.nativeElement;
     let specialElementHandlers = {
       '#editor': function(element, renderer) {
@@ -619,7 +630,7 @@ export class HistoriaClinicaComponent implements OnInit {
   // pdfRemision() {
 
   //   var doc = new jsPDF();
-    
+
   //   let content = this.contentRemision.nativeElement;
   //   let specialElementHandlers = {
   //     '#editor': function(element, renderer) {
@@ -660,7 +671,7 @@ export class HistoriaClinicaComponent implements OnInit {
   //       return true;
   //     }
   //   };
-    
+
 
   //   doc.addImage(img, 'JPEG', 0,0,210,250);
 
@@ -677,17 +688,17 @@ export class HistoriaClinicaComponent implements OnInit {
   //   //  let refraccionOd = this.datosOptometria.value.selectOdRefraccion + ' ' + this.datosOptometria.value.esferaRefraccion +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindroRefracion + ' ' +
   //   //   'X' + ' ' + this.datosOptometria.value.ejeRefracion;
- 
+
   //   //  //  this.datosOptometria.value.selectRefracion1Oi this.datosOptometria.value.selectRefracion2Oi
   //   //  let refraccionOi = this.datosOptometria.value.selectOiRefraccion + ' ' + this.datosOptometria.value.esferaRefraccionoi +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindroRefracionOi + ' ' + 'X'
   //   //   + ' ' + this.datosOptometria.value.ejeRefracionOi;
- 
+
   //   //  //  this.datosOptometria.value.selecFormulaFinal1Od this.datosOptometria.value.selecFormulaFinal2Od
   //   //  let ffod = this.datosOptometria.value.selectOdFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOd +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd + ' ' + 'X'
   //   //   + ' ' + this.datosOptometria.value.ejFormulaFinalOd;
- 
+
   //   //  //  this.datosOptometria.value.selecFormulaFinal1Oi this.datosOptometria.value.selecFormulaFinal2Oi
   //   //  let ffoi = this.datosOptometria.value.selectOiFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOi +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOi + ' ' +
@@ -699,7 +710,7 @@ export class HistoriaClinicaComponent implements OnInit {
   //   doc.text(53, 95, this.datosOptometria.value.selectOiFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOi); //OI
 
   //   // cilindro
-  //   doc.text(81, 86,  '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd); //OD 
+  //   doc.text(81, 86,  '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd); //OD
   //   doc.text(81, 95, '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOi); //OI
 
   //   // eje

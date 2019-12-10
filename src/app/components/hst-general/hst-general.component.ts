@@ -665,18 +665,19 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 
     let info = { tipo_consulta: this.datosHistGeneral.value.tipoConsulta, motivo_consulta: this.datosHistGeneral.value.motivoConsulta,
                  enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario,
-                 id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas, examenf, impresion_diag, historia_opt};
+                 id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas,
+                 examenf, impresion_diag, historia_opt};
 
     console.log(info);
     this._diagnosticoService.postDiagnostico(info, token).subscribe( (response) => {
-      //console.log(response);
-      if(response === true) {
+      console.log(response);
+      if (response === true) {
         this.status = 'success';
         this.statusText = 'Historia clinica guardada con exito';
         document.getElementById('btn-publicacion-exitosa').click();
        // document.getElementById('cerrarModal').click();
       }
-    } )
+    });
   }
 
   pubExitosa(){

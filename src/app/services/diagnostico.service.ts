@@ -7,7 +7,7 @@ import { Global } from './global';
 export class DiagnosticoService {
   public url;
 
-  constructor(public http: HttpClient, public global: Global) { 
+  constructor(public http: HttpClient, public global: Global) {
     this.url = this.global.apiUrl;
   }
 
@@ -15,10 +15,8 @@ export class DiagnosticoService {
     return this.http.get(this.url + '/impdiagnostica');
   }
 
-  postDiagnostico(info, token) : Observable <any>{
+  postDiagnostico(info, token): Observable <any> {
     var headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(this.url + '/histclinica/' + '?token=' + token, info, {headers : headers});
   }
-
-
 }

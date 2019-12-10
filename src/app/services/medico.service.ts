@@ -31,7 +31,7 @@ export class MedicoService {
         return this.http.post(this.url + '/medicos/' + '?token=' + token, info, {headers : headers});
     }
 
- 
+
     // Borrar medico por provedor
 
     dltMedicoPorProvedor(medico_id, provedor_id, token): Observable<any> {
@@ -89,6 +89,11 @@ export class MedicoService {
       getHistoriaClinicaGeneral(id_usuario, id_servicio): Observable<any> {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/darhistclinica/' + id_usuario + '/' + id_servicio , {headers : headers});
+      }
+
+      getHistoriaGeneral2(id_historiacl): Observable<any> {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.get(this.url + '/darhistcf/' + id_historiacl, {headers : headers});
       }
 
       // Ruta para ver historias clinicas usuario por servicio
