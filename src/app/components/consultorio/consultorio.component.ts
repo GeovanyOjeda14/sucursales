@@ -86,7 +86,7 @@ export class ConsultorioComponent implements OnInit {
     this.mymodel = 'informacion';
     this._route.params.subscribe(params => {
 
-      if(params['id']) {
+      if (params['id']) {
         this.id_consultorio= params['id'];
         this.getConsultorioApi(this.id_consultorio);
         // console.log('editar');
@@ -123,7 +123,7 @@ export class ConsultorioComponent implements OnInit {
     } );
   }
 
-  getServicios(id_provedor){
+  getServicios(id_provedor) {
 
     this.loading = true;
     this._provedorService.getPublications(id_provedor).subscribe( (response) => {
@@ -138,7 +138,7 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  siguiente(){
+  siguiente() {
     this.mymodel = 'horarios';
     document.getElementById('informacion').className = 'list-group-item';
     document.getElementById('horarios').className = 'list-group-item active';
@@ -963,7 +963,7 @@ export class ConsultorioComponent implements OnInit {
 
   // ------------------------------------ METODOS EDITAR CONSULTORIO -------------------------------------------------------------
 
-  getConsultorioApi(id_consultorio){
+  getConsultorioApi(id_consultorio) {
     this.loading = true;
     this._sucursalService.getInfoConsultorio(id_consultorio).subscribe( (response) => {
       console.log('info_cc', response);
@@ -1023,7 +1023,7 @@ export class ConsultorioComponent implements OnInit {
      } else {
        console.log('hay eventos');
        this.confirmacion = false;
-     };
+     }
 
    }, (err) => {
     console.log(err);
@@ -1065,9 +1065,9 @@ export class ConsultorioComponent implements OnInit {
 
   crearHorario() {
 
-    for(let i = 0; i < this.infoConsultorio.horario.length; i ++) {
+    for (let i = 0; i < this.infoConsultorio.horario.length; i ++) {
 
-        for(let j = 0; j < this.infoConsultorio.horario[i].dias.length; j++) {
+        for (let j = 0; j < this.infoConsultorio.horario[i].dias.length; j++) {
           console.log(this.infoConsultorio.horario[i].dias[j].dia);
           let nombre = this.infoConsultorio.horario[i].dias[j].dia;
 
@@ -1080,9 +1080,8 @@ export class ConsultorioComponent implements OnInit {
       }
     }
 
-    console.log(this.ds);
+    // console.log(this.ds);
     this.horas();
-    
     this.consultorioForm = true;
 
     // document.getElementById('btn-modal-crear-horario').click();
@@ -1365,16 +1364,16 @@ export class ConsultorioComponent implements OnInit {
     }
   }
 
-  guardarHorario(){
-  
-    if(this.validacionesH1() === true) {
+  guardarHorario() {
+
+    if (this.validacionesH1() === true) {
       this.loading = true;
-      console.log('too bn');
+      // console.log('too bn');
 
 
       let h1;
 
-      if(this.mananaH1 && !this.tardeH1) {
+      if (this.mananaH1 && !this.tardeH1) {
         h1 = { m_de: this.mananaDesdeH1 + ':00', m_hasta: this.mananaHastaH1 + ':00', t_de: undefined,
         t_hasta: undefined, semana : this.diasH1, id_servicio: this.infoConsultorio.id_servicios, id_sucursal : this.infoConsultorio.id_sucursales,
         id_consul : this.infoConsultorio.id_consultorio};
@@ -1395,11 +1394,11 @@ export class ConsultorioComponent implements OnInit {
         // console.log('mana s tarde s', h1);
       }
 
-      console.log(h1);
+      // console.log(h1);
       this._sucursalService.postEnviarHorario(h1).subscribe( (response) => {
         console.log(response);
         this.loading = false;
-        if(response === true) {
+        if (response === true) {
            this.mananaH1 = false;
            this.tardeH1 = false;
            this.consultorioForm = false;
@@ -1408,6 +1407,7 @@ export class ConsultorioComponent implements OnInit {
            this.mananaHastaH1 = undefined;
            this.tardeDesdeH1 = undefined;
            this.tardeHastaH1 = undefined;
+           this.getConsultorioApi(this.id_consultorio);
         }
 
       }, (err) => {

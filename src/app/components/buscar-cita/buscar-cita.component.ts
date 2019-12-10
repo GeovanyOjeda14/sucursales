@@ -60,16 +60,16 @@ export class BuscarCitaComponent implements OnInit {
   ngOnInit() {
 
     let identity = this._userService.getIdentity().id_provedor;
-    if (identity !== undefined) {
+    if (identity != undefined) {
       this.medico = false;
-    //   // console.log('es sucursal');
+      console.log('es sucursal');
       this.citasUsuario();
 
       this.intervalo =  setInterval(() => {
-      this.citasUsuario() }, 30000);
+      this.citasUsuario()}, 30000);
     } else {
       this.medico = true;
-      // // console.log('es medico');
+      console.log('es medico');
       this.medico_id = this._userService.getIdentity().medico_id;
       this.getCitasMedico(this._userService.getIdentity().medico_id);
 

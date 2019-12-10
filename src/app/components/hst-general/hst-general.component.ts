@@ -572,7 +572,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
      };
 
     let info = { tipo_consulta: this.datosHistGeneral.value.tipoConsulta, motivo_consulta: this.datosHistGeneral.value.motivoConsulta,
-                 enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario, 
+                 enfermedades_preex: this.datosHistGeneral.value.enfermedadPreexistente, usuario_id: this.id_usuario,
                  id_servicios: this.id_servicio, antecedentes_f, antecedentes_p, habitosyfactores, revisionpsistemas, examenf };
 
     console.log(info);
@@ -581,15 +581,15 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
 
 }
 
-export interface AntecedentesF{
-  id : string;
-  nombre : string;
-  disponible : string;
+export interface AntecedentesF {
+  id: string;
+  nombre: string;
+  disponible: string;
 }
 
-export interface AntecedentesFGroup{
-  nombre : string; 
-  disponible : string;
+export interface AntecedentesFGroup {
+  nombre: string;
+  disponible: string;
   antecedentesF: AntecedentesF[];
 }
 

@@ -12,32 +12,38 @@ export class MedicoService {
         this.url = this.global.apiUrl;
     }
 
-    // Obtener la informacion del medico a travez de su id
-    getInfoMedico(id) {
-        let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/medicosm/' + id , {headers : headers});
-      }
+  // METODOS POST
 
-      // Consultar si un medico existe o no a traves de la cedula
-      getMedico(cedula): Observable<any> {
-        let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/medicosc/' + cedula, {headers : headers});
-      }
-
-       // Agregar medico desde provedor
+    // Agregar medico desde provedor
     postAgregarMedicos(info, token): Observable<any> {
 
         var headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.post(this.url + '/medicos/' + '?token=' + token, info, {headers : headers});
     }
 
- 
+    // RUTA PARA GUARDAR HISTORIAS CLINICAS
+     postHistoriasClinicas(info) {
+      var headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.post(this.url + '/histclinica/', info, {headers : headers});
+     }
+
+    // METODOS DELETE
+
     // Borrar medico por provedor
 
     dltMedicoPorProvedor(medico_id, provedor_id, token): Observable<any> {
        let headers = new HttpHeaders().set('Content-Type', 'application/json');
        return this.http.delete(this.url + '/medico/' + medico_id + '/' + provedor_id + '?token=' + token , {headers : headers});
        }
+
+
+    // METODOS PUT
+
+    // ruta para dar respuestas a los comentarios por parte del medico.
+    respuestaComentarioMedico(info): Observable<any>  {
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.put(this.url + '/comentmed' , info, {headers : headers});
+      }
 
     // Editar datos del medico
     editInfoMedico(info, token) {
@@ -46,6 +52,8 @@ export class MedicoService {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.put(this.url + '/medico/' + '?token=' + token , info, {headers : headers});
     }
+
+    // METODOS GET
 
     // Ruta para ver los servicios que tiene un medico
     getServicios(id) {
@@ -59,12 +67,6 @@ export class MedicoService {
       console.log(id_servicio, idctga, id_medico);
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/comentmed/' + id_servicio + '/' + idctga + '/' + id_medico, {headers : headers});
-      }
-
-       // ruta para dar respuestas a los comentarios por parte del medico.
-    respuestaComentarioMedico(info): Observable<any>  {
-        let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.put(this.url + '/comentmed' , info, {headers : headers});
       }
 
       // Ruta para pedir las citas activas
@@ -98,7 +100,7 @@ export class MedicoService {
       }
 
       // Ruta para obtener las citas del medico.
-      getHistorialCitasCalendar(mes,anio,id_medico,id_categoria, id_consultorio){
+      getHistorialCitasCalendar(mes,anio,id_medico,id_categoria, id_consultorio) {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/histmed/' + mes + '/' + anio + '/' + id_medico + '/' + id_categoria + '/' + id_consultorio , {headers : headers});
       }
@@ -107,4 +109,16 @@ export class MedicoService {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.get(this.url + '/activhist/' + id_servicio, {headers : headers});
       }
+
+          // Obtener la informacion del medico a travez de su id
+    getInfoMedico(id) {
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.get(this.url + '/medicosm/' + id , {headers : headers});
+    }
+
+    // Consultar si un medico existe o no a traves de la cedula
+    getMedico(cedula): Observable<any> {
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      return this.http.get(this.url + '/medicosc/' + cedula, {headers : headers});
+    }
 }

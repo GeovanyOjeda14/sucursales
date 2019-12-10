@@ -17,6 +17,7 @@ export class HistoriaOptometriaComponent implements OnInit {
   @Input() id_servicio: string;
   @Input() nombres: string;
   @Input() cedula: string;
+  @Input() categoria;
   @ViewChild('content') content: ElementRef;
   @ViewChild('contentRemision') contentRemision: ElementRef;
   @ViewChild('contentDiagnostico') contentDiagnostico: ElementRef;
@@ -41,6 +42,7 @@ export class HistoriaOptometriaComponent implements OnInit {
 
   ngOnInit() {
     this.validacionesFormOptometria();
+    // console.log('categoria', this.categoria);
   }
 
   validacionesFormOptometria(){
@@ -129,7 +131,7 @@ export class HistoriaOptometriaComponent implements OnInit {
     });
   }
 
-  formOptometria(){
+  formOptometria() {
     this.loading = true;
 
     let adicion = '+' + ' ' + this.datosOptometria.value.adicion;
@@ -181,38 +183,57 @@ export class HistoriaOptometriaComponent implements OnInit {
       observaciones : this.datosOptometria.value.observaciones, id_usuario: this.id_usuario, id_servicio: this.id_servicio,
       tipoConsulta: this.datosOptometria.value.tipoConsulta, rips : this.datosOptometria.value.rips};
 
+      let info = { tipo_consulta: this.datosOptometria.value.tipoConsulta, motivo_consulta: this.datosOptometria.value.motivoConsulta,
+        enfermedades_preex: '', historia_opt: this.infoHcFb, usuario_id: this.id_usuario, id_servicios: this.id_servicio,
+        antecedentes_f: { }, antecedentes_p: { }, habitosyfactores: { }, revisionpsistemas: { }, examenf: { }, impresion_diag: [ ] };
 
-      console.log(this.infoHcFb);
+      console.log(info);
 
-      this.loading = true;
-    // console.log('aqui');
-    this._medicoService.putHistoriaClinica(this.infoHcFb).subscribe( (response) => {
-      console.log('hc', response);
+      this._medicoService.postHistoriasClinicas(info).subscribe( (response) => {
 
-      if (response === true) {
-        this.status = 'success';
-        this.statusText = 'Historia clinica guarda con exito.';
-        this.datosOptometria.reset();
-        this.loading = false;
-        document.getElementById('pub-exitosa').click();
-      }
+        console.log('hc', response);
 
-    }, (err) => {
-      console.log(err);
-      this.status = 'error';
-      this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
-      this.loading = false;
-    });
+          if (response === true) {
+            this.status = 'success';
+            this.statusText = 'Historia clinica guarda con exito.';
+            this.datosOptometria.reset();
+            this.loading = false;
+            document.getElementById('pub-exitosa').click();
+          }
+      }, () => {
+          this.status = 'error';
+          this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
+          this.loading = false;
+      } );
+
+    // // console.log('aqui');
+    // this._medicoService.putHistoriaClinica(this.infoHcFb).subscribe( (response) => {
+    //   console.log('hc', response);
+
+    //   if (response === true) {
+    //     this.status = 'success';
+    //     this.statusText = 'Historia clinica guarda con exito.';
+    //     this.datosOptometria.reset();
+    //     this.loading = false;
+    //     document.getElementById('pub-exitosa').click();
+    //   }
+
+    // }, (err) => {
+    //   console.log(err);
+    //   this.status = 'error';
+    //   this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
+    //   this.loading = false;
+    // });
 
   }
 
   puExitosa() {
     document.getElementById('btn-cerrar-pub-exitosa').click();
-    this._router.navigate(['/historia-clinica', this.id_usuario, this.id_servicio]);
+    this._router.navigate(['/historia-clinica', this.id_usuario, this.id_servicio, this.categoria]);
   }
 
   // Metodo para cambiar de pagina
-  cambiar(tipo){
+  cambiar(tipo) {
 
    let bol = true;
 

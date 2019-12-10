@@ -65,18 +65,18 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', JSON.stringify(response.token));
 
           // true admin
-          this.identity(response.id_usuario, 'admin');
-        } 
+          this.identity(response.id_usuario, response.id_member, 'admin');
+        }
          if (response.esAdmin === 3) {
 
           localStorage.setItem('token', JSON.stringify(response.token));
-          this.identity(response.id_usuario, 'med');
+          this.identity(response.id_usuario, response.id_member, 'med');
         }
 
         if (response.esAdmin === 4) {
 
           localStorage.setItem('token', JSON.stringify(response.token));
-          this.identity(response.id_usuario, 'sucu');
+          this.identity(response.id_usuario, response.id_member, 'sucu');
         }
 
       } else {
@@ -99,41 +99,41 @@ export class LoginComponent implements OnInit {
   }
 
 
-  identity(id, member) {
+  identity(idUsuario, idMember, member) {
 
     // this.loading = true;
 
-      console.log(id);
+      // console.log(id);
 
       if (member === 'admin') {
 
         // this.locket(id);
-        this._provedorService.getIdentity(id).subscribe( (response) => {
-          console.log('respuesta', response);
+        this._provedorService.getIdentity(idUsuario).subscribe( (response) => {
+          // console.log('respuesta', response);
 
          localStorage.setItem('identity', JSON.stringify(response[0]));
-         this.locket(id);
+         this.locket(idMember);
 
            // this._router.navigate(['/home/', response.id_usuario, response.esAdmin ]);
           //  this.loading = false;
 
-        }, (err) => {
+        }, () => {
           this.status = 'error';
           this.statusText = 'Error en la conexión, intentalo más tarde o revisa tu conexión.'
           this.loading = false;
         });
 
-      } 
-      
-      if(member === 'med') {
+      }
+
+      if (member === 'med') {
 
         // this.locket(id);
-        this._medicoService.getInfoMedico(id).subscribe( (response) => {
+        this._medicoService.getInfoMedico(idUsuario).subscribe( (response) => {
           console.log(response);
 
           let identity = response[0];
           localStorage.setItem('identity', JSON.stringify(identity));
-          this.locket(id);
+          this.locket(idMember);
           this.loading = false;
         }, (err) => {
           this.status = 'error';
@@ -143,9 +143,9 @@ export class LoginComponent implements OnInit {
 
       }
 
-      if(member === 'sucu') {
-        
-        this._sucursalService.getIdentitySucursal(id).subscribe( (response) => {
+      if (member === 'sucu') {
+
+        this._sucursalService.getIdentitySucursal(idMember).subscribe( (response) => {
           console.log(response);
           let identity = response[0];
           localStorage.setItem('identity', JSON.stringify(identity));
@@ -159,10 +159,10 @@ export class LoginComponent implements OnInit {
 
   }
 
-  locket(id) {
-    console.log(id);
-    this._aplicationService.getConfirmacionCuenta(id).subscribe( (response) => {
-      console.log(response);
+  locket(idMember) {
+    // console.log(id);
+    this._aplicationService.getConfirmacionCuenta(idMember).subscribe( (response) => {
+      console.log('locket', response);
 
       if (response === true) {
         console.log('aqui home');

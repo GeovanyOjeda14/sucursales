@@ -17,20 +17,19 @@ export class HistoriaGeneralComponent implements OnInit {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    
     this.getInfoUser();
 
     this.route.params.subscribe( (categoria) => {
-      console.log(categoria);
+      // console.log(categoria);
       this.idCategoria = categoria.idCategoria;
-      console.log(this.idCategoria);
+      // console.log(this.idCategoria);
     } );
   }
 
   getInfoUser() {
     let user = localStorage.getItem('user');
     this.user = JSON.parse(user);
-    console.log(this.user);
-  } 
+    // console.log(this.user);
+  }
 
 }

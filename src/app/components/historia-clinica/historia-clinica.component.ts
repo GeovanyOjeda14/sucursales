@@ -112,9 +112,7 @@ export class HistoriaClinicaComponent implements OnInit {
 
   getHistoriasClinicas(id_usuario, id_servicio) {
 
-
     this.loading = true;
-
     this._medicoService.getHistoriaClinicaPorServicio(id_usuario, id_servicio).subscribe( (response) => {
       // console.log(response);
       this.infoHc = response;
