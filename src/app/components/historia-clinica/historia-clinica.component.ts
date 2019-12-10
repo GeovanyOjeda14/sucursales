@@ -17,10 +17,10 @@ import * as jsPDF from 'jspdf';
 })
 export class HistoriaClinicaComponent implements OnInit {
 
-  @ViewChild('content') content: ElementRef;
-  @ViewChild('contentRemision') contentRemision: ElementRef;
-  @ViewChild('contentDiagnostico') contentDiagnostico: ElementRef;
-  @ViewChild('contentObservaciones') contentObservaciones: ElementRef;
+  @ViewChild('content', { static: false }) content: ElementRef;
+  @ViewChild('contentRemision', { static: false }) contentRemision: ElementRef;
+  @ViewChild('contentDiagnostico', { static: false }) contentDiagnostico: ElementRef;
+  @ViewChild('contentObservaciones', { static: false }) contentObservaciones: ElementRef;
 
 
   public mymodel;
@@ -120,7 +120,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this.loading = true;
     this._medicoService.getHistoriaClinicaGeneral(id_usuario, id_servicio).subscribe( (response) => {
       this.loading = false;
-      console.log('historia clinica general', response);
+      // console.log('historia clinica general', response);
       this.infoHc = response;
     }, () => {
       // console.log(err);
@@ -208,7 +208,7 @@ export class HistoriaClinicaComponent implements OnInit {
         this.tituloModal = 'Anamnesis';
         this.estadoModal = 'anamnesis';
         this.estadoModalAtras = 'vacio';
-        this.formPruebaUsuario();
+        this.formUsuario();
       break;
 
       case tipo === 'anamnesis' :
@@ -229,28 +229,30 @@ export class HistoriaClinicaComponent implements OnInit {
   validaciones() {
 
     this.edad = this.infoUser.edad;
-
+    // console.log(this.infoUser);
+    this.getMunicipios(this.infoUser.id_departamento);
 
     this.datosUsuario = this.formBuilder.group({
 
       nombresYapellidos : [this.infoUser.nombres, [Validators.required, Validators.pattern('[a-z A-z ñ]*')]],
       tipoDocumento : [this.infoUser.tipoDocumento, [Validators.required]],
       // tipoDocumentoStr : [this.infoUser.tipoDocumento, [Validators.required]],
-      numeroDocumento : [this.infoUser.cedula, [Validators.required, Validators.pattern('[0-9]*')]],
+      numeroDocumento : [this.infoUser.cedula, [Validators.required, Validators.pattern('[0-9]*'),
+                                                Validators.minLength(7), Validators.maxLength(15)]],
       estadoCivil : [this.infoUser.estadoCivil, [Validators.required]],
       // estadoCivilStr : [this.infoUser.estadoCivil, [Validators.required]],
       edad : [''],
       fechaNacimiento : [this.infoUser.fecha_nacimiento, [Validators.required]],
       // fechaNacimientoStr : ['', [Validators.required]],
-      departamento : [this.infoUser.nomDepa, [Validators.required]],
+      departamento : [this.infoUser.id_departamento, [Validators.required]],
       // departamentoStr : [this.infoUser.nomDepa, [Validators.required]],
-      municipio : [this.infoUser.nomMuni, [Validators.required]],
+      municipio : [this.infoUser.id_municipio, [Validators.required]],
       // municipioStr : [this.infoUser.nomMuni, [Validators.required]],
       ocupacion : [this.infoUser.ocupacion, [Validators.required, Validators.pattern('[a-z A-z ñ]*')]],
       direccion : [this.infoUser.direccion , [Validators.required]],
       barrio : [this.infoUser.barrio, [Validators.required]],
       telefono : [this.infoUser.telefono, [Validators.required, Validators.pattern('[0-9]*')]],
-      eps : [this.infoUser.eps, [Validators.pattern('[a-z A-z ñ]*')]],
+      eps : [this.infoUser.eps,],
       acompanante : [this.infoUser.acompanante, Validators.pattern('[a-z A-z ñ]*')],
       parentesco : [this.infoUser.pareentesco, ],
       // parentescoStr : ['', ],
@@ -471,25 +473,27 @@ export class HistoriaClinicaComponent implements OnInit {
 
       console.log(this.infoHcFb);
 
-      this.enviarDatosUsuario();
+      // this.enviarDatosUsuario();
 
   }
 
-  enviarDatosUsuario() {
-    this.loading = true;
-    let token = this._userService.getToken();
-    this._aplicationService.editUser(this.infoUserFb, token).subscribe( (response) => {
-      this.res = response;
-      console.log('usu', this.res);
-      this.enviarDatosHistoriaC();
-      if (this.res.update === true) {
-        //  this.datosUsuario.reset();
-      }
-    }, (err) => {
-      // console.log(err);
-      this.loading = false;
-    });
-  }
+  // enviarDatosUsuario() {
+  //   this.loading = true;
+  //   let token = this._userService.getToken();
+  //   this._aplicationService.editUser(this.infoUserFb, token).subscribe( (response) => {
+  //     this.res = response;
+  //     // console.log('usu', this.res);
+  //     this.enviarDatosHistoriaC();
+  //     if (this.res.update === true) {
+  //       //  this.datosUsuario.reset();
+  //     }
+  //   }, (err) => {
+  //     // console.log(err);
+  //     this.loading = false;
+  //     this.status = 'error';
+  //     this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
+  //   });
+  // }
 
   enviarDatosHistoriaC() {
     this.loading = true;
@@ -510,8 +514,8 @@ export class HistoriaClinicaComponent implements OnInit {
         this.getHistoriasClinicas(this.id_usuario, this.id_servicio);
       }
 
-    }, (err) => {
-      console.log(err);
+    }, () => {
+      // console.log(err);
       this.status = 'error';
       this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
       document.getElementById('cerrar-modal-hc').click();
@@ -521,30 +525,33 @@ export class HistoriaClinicaComponent implements OnInit {
 
   }
 
-  formPruebaUsuario () {
+  formUsuario () {
   //  var inputValue = (<HTMLInputElement>document.getElementById('oe')).value;
 
   // console.log('El valor del campo es:' +  inputValue);
 
-   if (this.infoUser.tipoDocumento) {
-      this.datosUsuario.value.tipoDocumento = this.infoUser.tipoDocumento;
-   }
+  //  if (this.infoUser.tipoDocumento) {
+  //     this.datosUsuario.value.tipoDocumento = this.infoUser.tipoDocumento;
+  //  }
 
-   if (this.infoUser.estadoCivil) {
-      this.datosUsuario.value.estadoCivil = this.infoUser.estadoCivil;
-   }
+  //  if (this.infoUser.estadoCivil) {
+  //     this.datosUsuario.value.estadoCivil = this.infoUser.estadoCivil;
+  //  }
 
-   if (this.infoUser.fecha_nacimiento) {
-      this.datosUsuario.value.fechaNacimiento = this.infoUser.fecha_nacimiento;
-   }
+  //  if (this.infoUser.fecha_nacimiento) {
+  //     this.datosUsuario.value.fechaNacimiento = this.infoUser.fecha_nacimiento;
+  //  }
 
-   if (this.infoUser.nomDepa) {
-      this.datosUsuario.value.departamento = this.infoUser.id_departamento;
-   }
+  //  if (this.infoUser.nomDepa) {
+  //     this.datosUsuario.value.departamento = this.infoUser.id_departamento;
+  //  }
 
-   if (this.infoUser.nomMuni) {
-    this.datosUsuario.value.municipio = this.infoUser.id_municipio;
-   }
+  //  if (this.infoUser.nomMuni) {
+  //   this.datosUsuario.value.municipio = this.infoUser.id_municipio;
+  //  }
+
+  
+      this.loading = true;
 
       this.infoUserFb = { nombres : this.datosUsuario.value.nombresYapellidos, tipoDocumento: this.datosUsuario.value.tipoDocumento,
       cedula : this.datosUsuario.value.numeroDocumento, estadoCivil : this.datosUsuario.value.estadoCivil,
@@ -558,7 +565,26 @@ export class HistoriaClinicaComponent implements OnInit {
       id: this.id_usuario, apellidos : this.infoUser.apellidos, nombre : this.infoUser.nombre,
       telefonowatshapp : this.infoUser.telefonowatshapp
   };
-  console.log(this.infoUserFb);
+  console.log('info user', this.infoUserFb);
+
+  let token = this._userService.getToken();
+  this._aplicationService.editUser(this.infoUserFb, token).subscribe( (response) => {
+    this.res = response;
+    this.loading = false;
+    // console.log('usu', this.res);
+    if (this.res.update === true) {
+      //  this.datosUsuario.reset();
+      this.status = 'success';
+      this.statusText = 'Datos de usuario actualizados con exito.';
+
+    }
+  }, (err) => {
+    // console.log(err);
+    this.loading = false;
+    this.status = 'error';
+    this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
+  });
+
 
   }
 
@@ -584,6 +610,7 @@ export class HistoriaClinicaComponent implements OnInit {
         this.infoHistoriaClinica = response.histoptica ;
         this.loading = false;
     }, () => {
+      document.getElementById('btn-cerrar-moda-ver-hc').click();
       this.status = 'error';
       this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
       this.loading = false;
@@ -615,10 +642,10 @@ export class HistoriaClinicaComponent implements OnInit {
       }
     };
 
-    doc.addImage(this.imagen, 'JPEG', 0,0,210,250);
+    doc.addImage(this.imagen, 'JPEG', 0, 0, 210, 250);
 
-    doc.setFont("courier");
-    doc.setFontStyle("normal");
+    doc.setFont('courier');
+    doc.setFontStyle('normal');
     doc.setFontSize(12);
     doc.text(132, 55, this.today);
     doc.text(42, 70, this.datosUsuario.value.nombresYapellidos);

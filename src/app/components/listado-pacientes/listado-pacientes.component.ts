@@ -26,10 +26,10 @@ export class ListadoPacientesComponent implements OnInit {
   public imagen;
   public infoUser;
 
-  @ViewChild('content') content: ElementRef;
-  @ViewChild('contentRemision') contentRemision: ElementRef;
-  @ViewChild('contentCertificado') contentCertificado: ElementRef;
-  @ViewChild('contentCertificadoObservaciones') contentCertificadoObservaciones: ElementRef;
+  @ViewChild('content', { static: false }) content: ElementRef;
+  @ViewChild('contentRemision', { static: false }) contentRemision: ElementRef;
+  @ViewChild('contentCertificado', { static: false }) contentCertificado: ElementRef;
+  @ViewChild('contentCertificadoObservaciones', { static: false }) contentCertificadoObservaciones: ElementRef;
  
   constructor(private _userService: UserService, private _medicoService: MedicoService, location: PlatformLocation, 
     private _aplicationService : ApplicationService, private _route: ActivatedRoute) { 

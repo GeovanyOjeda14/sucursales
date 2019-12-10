@@ -39,7 +39,7 @@ export class HstGeneralComponent implements OnInit, AfterViewInit, OnDestroy{
   public antecedentesFMultiCtrl: FormControl = new FormControl();
   public antecedentesFMultiFilterCtrl: FormControl = new FormControl();
   public filteredAntecedentesFMulti: ReplaySubject<AntecedentesF[]> = new ReplaySubject<AntecedentesF[]>(1);
-  @ViewChild('multiSelect') multiSelect: MatSelect;
+  @ViewChild('multiSelect', { static: false }) multiSelect: MatSelect;
   protected _onDestroy = new Subject<void>();
   public grupoHabitos;
   public datos: FormGroup;

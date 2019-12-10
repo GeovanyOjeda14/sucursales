@@ -18,10 +18,10 @@ export class HistoriaOptometriaComponent implements OnInit {
   @Input() nombres: string;
   @Input() cedula: string;
   @Input() categoria;
-  @ViewChild('content') content: ElementRef;
-  @ViewChild('contentRemision') contentRemision: ElementRef;
-  @ViewChild('contentDiagnostico') contentDiagnostico: ElementRef;
-  @ViewChild('contentObservaciones') contentObservaciones: ElementRef;
+  @ViewChild('content', { static: false }) content: ElementRef;
+  @ViewChild('contentRemision', { static: false }) contentRemision: ElementRef;
+  @ViewChild('contentDiagnostico', { static: false }) contentDiagnostico: ElementRef;
+  @ViewChild('contentObservaciones', { static: false }) contentObservaciones: ElementRef;
 
   public datosOptometria: FormGroup;
   public infoHcFb: {};
@@ -184,8 +184,9 @@ export class HistoriaOptometriaComponent implements OnInit {
       tipoConsulta: this.datosOptometria.value.tipoConsulta, rips : this.datosOptometria.value.rips};
 
       let info = { tipo_consulta: this.datosOptometria.value.tipoConsulta, motivo_consulta: this.datosOptometria.value.motivoConsulta,
-        enfermedades_preex: '', historia_opt: this.infoHcFb, usuario_id: this.id_usuario, id_servicios: this.id_servicio,
-        antecedentes_f: { }, antecedentes_p: { }, habitosyfactores: { }, revisionpsistemas: { }, examenf: { }, impresion_diag: [ ] };
+        enfermedades_preex: this.datosOptometria.value.antecedentes, historia_opt: this.infoHcFb, usuario_id: this.id_usuario,
+        id_servicios: this.id_servicio, antecedentes_f: { }, antecedentes_p: { }, habitosyfactores: { }, revisionpsistemas: { },
+        examenf: { }, impresion_diag: [ ] };
 
       console.log(info);
 

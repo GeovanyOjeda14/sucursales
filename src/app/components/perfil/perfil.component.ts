@@ -151,7 +151,7 @@ export class PerfilComponent implements OnInit {
   mouseEnter(campo) {
     this.ver = campo;
   }
- 
+
   mouseLeave() {
     this.ver = '';
   }
