@@ -113,8 +113,37 @@ export class HistoriaClinicaComponent implements OnInit {
   }
 
   getHistoriasClinicas(id_usuario, id_servicio) {
+      this.getHistoriasClinicasGeneral(id_usuario, id_servicio);
+    }
 
+  getHistoriasClinicasGeneral(id_usuario, id_servicio) {
     this.loading = true;
+    this._medicoService.getHistoriaClinicaGeneral(id_usuario, id_servicio).subscribe( (response) => {
+      this.loading = false;
+      console.log('historia clinica general', response);
+      this.infoHc = response;
+    }, () => {
+      // console.log(err);
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
+      this.loading = false;
+    } );
+
+  }
+
+  getHistoriaGeneral2(id_historiacl) {
+    this.loading = true;
+    this._medicoService.getHistoriaGeneral2(id_historiacl).subscribe( (response) => {
+      this.loading = false;
+      this.infoHc = response;
+    }, () => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
+      this.loading = false;
+    });
+  }
+
+  getHistoriasClinicasOptometria(id_usuario, id_servicio) {
     this._medicoService.getHistoriaClinicaPorServicio(id_usuario, id_servicio).subscribe( (response) => {
       // console.log(response);
       this.infoHc = response;
@@ -137,7 +166,7 @@ export class HistoriaClinicaComponent implements OnInit {
       localStorage.setItem('user', JSON.stringify(user));
       this.validaciones();
       this.loading = false;
-    }, (err) => {
+    }, () => {
       this.status = 'error';
       this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
       this.loading = false;
@@ -535,15 +564,30 @@ export class HistoriaClinicaComponent implements OnInit {
 
   verHistoriaClinica(info) {
     if (this.idCategoria == 3) {
-      this.infoHistoriaClinica = info;
-       console.log(this.infoHistoriaClinica);
-      document.getElementById('btn-ver-hc').click();
+      this.getHistoriaClinica(info.id_historiacl);
     }else{
      this.infoHistoriaGeneral = info;
      console.log(this.infoHistoriaGeneral);
      document.getElementById('btn-ver-hg').click();
     }
 
+  }
+
+  getHistoriaClinica(idHistoriaClinica) {
+
+
+    this.loading = true;
+
+    this._medicoService.getHistoriaGeneral2(idHistoriaClinica).subscribe( (response) => {
+        console.log(response);
+        document.getElementById('btn-ver-hc').click();
+        this.infoHistoriaClinica = response.histoptica ;
+        this.loading = false;
+    }, () => {
+      this.status = 'error';
+      this.statusText = 'Error en la conexión, por favor revisa tu conexión o intentalo más tarde';
+      this.loading = false;
+    } );
   }
 
   getParentescos() {

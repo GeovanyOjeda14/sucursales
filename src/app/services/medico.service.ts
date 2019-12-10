@@ -93,9 +93,10 @@ export class MedicoService {
         return this.http.get(this.url + '/darhistclinica/' + id_usuario + '/' + id_servicio , {headers : headers});
       }
 
-      getHistoriaGeneral2(id_historiacl): Observable<any> {
+      // Ruta para obtener historia clinica por idHistoriaClinica
+      getHistoriaGeneral2(idHistoriaClinica): Observable<any> {
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.get(this.url + '/darhistcf/' + id_historiacl, {headers : headers});
+        return this.http.get(this.url + '/darhistcf/' + idHistoriaClinica, {headers});
       }
 
       // Ruta para ver historias clinicas usuario por servicio

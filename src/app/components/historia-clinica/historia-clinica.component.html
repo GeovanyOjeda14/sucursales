@@ -1403,14 +1403,6 @@
                     <hr class="my-4">
 
                     <div class="jumbotron jumbotron-fluid titulo" style="padding: 20px" *ngFor="let hc of infoHc">
-                        <h3 class="card-title" (click)="verHistoriaClinica(hc)">Historia Clinica No. {{hc.idhistoria_opt}}</h3>
-                        <hr>
-                        <h6 class="card-text">Fecha : {{hc.CreatedAT | fecha}}</h6>
-                        <h6 class="card-text">Hora : {{hc.CreatedAT | hora}}</h6>
-                        <h6 class="card-text">Tipo de consulta : {{hc.tipo_consulta}}</h6>
-                    </div>
-
-                    <div class="jumbotron jumbotron-fluid titulo" style="padding: 20px" *ngFor="let hc of infoHc">
                         <h3 class="card-title" (click)="verHistoriaClinica(hc)">Historia Clinica No. {{hc.id_historiacl}}</h3>
                         <hr>
                         <h6 class="card-text">Nombre Paciente : {{infoUser.nombres}}</h6>
