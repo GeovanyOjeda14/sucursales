@@ -8,6 +8,7 @@ import { UserService } from '../../services/user.service';
 import { PlatformLocation } from '@angular/common';
 import * as jsPDF from 'jspdf';
 
+
 @Component({
   selector: 'app-historia-clinica',
   templateUrl: './historia-clinica.component.html',
@@ -44,6 +45,7 @@ export class HistoriaClinicaComponent implements OnInit {
   public id_usuario;
   public infoHc;
   public infoHistoriaClinica;
+  public infoHistoriaGeneral;
   public id_servicio;
   public res;
   public imagen;
@@ -532,9 +534,16 @@ export class HistoriaClinicaComponent implements OnInit {
   }
 
   verHistoriaClinica(info) {
-    this.infoHistoriaClinica = info;
-    // console.log(this.infoHistoriaClinica);
-    document.getElementById('btn-ver-hc').click();
+    if (this.idCategoria == 3) {
+      this.infoHistoriaClinica = info;
+       console.log(this.infoHistoriaClinica);
+      document.getElementById('btn-ver-hc').click();
+    }else{
+     this.infoHistoriaGeneral = info;
+     console.log(this.infoHistoriaGeneral);
+     document.getElementById('btn-ver-hg').click();
+    }
+
   }
 
   getParentescos() {
@@ -554,7 +563,7 @@ export class HistoriaClinicaComponent implements OnInit {
 
   pdfMedicamentos() {
     var doc = new jsPDF();
-    
+
     let content = this.content.nativeElement;
     let specialElementHandlers = {
       '#editor': function(element, renderer) {
@@ -581,7 +590,7 @@ export class HistoriaClinicaComponent implements OnInit {
   // pdfRemision() {
 
   //   var doc = new jsPDF();
-    
+
   //   let content = this.contentRemision.nativeElement;
   //   let specialElementHandlers = {
   //     '#editor': function(element, renderer) {
@@ -622,7 +631,7 @@ export class HistoriaClinicaComponent implements OnInit {
   //       return true;
   //     }
   //   };
-    
+
 
   //   doc.addImage(img, 'JPEG', 0,0,210,250);
 
@@ -639,17 +648,17 @@ export class HistoriaClinicaComponent implements OnInit {
   //   //  let refraccionOd = this.datosOptometria.value.selectOdRefraccion + ' ' + this.datosOptometria.value.esferaRefraccion +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindroRefracion + ' ' +
   //   //   'X' + ' ' + this.datosOptometria.value.ejeRefracion;
- 
+
   //   //  //  this.datosOptometria.value.selectRefracion1Oi this.datosOptometria.value.selectRefracion2Oi
   //   //  let refraccionOi = this.datosOptometria.value.selectOiRefraccion + ' ' + this.datosOptometria.value.esferaRefraccionoi +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindroRefracionOi + ' ' + 'X'
   //   //   + ' ' + this.datosOptometria.value.ejeRefracionOi;
- 
+
   //   //  //  this.datosOptometria.value.selecFormulaFinal1Od this.datosOptometria.value.selecFormulaFinal2Od
   //   //  let ffod = this.datosOptometria.value.selectOdFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOd +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd + ' ' + 'X'
   //   //   + ' ' + this.datosOptometria.value.ejFormulaFinalOd;
- 
+
   //   //  //  this.datosOptometria.value.selecFormulaFinal1Oi this.datosOptometria.value.selecFormulaFinal2Oi
   //   //  let ffoi = this.datosOptometria.value.selectOiFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOi +
   //   //  ' ' + '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOi + ' ' +
@@ -661,7 +670,7 @@ export class HistoriaClinicaComponent implements OnInit {
   //   doc.text(53, 95, this.datosOptometria.value.selectOiFormulaFinal + ' ' + this.datosOptometria.value.esferaFormulaFinalOi); //OI
 
   //   // cilindro
-  //   doc.text(81, 86,  '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd); //OD 
+  //   doc.text(81, 86,  '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOd); //OD
   //   doc.text(81, 95, '-' + ' ' + this.datosOptometria.value.cilindrFormulaFinalOi); //OI
 
   //   // eje

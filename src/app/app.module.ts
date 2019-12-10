@@ -30,6 +30,9 @@ import { BarraNavegacionComponent } from './components/barra-navegacion/barra-na
 import { FooterComponent } from './components/footer/footer.component';
 import { VerPerfilMedicoComponent } from './components/ver-perfil-medico/ver-perfil-medico.component';
 import { CrearPublicacionComponent } from './components/crear-publicacion/crear-publicacion.component';
+import { DiagnosticoComponent } from './components/diagnostico/diagnostico.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { VisiometriaComponent } from './components/visiometria/visiometria.component';
 
 // Servicios
 import { ProvedorService } from './services/provedor.service';
@@ -51,11 +54,12 @@ import { FechaPipe } from './pipes/fechas.pipe';
 import { HoraPipe } from './pipes/horas.pipe';
 import { CategoriaPipe } from './pipes/categoria.pipe';
 import { AmPmPipe } from './pipes/ampm.pipe';
+import { BusquedaPipe } from './pipes/busqueda.pipe';
 
 // Angular material
 
 import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule,
-        MatAutocompleteModule } from '@angular/material';
+        MatAutocompleteModule, MatRadioModule} from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
@@ -94,6 +98,7 @@ import { HistoriaGeneralComponent } from './components/historia-general/historia
 import { HistoriaOptometriaComponent } from './components/historia-optometria/historia-optometria.component';
 import { BarraLateralComponent } from './components/barra-lateral/barra-lateral.component';
 import { HstGeneralComponent } from './components/hst-general/hst-general.component';
+import { DiagnosticoService } from './services/diagnostico.service';
 
 // search selected
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -125,6 +130,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     FechaPipe,
     HoraPipe,
     CategoriaPipe,
+    BusquedaPipe,
     AmPmPipe,
     CrearPublicacionComponent,
     MisServiciosComponent,
@@ -141,10 +147,14 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     HistoriaOptometriaComponent,
     BarraLateralComponent,
     HstGeneralComponent,
+    DiagnosticoComponent,
+    ModalComponent,
+    VisiometriaComponent
+
   ],
   imports: [
     BrowserModule,
-    //Search Selected
+    // Search Selected
     NgxMatSelectSearchModule,
     ImageCropperModule,
     // routing,
@@ -156,17 +166,17 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatCheckboxModule,
     MatFormFieldModule, MatInputModule,
     MatAutocompleteModule,
+    MatRadioModule,
     ReactiveFormsModule,
     MatSelectModule,
     MatCardModule,
     BrowserAnimationsModule,
-    ScrollDispatchModule,
     NgxLoadingModule.forRoot({}),
     BrowserAnimationsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-      
+
     }),
     FormsModule,
     FlatpickrModule.forRoot(),
@@ -183,6 +193,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     UserSucursal,
     SucursalMedico,
     Global,
+    DiagnosticoService,
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
