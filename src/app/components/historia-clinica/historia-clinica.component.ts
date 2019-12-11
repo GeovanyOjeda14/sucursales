@@ -563,13 +563,10 @@ export class HistoriaClinicaComponent implements OnInit {
   }
 
   verHistoriaClinica(info) {
-    if (this.idCategoria == 3) {
+
       this.getHistoriaClinica(info.id_historiacl);
-    }else{
-     this.infoHistoriaGeneral = info;
-     console.log(this.infoHistoriaGeneral);
-     document.getElementById('btn-ver-hg').click();
-    }
+
+
 
   }
 
@@ -580,8 +577,16 @@ export class HistoriaClinicaComponent implements OnInit {
 
     this._medicoService.getHistoriaGeneral2(idHistoriaClinica).subscribe( (response) => {
         console.log(response);
-        document.getElementById('btn-ver-hc').click();
-        this.infoHistoriaClinica = response.histoptica ;
+        if (this.idCategoria === 3) {
+          document.getElementById('btn-ver-hc').click();
+          this.infoHistoriaClinica = response.histoptica ;
+        } else {
+           this.infoHistoriaGeneral = response;
+           console.log('bvhgi', this.infoHistoriaGeneral);
+           document.getElementById('btn-ver-hg').click();
+        }
+
+
         this.loading = false;
     }, () => {
       this.status = 'error';
