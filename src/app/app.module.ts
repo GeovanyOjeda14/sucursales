@@ -64,7 +64,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
-import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 // Calendario
 
@@ -101,7 +100,7 @@ import { HstGeneralComponent } from './components/hst-general/hst-general.compon
 import { DiagnosticoService } from './services/diagnostico.service';
 
 // search selected
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+// import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 
 @NgModule({
@@ -155,7 +154,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
   imports: [
     BrowserModule,
     // Search Selected
-    NgxMatSelectSearchModule,
+    // NgxMatSelectSearchModule,
     ImageCropperModule,
     // routing,
     RouterModule,
