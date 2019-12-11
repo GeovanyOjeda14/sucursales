@@ -188,11 +188,11 @@ export class HistoriaOptometriaComponent implements OnInit {
         id_servicios: this.id_servicio, antecedentes_f: { }, antecedentes_p: { }, habitosyfactores: { }, revisionpsistemas: { },
         examenf: { }, impresion_diag: [ ] };
 
-      console.log(info);
+      // console.log(info);
 
       this._medicoService.postHistoriasClinicas(info).subscribe( (response) => {
 
-        console.log('hc', response);
+        // console.log('hc', response);
 
           if (response === true) {
             this.status = 'success';
@@ -202,6 +202,7 @@ export class HistoriaOptometriaComponent implements OnInit {
             document.getElementById('pub-exitosa').click();
           }
       }, () => {
+          console.log('aqui');
           this.status = 'error';
           this.statusText = 'Error al guardar la historia clinica, por favor revisa tu conexión o intentalo más tarde.';
           this.loading = false;

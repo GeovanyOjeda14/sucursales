@@ -100,7 +100,7 @@ export class HistoriaClinicaComponent implements OnInit {
       // console.log(id);
       this.getUser(this.id_usuario);
       this.getHistoriasClinicas(this.id_usuario, this.id_servicio);
-      this.getActiveHist(this.id_servicio);
+      // this.getActiveHist(this.id_servicio);
     });
   }
 
@@ -471,7 +471,7 @@ export class HistoriaClinicaComponent implements OnInit {
       tipoConsulta: this.datosOptometria.value.tipoConsulta, rips : this.datosOptometria.value.rips};
 
 
-      console.log(this.infoHcFb);
+      // console.log(this.infoHcFb);
 
       // this.enviarDatosUsuario();
 
@@ -499,7 +499,7 @@ export class HistoriaClinicaComponent implements OnInit {
     this.loading = true;
     // console.log('aqui');
     this._medicoService.putHistoriaClinica(this.infoHcFb).subscribe( (response) => {
-      console.log('hc', response);
+      // console.log('hc', response);
 
       if (response === true) {
         this.status = 'success';
@@ -603,7 +603,7 @@ export class HistoriaClinicaComponent implements OnInit {
 
     this._medicoService.getHistoriaGeneral2(idHistoriaClinica).subscribe( (response) => {
         console.log(response);
-        if (this.idCategoria === 3) {
+        if (this.idCategoria === '3') {
           document.getElementById('btn-ver-hc').click();
           this.infoHistoriaClinica = response.histoptica ;
         } else {
