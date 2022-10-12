@@ -36,7 +36,7 @@
     "flatpickr": "^4.5.7",
     "jquery": "1.12",
     "js-sha512": "^0.8.0",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.5.1",
     "ngx-image-cropper": "^1.4.1",
     "ngx-loading": "^3.0.1",
     "ngx-mat-select-search": "^2.0.0",
